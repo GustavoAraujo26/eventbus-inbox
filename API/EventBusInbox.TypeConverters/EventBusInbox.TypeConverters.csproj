@@ -10,4 +10,8 @@
     <PackageReference Include="AutoMapper" Version="13.0.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\EventBusInbox.Domain\EventBusInbox.Domain.csproj" />
+  </ItemGroup>
+
 </Project>

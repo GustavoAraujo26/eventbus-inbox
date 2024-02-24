@@ -15,6 +15,31 @@ namespace EventBusInbox.Domain.Entities
         public EventBusReceivedMessage() { }
 
         /// <summary>
+        /// Construtor para inicializar as propriedades
+        /// </summary>
+        /// <param name="requestId">Id da requisição</param>
+        /// <param name="createdAt">Data de criação</param>
+        /// <param name="type">Tipo da mensagem</param>
+        /// <param name="data">Conteudo da mensagem</param>
+        /// <param name="queue">Fila na qual a mensagem foi recebida</param>
+        /// <param name="status">Status da mensagem</param>
+        /// <param name="processingAttempts">Quantidade de processamentos</param>
+        /// <param name="processingHistory">Histórico de processamento da mensagem</param>
+        public EventBusReceivedMessage(Guid requestId, DateTime createdAt, string type, 
+            dynamic data, EventBusQueue queue, EventBusMessageStatus status, int processingAttempts, 
+            IList<ProcessingHistoryLine> processingHistory)
+        {
+            RequestId = requestId;
+            CreatedAt = createdAt;
+            Type = type;
+            Data = data;
+            Queue = queue;
+            Status = status;
+            ProcessingAttempts = processingAttempts;
+            ProcessingHistory = processingHistory;
+        }
+
+        /// <summary>
         /// Id da requisição
         /// </summary>
         public Guid RequestId { get; private set; }
