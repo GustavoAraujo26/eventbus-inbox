@@ -15,7 +15,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\EventBusInbox.Repositories\EventBusInbox.Repositories.csproj" />
+    <ProjectReference Include="..\EventBusInbox.Shared\EventBusInbox.Shared.csproj" />
     <ProjectReference Include="..\EventBusInbox.TypeConverters\EventBusInbox.TypeConverters.csproj" />
+    <ProjectReference Include="..\EventBusInbox.UseCases\EventBusInbox.UseCases.csproj" />
   </ItemGroup>
 
 </Project>

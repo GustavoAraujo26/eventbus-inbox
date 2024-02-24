@@ -5,7 +5,10 @@
       "launchBrowser": true,
       "launchUrl": "swagger",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "MONGODB_CONNECTION_STRING": "mongodb://mongodb:27017",
+        "MONGODB_DATABASE_NAME": "EventBusInbox",
+        "RABBITMQ_CONNECTION_STRING": ""
       },
       "dotnetRunMessages": true,
       "applicationUrl": "https://localhost:7185;http://localhost:5043"
@@ -15,7 +18,10 @@
       "launchBrowser": true,
       "launchUrl": "swagger",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "MONGODB_CONNECTION_STRING": "mongodb://mongodb:27017",
+        "MONGODB_DATABASE_NAME": "EventBusInbox",
+        "RABBITMQ_CONNECTION_STRING": ""
       }
     },
     "Container (Dockerfile)": {
@@ -23,7 +29,10 @@
       "launchBrowser": true,
       "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/swagger",
       "environmentVariables": {
-        "ASPNETCORE_URLS": "https://+:443;http://+:80"
+        "ASPNETCORE_URLS": "https://+:443;http://+:80",
+        "MONGODB_CONNECTION_STRING": "mongodb://mongodb:27017",
+        "MONGODB_DATABASE_NAME": "EventBusInbox",
+        "RABBITMQ_CONNECTION_STRING": ""
       },
       "publishAllPorts": true,
       "useSSL": true

@@ -12,7 +12,7 @@ namespace EventBusInbox.TypeConverters.Extensions
         /// Configura a injeção de dependência para o AutoMapper
         /// </summary>
         /// <param name="services">Interface do service collection</param>
-        public static void AddAppAutoMapper(this IServiceCollection services)
+        public static void ConfigureAppAutoMapper(this IServiceCollection services)
         {
             services.AddAutoMapper(typeof(ModelProfile), typeof(EntityProfile));
         }

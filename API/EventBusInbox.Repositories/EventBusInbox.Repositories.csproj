@@ -11,4 +11,9 @@
     <PackageReference Include="MongoDB.Driver" Version="2.24.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\EventBusInbox.Domain\EventBusInbox.Domain.csproj" />
+    <ProjectReference Include="..\EventBusInbox.Shared\EventBusInbox.Shared.csproj" />
+  </ItemGroup>
+
 </Project>

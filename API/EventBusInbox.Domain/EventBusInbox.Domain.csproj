@@ -10,7 +10,6 @@
     <Folder Include="Extensions\" />
     <Folder Include="Validations\" />
     <Folder Include="UseCases\" />
-    <Folder Include="Repositories\" />
   </ItemGroup>
 
   <ItemGroup>
