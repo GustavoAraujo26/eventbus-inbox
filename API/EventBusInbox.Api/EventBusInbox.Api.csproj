@@ -6,16 +6,20 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>877344a3-b688-40b8-8dd3-9285d837ad54</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="13.0.1" />
     <PackageReference Include="MediatR" Version="12.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.27" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.19.6" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\EventBusInbox.Domain\EventBusInbox.Domain.csproj" />
+    <ProjectReference Include="..\EventBusInbox.Handlers\EventBusInbox.Handlers.csproj" />
     <ProjectReference Include="..\EventBusInbox.Repositories\EventBusInbox.Repositories.csproj" />
     <ProjectReference Include="..\EventBusInbox.Shared\EventBusInbox.Shared.csproj" />
     <ProjectReference Include="..\EventBusInbox.TypeConverters\EventBusInbox.TypeConverters.csproj" />

@@ -15,7 +15,7 @@ namespace EventBusInbox.Api.Controllers.Base
         /// <typeparam name="T">Tipo do objeto de retorno</typeparam>
         /// <param name="appResponse">Resposta da aplicação</param>
         /// <returns></returns>
-        public IActionResult BuildResponse<T>(AppResponse<T> appResponse) where T : class
+        public ActionResult BuildResponse<T>(AppResponse<T> appResponse) where T : class
         {
             return StatusCode((int)appResponse.Status, appResponse);
         }

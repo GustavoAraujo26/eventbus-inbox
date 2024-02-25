@@ -28,7 +28,7 @@
         /// <summary>
         /// String de conexão do RabbitMQ
         /// </summary>
-        public string RabbitMqConnectionString { get; set; }
+        public string RabbitMqConnectionString { get; private set; }
 
         /// <summary>
         /// Adiciona as credenciais de conexão ao MongoDb
@@ -37,5 +37,12 @@
         /// <param name="databaseName">Nome do banco de dados</param>
         public void AddMongoDbCredentials(string connectionString, string databaseName) =>
             MongoDbCredentials = new KeyValuePair<string, string>(databaseName, connectionString);
+
+        /// <summary>
+        /// Adiciona a string de conexão do RabbitMQ
+        /// </summary>
+        /// <param name="connectionString"></param>
+        public void AddRabbitMqConnectionString(string connectionString) => 
+            RabbitMqConnectionString = connectionString;
     }
 }

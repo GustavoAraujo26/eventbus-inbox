@@ -1,4 +1,6 @@
 ﻿using EventBusInbox.Domain.Enums;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace EventBusInbox.Domain.Responses.EventBusQueues
 {
@@ -25,6 +27,7 @@ namespace EventBusInbox.Domain.Responses.EventBusQueues
         /// <summary>
         /// Status
         /// </summary>
+        [JsonConverter(typeof(StringEnumConverter))]
         public QueueStatus Status { get; set; }
 
         /// <summary>

@@ -1,6 +1,7 @@
 ﻿using EventBusInbox.Shared.Extensions;
 using FluentValidation.Results;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using System.Net;
 
 namespace EventBusInbox.Shared.Models
@@ -33,7 +34,7 @@ namespace EventBusInbox.Shared.Models
         }
 
         /// <summary>
-        /// Status
+        /// Status do processamento
         /// </summary>
         public HttpStatusCode Status { get; private set; }
 
