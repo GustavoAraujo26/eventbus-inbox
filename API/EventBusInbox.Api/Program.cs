@@ -41,6 +41,8 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
     options.SuppressModelStateInvalidFilter = true;
 });
 
+builder.Services.AddCors();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -56,5 +58,12 @@ app.UseSerilogRequestLogging();
 app.UseMiddleware<ErrorHandlerMiddleware>();
 
 app.MapControllers();
+
+app.UseCors(options =>
+{
+    options.AllowAnyHeader();
+    options.AllowAnyMethod();
+    options.AllowAnyOrigin();
+});
 
 app.Run();
