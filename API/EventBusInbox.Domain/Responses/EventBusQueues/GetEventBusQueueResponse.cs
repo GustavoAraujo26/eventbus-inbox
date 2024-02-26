@@ -27,7 +27,6 @@ namespace EventBusInbox.Domain.Responses.EventBusQueues
         /// <summary>
         /// Status
         /// </summary>
-        [JsonConverter(typeof(StringEnumConverter))]
         public QueueStatus Status { get; set; }
 
         /// <summary>

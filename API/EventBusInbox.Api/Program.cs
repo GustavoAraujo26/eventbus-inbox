@@ -4,13 +4,16 @@ using EventBusInbox.Shared.Extensions;
 using Microsoft.OpenApi.Models;
 using EventBusInbox.Handlers.Extensions;
 using EventBusInbox.Api.Middlewares;
+using Serilog;
+using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.ConfigureEnvironmentSettings();
+builder.ConfigureAppSerilog();
 builder.Services.ConfigureAppAutoMapper();
 builder.Services.ConfigureAppRepositories();
-builder.Services.ConfigureEnvironmentSettings();
 builder.Services.ConfigureAppMediator();
 
 builder.Services.AddControllers();
@@ -33,6 +36,11 @@ builder.Services.AddSwaggerGen(options =>
     //options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
 });
 
+builder.Services.Configure<ApiBehaviorOptions>(options =>
+{
+    options.SuppressModelStateInvalidFilter = true;
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -44,6 +52,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseSerilogRequestLogging();
 app.UseMiddleware<ErrorHandlerMiddleware>();
 
 app.MapControllers();

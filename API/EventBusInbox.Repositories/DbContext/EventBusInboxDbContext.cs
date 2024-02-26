@@ -5,7 +5,7 @@ using MongoDB.Driver;
 
 namespace EventBusInbox.Repositories.DbContext
 {
-    internal class EventBusInboxDbContext
+    internal class EventBusInboxDbContext : IDisposable
     {
         private readonly IMongoDatabase database;
 
@@ -22,5 +22,7 @@ namespace EventBusInbox.Repositories.DbContext
         {
             get => database.GetCollection<EventBusReceivedMessageModel>(EventBusInboxCollection.EventBusReceivedMessages.ToString());
         }
+
+        public void Dispose() { }
     }
 }

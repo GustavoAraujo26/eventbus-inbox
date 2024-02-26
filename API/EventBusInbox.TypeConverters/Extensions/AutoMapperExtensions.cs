@@ -14,7 +14,7 @@ namespace EventBusInbox.TypeConverters.Extensions
         /// <param name="services">Interface do service collection</param>
         public static void ConfigureAppAutoMapper(this IServiceCollection services)
         {
-            services.AddAutoMapper(typeof(ModelProfile), typeof(EntityProfile));
+            services.AddAutoMapper(typeof(ModelProfile), typeof(EntityProfile), typeof(ResponseProfile), typeof(RequestProfile));
         }
     }
 }

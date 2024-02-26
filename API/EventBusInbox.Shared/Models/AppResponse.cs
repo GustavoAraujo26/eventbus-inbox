@@ -88,10 +88,13 @@ namespace EventBusInbox.Shared.Models
         /// <summary>
         /// Realiza cópia da resposta atual, porém, sem os objetos
         /// </summary>
-        /// <typeparam name="Response">Tipo de resposta</typeparam>
+        /// <typeparam name="Origin">Tipo do objeto de origem</typeparam>
+        /// <param name="origin">Objeto a ser copiado</param>
+        /// <param name="data">Dados a serem enviados</param>
         /// <returns></returns>
-        public AppResponse<Response> Copy<Response>() where Response : class =>
-            new AppResponse<Response>(Status, Message, StackTrace, null);
+        public static AppResponse<T> Copy<Origin>(AppResponse<Origin> origin, List<T>? data = null) 
+            where Origin : class =>
+            new AppResponse<T>(origin.Status, origin.Message, origin.StackTrace, data);
 
         /// <summary>
         /// Retorna resposta de sucesso com mensagem

@@ -7,7 +7,14 @@
     {
         static EnvironmentSettings _instance;
 
-        private EnvironmentSettings() { }
+        private EnvironmentSettings()
+        {
+            MongoDbCredentials = new KeyValuePair<string, string>(
+                Environment.GetEnvironmentVariable("MONGODB_DATABASE_NAME"),
+                Environment.GetEnvironmentVariable("MONGODB_CONNECTION_STRING")
+            );
+            RabbitMqConnectionString = Environment.GetEnvironmentVariable("RABBITMQ_CONNECTION_STRING");
+        }
 
         /// <summary>
         /// Obtém a instância a classe
@@ -31,18 +38,10 @@
         public string RabbitMqConnectionString { get; private set; }
 
         /// <summary>
-        /// Adiciona as credenciais de conexão ao MongoDb
+        /// Constrói string de conexão do MongoDB, especificando o banco de dados
         /// </summary>
-        /// <param name="connectionString">String de conexão</param>
-        /// <param name="databaseName">Nome do banco de dados</param>
-        public void AddMongoDbCredentials(string connectionString, string databaseName) =>
-            MongoDbCredentials = new KeyValuePair<string, string>(databaseName, connectionString);
-
-        /// <summary>
-        /// Adiciona a string de conexão do RabbitMQ
-        /// </summary>
-        /// <param name="connectionString"></param>
-        public void AddRabbitMqConnectionString(string connectionString) => 
-            RabbitMqConnectionString = connectionString;
+        /// <returns></returns>
+        public string GetMongoDbDatabaseUrl() =>
+            $"{MongoDbCredentials.Value}/{MongoDbCredentials.Key}";
     }
 }

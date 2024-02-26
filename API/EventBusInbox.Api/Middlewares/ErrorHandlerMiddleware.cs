@@ -1,4 +1,5 @@
-﻿using EventBusInbox.Shared.Models;
+﻿using EventBusInbox.Shared.Extensions;
+using EventBusInbox.Shared.Models;
 using Newtonsoft.Json;
 
 namespace EventBusInbox.Api.Middlewares
@@ -9,14 +10,17 @@ namespace EventBusInbox.Api.Middlewares
     public class ErrorHandlerMiddleware
     {
         private readonly RequestDelegate _next;
+        private readonly Serilog.ILogger logger;
 
         /// <summary>
         /// Construtor para inicializar as propriedades
         /// </summary>
         /// <param name="next">Requisição</param>
+        /// <param name="logger">Logger</param>
         public ErrorHandlerMiddleware(RequestDelegate next)
         {
             _next = next;
+            logger = LoggingExtensions.CreateAppLogger();
         }
 
         /// <summary>
@@ -41,6 +45,8 @@ namespace EventBusInbox.Api.Middlewares
 
                 var result = JsonConvert.SerializeObject(appResponse);
                 await response.WriteAsync(result);
+
+                logger.Error(ex, "An error ocurred when execute the request!");
             }
         }
     }

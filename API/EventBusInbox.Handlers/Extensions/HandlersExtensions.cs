@@ -1,4 +1,6 @@
-﻿using EventBusInbox.Domain.Handlers.EventBusQueue;
+﻿using EventBusInbox.Domain.Handlers;
+using EventBusInbox.Domain.Handlers.EventBusQueue;
+using EventBusInbox.Handlers.Contracts;
 using EventBusInbox.Handlers.Contracts.EventBusQueue;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
@@ -16,6 +18,8 @@ namespace EventBusInbox.Handlers.Extensions
         /// <param name="services">Interface do Service Collection</param>
         public static void ConfigureAppMediator(this IServiceCollection services)
         {
+            services.AddTransient<IEventLogHandler, EventLogHandler>();
+            
             services.AddTransient<IDeleteEventBusQueueHandler, DeleteEventBusQueueHandler>();
             services.AddTransient<IGetEventBusQueueHandler, GetEventBusQueueHandler>();
             services.AddTransient<ISaveEventBusQueueHandler, SaveEventBusQueueHandler>();

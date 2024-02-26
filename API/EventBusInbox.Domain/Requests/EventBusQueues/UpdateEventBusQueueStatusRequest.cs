@@ -1,9 +1,8 @@
 ﻿using EventBusInbox.Domain.Enums;
 using EventBusInbox.Domain.Responses.EventBusQueues;
+using EventBusInbox.Domain.Validations.EventBusQueue;
 using EventBusInbox.Shared.Models;
 using MediatR;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 
 namespace EventBusInbox.Domain.Requests.EventBusQueues
 {
@@ -36,7 +35,13 @@ namespace EventBusInbox.Domain.Requests.EventBusQueues
         /// <summary>
         /// Status
         /// </summary>
-        [JsonConverter(typeof(StringEnumConverter))]
         public QueueStatus Status { get; set; }
+
+        /// <summary>
+        /// Realiza validação das informações
+        /// </summary>
+        /// <returns></returns>
+        public AppResponse<UpdateEventBusQueueStatusRequest> Validate() =>
+            AppResponse<UpdateEventBusQueueStatusRequest>.ValidationResponse(new UpdateEventBusQueueStatusValidation().Validate(this));
     }
 }

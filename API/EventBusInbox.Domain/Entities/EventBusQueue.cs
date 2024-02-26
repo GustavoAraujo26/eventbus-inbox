@@ -66,18 +66,18 @@ namespace EventBusInbox.Domain.Entities
         /// <summary>
         /// Cria nova fila
         /// </summary>
+        /// <param name="id">Id</param>
         /// <param name="name">Nome</param>
         /// <param name="description">Descrição</param>
         /// <param name="status">Status</param>
         /// <param name="processingAttempts">Quantidade de tentativas de processamento</param>
         /// <returns></returns>
-        public static EventBusQueue Create(string name, string description, QueueStatus status, int processingAttempts) =>
-            new EventBusQueue(Guid.NewGuid(), name, description, status, processingAttempts);
+        public static EventBusQueue Create(Guid id, string name, string description, QueueStatus status, int processingAttempts) =>
+            new EventBusQueue(id, name, description, status, processingAttempts);
 
         /// <summary>
         /// Realiza cópia dos dados
         /// </summary>
-        /// <param name="origin">Origem da cópia</param>
         /// <returns></returns>
         public EventBusQueue Copy() =>
             JsonConvert.DeserializeObject<EventBusQueue>(this.ToString());

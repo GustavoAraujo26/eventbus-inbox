@@ -11,47 +11,57 @@ namespace EventBusInbox.Repositories.Contracts
 {
     internal class EventBusReceivedMessageRepository : IEventBusReceivedMessageRepository
     {
-        private readonly EventBusInboxDbContext context;
+        private readonly EnvironmentSettings envSettings;
         private readonly IMapper mapper;
 
         public EventBusReceivedMessageRepository(EnvironmentSettings envSettings, IMapper mapper)
         {
-            context = new EventBusInboxDbContext(envSettings);
+            this.envSettings = envSettings;
             this.mapper = mapper;
         }
 
         public async Task<AppResponse<object>> Delete(Guid id)
         {
-            var filter = Builders<EventBusReceivedMessageModel>.Filter.Eq(x => x.RequestId, id);
-            var result = await context.ReceivedMessages.DeleteOneAsync(filter);
-            if (result.DeletedCount == 0)
-                return AppResponse<object>.Custom(HttpStatusCode.InternalServerError, "An error occurred when deleting message!");
+            using (var context = new EventBusInboxDbContext(envSettings))
+            {
+                var filter = Builders<EventBusReceivedMessageModel>.Filter.Eq(x => x.RequestId, id);
+                var result = await context.ReceivedMessages.DeleteOneAsync(filter);
+                if (result.DeletedCount == 0)
+                    return AppResponse<object>.Custom(HttpStatusCode.InternalServerError, "An error occurred when deleting message!");
 
-            return AppResponse<object>.Success("Message deleted!");
+                return AppResponse<object>.Success("Message deleted!");
+            }
         }
 
-        public async Task<EventBusReceivedMessage> GetById(Guid id) =>
-            await GetByFilter(Builders<EventBusReceivedMessageModel>.Filter.Eq(x => x.RequestId, id));
+        public async Task<EventBusReceivedMessage> GetById(Guid id)
+        {
+            using (var context = new EventBusInboxDbContext(envSettings))
+            {
+                return await GetByFilter(context, Builders<EventBusReceivedMessageModel>.Filter.Eq(x => x.RequestId, id));
+            }
+        }
 
         public async Task<AppResponse<object>> Save(EventBusReceivedMessage obj)
         {
-            var model = mapper.Map<EventBusReceivedMessageModel>(obj);
+            using (var context = new EventBusInboxDbContext(envSettings))
+            {
+                var model = mapper.Map<EventBusReceivedMessageModel>(obj);
 
-            var filter = new FilterDefinitionBuilder<EventBusReceivedMessageModel>().Eq(x => x.RequestId, obj.RequestId);
-            var result = await context.ReceivedMessages.ReplaceOneAsync(filter, model, new ReplaceOptions { IsUpsert = true });
-            if (result.ModifiedCount == 0)
-                return AppResponse<object>.Custom(HttpStatusCode.InternalServerError, "An error occurred when save message!");
-
-            return AppResponse<object>.Success("Message saved!");
+                var filter = new FilterDefinitionBuilder<EventBusReceivedMessageModel>().Eq(x => x.RequestId, obj.RequestId);
+                var result = await context.ReceivedMessages.ReplaceOneAsync(filter, model, new ReplaceOptions { IsUpsert = true });
+                
+                return AppResponse<object>.Success("Message saved!");
+            }
         }
 
-        private async Task<EventBusReceivedMessage> GetByFilter(FilterDefinition<EventBusReceivedMessageModel> filter)
+        private async Task<EventBusReceivedMessage> GetByFilter(EventBusInboxDbContext context, 
+            FilterDefinition<EventBusReceivedMessageModel> filter)
         {
-            var result = await context.ReceivedMessages.FindAsync(filter);
-            if (!result.Any())
+            var model = await context.ReceivedMessages.Find(filter).FirstOrDefaultAsync();
+            if (model is null)
                 return null;
 
-            return mapper.Map<EventBusReceivedMessage>(result.First());
+            return mapper.Map<EventBusReceivedMessage>(model);
         }
     }
 }

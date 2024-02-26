@@ -1,4 +1,5 @@
 ﻿using EventBusInbox.Domain.Responses.EventBusQueues;
+using EventBusInbox.Domain.Validations.EventBusQueue;
 using EventBusInbox.Shared.Models;
 using MediatR;
 
@@ -34,5 +35,12 @@ namespace EventBusInbox.Domain.Requests.EventBusQueues
         /// Nome
         /// </summary>
         public string Name { get; set; }
+
+        /// <summary>
+        /// Realiza validação das informações
+        /// </summary>
+        /// <returns></returns>
+        public AppResponse<GetEventBusQueueRequest> Validate() =>
+            AppResponse<GetEventBusQueueRequest>.ValidationResponse(new GetEventBusQueueValidation().Validate(this));
     }
 }

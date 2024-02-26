@@ -15,10 +15,14 @@
         /// </summary>
         /// <param name="id">Identificador</param>
         /// <param name="occurredAt">Data de ocorrência</param>
-        public EventBusQueueResponse(Guid id, DateTime occurredAt)
+        public EventBusQueueResponse(Guid id, DateTime? occurredAt = null)
         {
             Id = id;
-            OccurredAt = occurredAt;
+
+            if (occurredAt.HasValue)
+                OccurredAt = occurredAt.Value;
+            else
+                OccurredAt = DateTime.Now;
         }
 
         /// <summary>
