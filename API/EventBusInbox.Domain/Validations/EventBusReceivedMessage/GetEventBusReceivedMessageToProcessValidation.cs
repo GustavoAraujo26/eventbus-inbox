@@ -11,6 +11,12 @@ namespace EventBusInbox.Domain.Validations.EventBusReceivedMessage
         public GetEventBusReceivedMessageToProcessValidation()
         {
             RuleFor(x => x.QueueId).NotEqual(Guid.Empty).WithMessage("Invalid field!");
+
+            RuleFor(x => x.Page)
+                .GreaterThan(0).WithMessage("Field must be greater than {0}");
+
+            RuleFor(x => x.PageSize)
+                .GreaterThan(0).WithMessage("Field must be greater than {0}");
         }
     }
 }
