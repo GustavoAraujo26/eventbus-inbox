@@ -30,5 +30,12 @@ namespace EventBusInbox.Domain.Repositories
         /// <param name="id"></param>
         /// <returns></returns>
         Task<GetEventBusReceivedMessageResponse> GetResponse(Guid id);
+
+        /// <summary>
+        /// Retorna contagem de mensagens por status para cada fila passada como parâmetro
+        /// </summary>
+        /// <param name="queueIdList">Lista de identificadores de filas</param>
+        /// <returns></returns>
+        Task<List<KeyValuePair<Guid, SummarizeEventBusReceivedMessagesResponse>>> Summarize(List<Guid> queueIdList);
     }
 }

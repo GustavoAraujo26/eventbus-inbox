@@ -1,4 +1,5 @@
-﻿using EventBusInbox.Domain.Handlers.EventBusQueue;
+﻿using EventBusInbox.Domain.Factories;
+using EventBusInbox.Domain.Handlers.EventBusQueue;
 using EventBusInbox.Domain.Notifications;
 using EventBusInbox.Domain.Repositories;
 using EventBusInbox.Domain.Requests.EventBusQueues;
@@ -11,12 +12,15 @@ namespace EventBusInbox.Handlers.Contracts.EventBusQueue
 {
     public class GetEventBusQueueHandler : IGetEventBusQueueHandler
     {
-        private readonly IEventBusQueueRepository repository;
+        private readonly IEventBusQueueRepository queueRepository;
+        private readonly IEventBusReceivedMessageRepository messageRepository;
         private readonly IMediator mediator;
 
-        public GetEventBusQueueHandler(IEventBusQueueRepository repository, IMediator mediator)
+        public GetEventBusQueueHandler(IEventBusQueueRepository queueRepository, 
+            IEventBusReceivedMessageRepository messageRepository, IMediator mediator)
         {
-            this.repository = repository;
+            this.queueRepository = queueRepository;
+            this.messageRepository = messageRepository;
             this.mediator = mediator;
         }
 
@@ -31,7 +35,13 @@ namespace EventBusInbox.Handlers.Contracts.EventBusQueue
                 if (!validationResponse.IsSuccess)
                     return AppResponse<GetEventBusQueueResponse>.Copy(validationResponse);
 
-                var queue = await repository.Get(request);
+                var queue = await queueRepository.Get(request);
+
+                if (request.SummarizeMessages && queue is not null)
+                {
+                    var summarizationList = await messageRepository.Summarize(new List<Guid>{ queue.Id });
+                    EventBusQueueFactory.LinkMessageSummarization(queue, summarizationList);
+                }
 
                 return AppResponse<GetEventBusQueueResponse>.Success(queue);
             }

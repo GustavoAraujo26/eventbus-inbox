@@ -37,6 +37,11 @@ namespace EventBusInbox.Domain.Requests.EventBusQueues
         public int PageSize { get; set; }
 
         /// <summary>
+        /// Retorna contagem de mensagens?
+        /// </summary>
+        public bool SummarizeMessages { get; set; }
+
+        /// <summary>
         /// Realiza validação das informações
         /// </summary>
         /// <returns></returns>

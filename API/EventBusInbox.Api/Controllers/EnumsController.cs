@@ -1,7 +1,7 @@
 ﻿using EventBusInbox.Api.Controllers.Base;
 using EventBusInbox.Domain.Enums;
+using EventBusInbox.Shared.Extensions;
 using EventBusInbox.Shared.Models;
-using EventBusInbox.TypeConverters.Extensions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EventBusInbox.Api.Controllers
@@ -19,7 +19,7 @@ namespace EventBusInbox.Api.Controllers
         /// <returns></returns>
         [HttpGet]
         [Route("queue-status")]
-        public async Task<ActionResult<AppResponse<EnumData>>> ListQueueStatus()
+        public ActionResult<AppResponse<EnumData>> ListQueueStatus()
         {
             var enumValueList = QueueStatus.Enabled.List<QueueStatus>();
             return BuildResponse(AppResponse<EnumData>.Success(enumValueList));
@@ -31,7 +31,7 @@ namespace EventBusInbox.Api.Controllers
         /// <returns></returns>
         [HttpGet]
         [Route("event-bus-message-status")]
-        public async Task<ActionResult<AppResponse<EnumData>>> ListEventBusMessageStatus()
+        public ActionResult<AppResponse<EnumData>> ListEventBusMessageStatus()
         {
             var enumValueList = EventBusMessageStatus.Pending.List<EventBusMessageStatus>();
             return BuildResponse(AppResponse<EnumData>.Success(enumValueList));

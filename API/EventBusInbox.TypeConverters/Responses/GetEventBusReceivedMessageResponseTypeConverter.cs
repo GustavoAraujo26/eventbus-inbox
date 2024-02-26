@@ -2,7 +2,7 @@
 using EventBusInbox.Domain.Models;
 using EventBusInbox.Domain.Responses.EventBusQueues;
 using EventBusInbox.Domain.Responses.EventBusReceivedMessage;
-using EventBusInbox.TypeConverters.Extensions;
+using EventBusInbox.Shared.Extensions;
 using Newtonsoft.Json;
 
 namespace EventBusInbox.TypeConverters.Responses

@@ -6,6 +6,7 @@ using EventBusInbox.Domain.Repositories;
 using EventBusInbox.Domain.Requests.EventBusReceivedMessage;
 using EventBusInbox.Domain.Responses.EventBusReceivedMessage;
 using EventBusInbox.Repositories.DbContext;
+using EventBusInbox.Shared.Extensions;
 using EventBusInbox.Shared.Models;
 using MongoDB.Driver;
 using System.Net;
@@ -99,13 +100,40 @@ namespace EventBusInbox.Repositories.Contracts
             }
         }
 
+        public async Task<List<KeyValuePair<Guid, SummarizeEventBusReceivedMessagesResponse>>> Summarize(List<Guid> queueIdList)
+        {
+            var statusList = EventBusMessageStatus.Pending.List<EventBusMessageStatus>();
+            var filterBuilder = new FilterDefinitionBuilder<EventBusReceivedMessageModel>();
+
+            using (var context = new EventBusInboxDbContext(envSettings))
+            {
+                var result = new List<KeyValuePair<Guid, SummarizeEventBusReceivedMessagesResponse>>();
+
+                if (queueIdList is null || !queueIdList.Any())
+                    return result;
+
+                foreach(var id in queueIdList)
+                {
+                    foreach(var status in statusList)
+                    {
+                        var filter = filterBuilder.Where(x => ((int)x.Status).Equals(status.IntKey) && x.Queue.Id.Equals(id));
+                        var count = await CountByFilter(context, filter);
+                        var summarization = new SummarizeEventBusReceivedMessagesResponse(status, count);
+                        result.Add(new KeyValuePair<Guid, SummarizeEventBusReceivedMessagesResponse>(id, summarization));
+                    }
+                }
+
+                return result;
+            }
+        }
+
         private async Task<EventBusReceivedMessageModel> GetByFilter(EventBusInboxDbContext context,
             FilterDefinition<EventBusReceivedMessageModel> filter) =>
             await context.ReceivedMessages.Find(filter).FirstOrDefaultAsync();
 
-        private async Task<List<EventBusReceivedMessageModel>> ListByFilter(EventBusInboxDbContext context,
+        private async Task<long> CountByFilter(EventBusInboxDbContext context,
             FilterDefinition<EventBusReceivedMessageModel> filter) =>
-            await context.ReceivedMessages.Find(filter).ToListAsync();
+            await context.ReceivedMessages.Find(filter).CountDocumentsAsync();
 
         private async Task<List<EventBusReceivedMessageModel>> ListPagedByFilter(EventBusInboxDbContext context,
             FilterDefinition<EventBusReceivedMessageModel> filter, int page, int pageSize)

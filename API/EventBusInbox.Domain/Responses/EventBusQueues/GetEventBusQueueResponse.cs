@@ -1,4 +1,5 @@
-﻿using EventBusInbox.Shared.Models;
+﻿using EventBusInbox.Domain.Responses.EventBusReceivedMessage;
+using EventBusInbox.Shared.Models;
 
 namespace EventBusInbox.Domain.Responses.EventBusQueues
 {
@@ -31,5 +32,10 @@ namespace EventBusInbox.Domain.Responses.EventBusQueues
         /// Quantidade de tentativas de processamento
         /// </summary>
         public int ProcessingAttempts { get; set; }
+
+        /// <summary>
+        /// Sumarização das mensagens
+        /// </summary>
+        public List<SummarizeEventBusReceivedMessagesResponse> MessagesSummarization { get; set; }
     }
 }

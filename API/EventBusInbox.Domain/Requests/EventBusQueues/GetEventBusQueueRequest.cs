@@ -20,10 +20,11 @@ namespace EventBusInbox.Domain.Requests.EventBusQueues
         /// </summary>
         /// <param name="id">Identificador</param>
         /// <param name="name">Nome</param>
-        public GetEventBusQueueRequest(Guid? id, string name)
+        public GetEventBusQueueRequest(Guid? id, string name, bool summarizeMessages)
         {
             Id = id;
             Name = name;
+            SummarizeMessages = summarizeMessages;
         }
 
         /// <summary>
@@ -35,6 +36,11 @@ namespace EventBusInbox.Domain.Requests.EventBusQueues
         /// Nome
         /// </summary>
         public string Name { get; set; }
+
+        /// <summary>
+        /// Retorna contagem de mensagens?
+        /// </summary>
+        public bool SummarizeMessages { get; set; }
 
         /// <summary>
         /// Realiza validação das informações

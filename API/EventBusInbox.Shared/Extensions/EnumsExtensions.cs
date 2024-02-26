@@ -1,12 +1,12 @@
 ﻿using EventBusInbox.Shared.Models;
 using System.ComponentModel;
 
-namespace EventBusInbox.TypeConverters.Extensions
+namespace EventBusInbox.Shared.Extensions
 {
     /// <summary>
     /// Extensões para enumeradores
     /// </summary>
-    public static class EnumExtensions
+    public static class EnumsExtensions
     {
         /// <summary>
         /// Retorna o valor do atributo de descrição do enumerador
@@ -21,7 +21,7 @@ namespace EventBusInbox.TypeConverters.Extensions
             if (fieldInfo != null)
             {
                 var attrs = fieldInfo.GetCustomAttributes(typeof(DescriptionAttribute), true);
-                if (attrs is not null && attrs.Length > 0) 
+                if (attrs is not null && attrs.Length > 0)
                     description = ((DescriptionAttribute)attrs[0]).Description;
             }
 
