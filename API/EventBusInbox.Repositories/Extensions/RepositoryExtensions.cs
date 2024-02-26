@@ -17,6 +17,7 @@ namespace EventBusInbox.Repositories.Extensions
         {
             services.AddScoped<IEventBusQueueRepository, EventBusQueueRepository>();
             services.AddScoped<IEventBusReceivedMessageRepository, EventBusReceivedMessageRepository>();
+            services.AddScoped<IRabbitMqRepository, RabbitMqRepository>();
         }
     }
 }

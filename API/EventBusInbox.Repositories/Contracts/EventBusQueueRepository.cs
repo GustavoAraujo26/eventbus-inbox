@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using EventBusInbox.Domain.Entities;
+using EventBusInbox.Domain.Enums;
 using EventBusInbox.Domain.Models;
 using EventBusInbox.Domain.Repositories;
 using EventBusInbox.Domain.Requests.EventBusQueues;
@@ -52,6 +53,17 @@ namespace EventBusInbox.Repositories.Contracts
                     return null;
 
                 return mapper.Map<GetEventBusQueueResponse>(model);
+            }
+        }
+
+        public async Task<List<EventBusQueue>> GetActiveList()
+        {
+            using (var context = new EventBusInboxDbContext(envSettings))
+            {
+                var filter = Builders<EventBusQueueModel>.Filter.Eq(x => x.Status, QueueStatus.Enabled);
+                var modelList = await ListByFilter(context, filter);
+
+                return mapper.Map<List<EventBusQueue>>(modelList);
             }
         }
 
@@ -130,5 +142,9 @@ namespace EventBusInbox.Repositories.Contracts
         private async Task<EventBusQueueModel> GetByFilter(EventBusInboxDbContext context, 
             FilterDefinition<EventBusQueueModel> filter) =>
             await context.Queues.Find(filter).FirstOrDefaultAsync();
+
+        private async Task<List<EventBusQueueModel>> ListByFilter(EventBusInboxDbContext context,
+            FilterDefinition<EventBusQueueModel> filter) =>
+            await context.Queues.Find(filter).ToListAsync();
     }
 }

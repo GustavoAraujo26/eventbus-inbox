@@ -17,6 +17,9 @@ namespace EventBusInbox.TypeConverters.Profiles
 
             CreateMap<IList<ProcessingHistoryLineModel>, IList<ProcessingHistoryLine>>()
                 .ConvertUsing<ProcessingHistoryLineTypeConverter>();
+
+            CreateMap<List<EventBusQueueModel>, List<EventBusQueue>>()
+                .ConvertUsing<EventBusQueueListTypeConverter>();
         }
     }
 }

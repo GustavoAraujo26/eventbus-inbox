@@ -6,6 +6,7 @@ using EventBusInbox.Handlers.Extensions;
 using EventBusInbox.Api.Middlewares;
 using Serilog;
 using Microsoft.AspNetCore.Mvc;
+using EventBusInbox.Workers.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +16,7 @@ builder.ConfigureAppSerilog();
 builder.Services.ConfigureAppAutoMapper();
 builder.Services.ConfigureAppRepositories();
 builder.Services.ConfigureAppMediator();
+builder.Services.ConfigureWorkers();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

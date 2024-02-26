@@ -30,5 +30,11 @@ namespace EventBusInbox.Domain.Repositories
         /// <param name="request">Parâmetros de pesquisa</param>
         /// <returns></returns>
         Task<List<GetEventBusQueueResponse>> List(GetEventBusQueueListRequest request);
+
+        /// <summary>
+        /// Retorna lista das filas ativas
+        /// </summary>
+        /// <returns></returns>
+        Task<List<EventBusQueue>> GetActiveList();
     }
 }

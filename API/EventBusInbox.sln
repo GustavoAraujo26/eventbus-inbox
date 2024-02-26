@@ -15,7 +15,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventBusInbox.Tests", "Even
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventBusInbox.TypeConverters", "EventBusInbox.TypeConverters\EventBusInbox.TypeConverters.csproj", "{6067BEDA-BE2F-473A-ABA4-9F9F44A96668}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventBusInbox.Handlers", "EventBusInbox.Handlers\EventBusInbox.Handlers.csproj", "{991852EC-D776-4024-AE73-D4D3B8DF1C74}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventBusInbox.Handlers", "EventBusInbox.Handlers\EventBusInbox.Handlers.csproj", "{991852EC-D776-4024-AE73-D4D3B8DF1C74}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventBusInbox.Workers", "EventBusInbox.Workers\EventBusInbox.Workers.csproj", "{B9DCE426-7AB1-4C55-9A7D-EA1E46D0572E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +53,10 @@ Global
 		{991852EC-D776-4024-AE73-D4D3B8DF1C74}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{991852EC-D776-4024-AE73-D4D3B8DF1C74}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{991852EC-D776-4024-AE73-D4D3B8DF1C74}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B9DCE426-7AB1-4C55-9A7D-EA1E46D0572E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B9DCE426-7AB1-4C55-9A7D-EA1E46D0572E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B9DCE426-7AB1-4C55-9A7D-EA1E46D0572E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B9DCE426-7AB1-4C55-9A7D-EA1E46D0572E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

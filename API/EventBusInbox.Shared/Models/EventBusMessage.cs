@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.Text;
 
 namespace EventBusInbox.Shared.Models
 {
@@ -15,20 +16,20 @@ namespace EventBusInbox.Shared.Models
         /// <summary>
         /// Construtor para inicializar as propriedades
         /// </summary>
-        /// <param name="requestId">Identificador da requisição</param>
+        /// <param name="requestId">Id da requisição</param>
         /// <param name="createdAt">Data de criação</param>
         /// <param name="type">Tipo da mensagem</param>
-        /// <param name="data">Conteúdo da mensagem</param>
-        public EventBusMessage(Guid requestId, DateTime createdAt, string type, object data)
+        /// <param name="content">Conteudo da mensagem (JSON)</param>
+        public EventBusMessage(Guid requestId, DateTime createdAt, string type, string content)
         {
             RequestId = requestId;
             CreatedAt = createdAt;
             Type = type;
-            Data = data;
+            Content = content;
         }
 
         /// <summary>
-        /// Identificador da requisição
+        /// Id da requisição
         /// </summary>
         public Guid RequestId { get; set; }
 
@@ -43,16 +44,22 @@ namespace EventBusInbox.Shared.Models
         public string Type { get; set; }
 
         /// <summary>
-        /// Conteúdo da mensagem
+        /// Conteudo da mensagem (JSON)
         /// </summary>
-        public dynamic Data { get; set; }
+        public string Content { get; set; }
 
         /// <summary>
-        /// JSON do conteúdo da mensagem
+        /// Retorna JSON
         /// </summary>
-        public string DataJson
-        {
-            get => Convert.ToString(Data);
-        }
+        /// <returns></returns>
+        public override string ToString() => 
+            JsonConvert.SerializeObject(this);
+
+        /// <summary>
+        /// Retorna array de bytes
+        /// </summary>
+        /// <returns></returns>
+        public ReadOnlyMemory<byte> ToBytes() => 
+            Encoding.UTF8.GetBytes(ToString());
     }
 }
