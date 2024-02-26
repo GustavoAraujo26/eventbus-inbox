@@ -130,9 +130,5 @@ namespace EventBusInbox.Repositories.Contracts
         private async Task<EventBusQueueModel> GetByFilter(EventBusInboxDbContext context, 
             FilterDefinition<EventBusQueueModel> filter) =>
             await context.Queues.Find(filter).FirstOrDefaultAsync();
-
-        private async Task<List<EventBusQueueModel>> ListByFilter(EventBusInboxDbContext context, 
-            FilterDefinition<EventBusQueueModel> filter) =>
-            await context.Queues.Find(filter).ToListAsync();
     }
 }

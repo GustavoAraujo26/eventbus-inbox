@@ -1,7 +1,10 @@
 ﻿using AutoMapper;
 using EventBusInbox.Domain.Entities;
+using EventBusInbox.Domain.Enums;
 using EventBusInbox.Domain.Models;
 using EventBusInbox.Domain.Repositories;
+using EventBusInbox.Domain.Requests.EventBusReceivedMessage;
+using EventBusInbox.Domain.Responses.EventBusReceivedMessage;
 using EventBusInbox.Repositories.DbContext;
 using EventBusInbox.Shared.Models;
 using MongoDB.Driver;
@@ -37,7 +40,49 @@ namespace EventBusInbox.Repositories.Contracts
         {
             using (var context = new EventBusInboxDbContext(envSettings))
             {
-                return await GetByFilter(context, Builders<EventBusReceivedMessageModel>.Filter.Eq(x => x.RequestId, id));
+                var model = await GetByFilter(context, Builders<EventBusReceivedMessageModel>.Filter.Eq(x => x.RequestId, id));
+                if (model is null)
+                    return null;
+
+                return mapper.Map<EventBusReceivedMessage>(model);
+            }
+        }
+
+        public async Task<GetEventBusReceivedMessageResponse> GetResponse(Guid id)
+        {
+            using (var context = new EventBusInboxDbContext(envSettings))
+            {
+                var model = await GetByFilter(context, Builders<EventBusReceivedMessageModel>.Filter.Eq(x => x.RequestId, id));
+                if (model is null)
+                    return null;
+
+                return mapper.Map<GetEventBusReceivedMessageResponse>(model);
+            }
+        }
+
+        public async Task<List<GetEventBusReceivedMessageListResponse>> List(GetEventBusReceivedMessageListRequest request)
+        {
+            using (var context = new EventBusInboxDbContext(envSettings))
+            {
+                var filter = BuildFilter(request);
+                var modelList = await ListPagedByFilter(context, filter, request.Page, request.PageSize);
+                if (modelList is null || !modelList.Any())
+                    return new List<GetEventBusReceivedMessageListResponse>();
+
+                return mapper.Map<List<GetEventBusReceivedMessageListResponse>>(modelList);
+            }
+        }
+
+        public async Task<List<GetEventBusReceivedMessageToProcessResponse>> List(GetEventBusReceivedMessageToProcessRequest request)
+        {
+            using (var context = new EventBusInboxDbContext(envSettings))
+            {
+                var filter = BuildFilter(request);
+                var modelList = await ListPagedByFilter(context, filter, request.Page, request.PageSize);
+                if (modelList is null || !modelList.Any())
+                    return new List<GetEventBusReceivedMessageToProcessResponse>();
+
+                return mapper.Map<List<GetEventBusReceivedMessageToProcessResponse>>(modelList);
             }
         }
 
@@ -49,19 +94,82 @@ namespace EventBusInbox.Repositories.Contracts
 
                 var filter = new FilterDefinitionBuilder<EventBusReceivedMessageModel>().Eq(x => x.RequestId, obj.RequestId);
                 var result = await context.ReceivedMessages.ReplaceOneAsync(filter, model, new ReplaceOptions { IsUpsert = true });
-                
+
                 return AppResponse<object>.Success("Message saved!");
             }
         }
 
-        private async Task<EventBusReceivedMessage> GetByFilter(EventBusInboxDbContext context, 
-            FilterDefinition<EventBusReceivedMessageModel> filter)
-        {
-            var model = await context.ReceivedMessages.Find(filter).FirstOrDefaultAsync();
-            if (model is null)
-                return null;
+        private async Task<EventBusReceivedMessageModel> GetByFilter(EventBusInboxDbContext context,
+            FilterDefinition<EventBusReceivedMessageModel> filter) =>
+            await context.ReceivedMessages.Find(filter).FirstOrDefaultAsync();
 
-            return mapper.Map<EventBusReceivedMessage>(model);
+        private async Task<List<EventBusReceivedMessageModel>> ListByFilter(EventBusInboxDbContext context,
+            FilterDefinition<EventBusReceivedMessageModel> filter) =>
+            await context.ReceivedMessages.Find(filter).ToListAsync();
+
+        private async Task<List<EventBusReceivedMessageModel>> ListPagedByFilter(EventBusInboxDbContext context,
+            FilterDefinition<EventBusReceivedMessageModel> filter, int page, int pageSize)
+        {
+            int skip = (page == 1) ? 0 : (page - 1) * pageSize;
+
+            return await context.ReceivedMessages.Find(filter).Skip(skip).Limit(pageSize).ToListAsync();
+        }
+
+        private FilterDefinition<EventBusReceivedMessageModel> BuildFilter(GetEventBusReceivedMessageListRequest request)
+        {
+            var filterBuilder = new FilterDefinitionBuilder<EventBusReceivedMessageModel>();
+            FilterDefinition<EventBusReceivedMessageModel> filter = null;
+
+            if (request.QueueId.HasValue)
+                filter = filterBuilder.Eq(x => x.Queue.Id, request.QueueId.Value);
+
+            if (request.CreationDateSearch is not null)
+            {
+                var creationStartDateFilter = filterBuilder.Gte(x => x.CreatedAt, request.CreationDateSearch.Start.Value);
+                var creationEndDateFilter = filterBuilder.Lte(x => x.CreatedAt, request.CreationDateSearch.End.Value);
+
+                filter = filter & creationStartDateFilter & creationEndDateFilter;
+            }
+
+            if (request.UpdateDateSearch is not null)
+            {
+                var updateStartDateFilter = filterBuilder.Gte(x => x.CreatedAt, request.CreationDateSearch.Start.Value);
+                var updateEndDateFilter = filterBuilder.Lte(x => x.CreatedAt, request.CreationDateSearch.End.Value);
+
+                filter = filter & updateStartDateFilter & updateEndDateFilter;
+            }
+
+            if (request.StatusToSearch is not null && request.StatusToSearch.Any())
+            {
+                var statusFilter = filterBuilder.Where(x => request.StatusToSearch.Contains(x.Status));
+
+                filter = filter & statusFilter;
+            }
+
+            if (!string.IsNullOrEmpty(request.TypeMatch))
+            {
+                var typeFilter = filterBuilder.Where(x => x.Type.Contains(request.TypeMatch));
+
+                filter = filter & filter;
+            }
+
+            if (filter is null)
+                filter = filterBuilder.Empty;
+
+            return filter;
+        }
+
+        private FilterDefinition<EventBusReceivedMessageModel> BuildFilter(GetEventBusReceivedMessageToProcessRequest request)
+        {
+            var filterBuilder = new FilterDefinitionBuilder<EventBusReceivedMessageModel>();
+
+            var statusEnabled = new List<EventBusMessageStatus>
+            {
+                EventBusMessageStatus.Pending, EventBusMessageStatus.TemporaryFailure
+            };
+
+            return filterBuilder.Eq(x => x.Queue.Id, request.QueueId) & 
+                filterBuilder.Where(x => statusEnabled.Contains(x.Status));
         }
     }
 }
