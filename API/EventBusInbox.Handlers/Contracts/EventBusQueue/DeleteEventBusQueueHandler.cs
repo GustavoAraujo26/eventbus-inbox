@@ -2,7 +2,7 @@
 using EventBusInbox.Domain.Notifications;
 using EventBusInbox.Domain.Repositories;
 using EventBusInbox.Domain.Requests.EventBusQueues;
-using EventBusInbox.Domain.Responses.EventBusQueues;
+using EventBusInbox.Domain.Responses;
 using EventBusInbox.Shared.Models;
 using MediatR;
 using System.Net;
@@ -20,36 +20,36 @@ namespace EventBusInbox.Handlers.Contracts.EventBusQueue
             this.mediator = mediator;
         }
 
-        public async Task<AppResponse<EventBusQueueResponse>> Handle(DeleteEventBusQueueRequest request,
+        public async Task<AppResponse<AppTaskResponse>> Handle(DeleteEventBusQueueRequest request,
             CancellationToken cancellationToken)
         {
             try
             {
                 if (request is null)
-                    return AppResponse<EventBusQueueResponse>.Custom(HttpStatusCode.BadRequest, "Invalid request!");
+                    return AppResponse<AppTaskResponse>.Custom(HttpStatusCode.BadRequest, "Invalid request!");
 
                 var validationResponse = request.Validate();
                 if (!validationResponse.IsSuccess)
-                    return AppResponse<EventBusQueueResponse>.Copy(validationResponse);
+                    return AppResponse<AppTaskResponse>.Copy(validationResponse);
 
                 var currentQueue = await repository.GetById(request.Id);
                 if (currentQueue is null)
-                    return AppResponse<EventBusQueueResponse>.Custom(HttpStatusCode.NotFound, "Queue not found!");
+                    return AppResponse<AppTaskResponse>.Custom(HttpStatusCode.NotFound, "Queue not found!");
 
                 var repositoryResponse = await repository.Delete(request.Id);
                 if (!repositoryResponse.IsSuccess)
-                    return AppResponse<EventBusQueueResponse>.Copy(repositoryResponse);
+                    return AppResponse<AppTaskResponse>.Copy(repositoryResponse);
 
                 await mediator.Publish(EventLogNotification.Create(this, $"Event bus queue {request.Id} deleted!"));
 
-                var responseContent = new List<EventBusQueueResponse> { new EventBusQueueResponse(request.Id) };
-                return AppResponse<EventBusQueueResponse>.Success(responseContent);
+                var responseContent = new List<AppTaskResponse> { new AppTaskResponse(request.Id) };
+                return AppResponse<AppTaskResponse>.Success(responseContent);
             }
             catch(Exception ex)
             {
                 await mediator.Publish(EventLogNotification.Create(this, ex, 
                     $"An error occurred when deleting event bus queue {request.Id}!"));
-                return AppResponse<EventBusQueueResponse>.Error(ex);
+                return AppResponse<AppTaskResponse>.Error(ex);
             }
         }
     }

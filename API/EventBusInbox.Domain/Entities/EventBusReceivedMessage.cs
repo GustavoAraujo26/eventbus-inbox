@@ -1,4 +1,5 @@
 ﻿using EventBusInbox.Domain.Enums;
+using EventBusInbox.Shared.Extensions;
 using Newtonsoft.Json;
 using System.Net;
 
@@ -80,6 +81,20 @@ namespace EventBusInbox.Domain.Entities
         public IList<ProcessingHistoryLine> ProcessingHistory { get; private set; }
 
         /// <summary>
+        /// Última atualização do histórico
+        /// </summary>
+        public ProcessingHistoryLine LastUpdate
+        {
+            get
+            {
+                if (ProcessingHistory is null || !ProcessingHistory.Any())
+                    return null;
+
+                return ProcessingHistory.OrderByDescending(x => x.OccurredAt).FirstOrDefault();
+            }
+        }
+
+        /// <summary>
         /// Retorna JSON
         /// </summary>
         /// <returns></returns>
@@ -142,19 +157,30 @@ namespace EventBusInbox.Domain.Entities
         public void SetResult(HttpStatusCode statusCode, string message)
         {
             ProcessingAttempts++;
-            Status = statusCode.ToMessageStatus();
             ProcessingHistory.Add(
                 ProcessingHistoryLine.Create(DateTime.Now, statusCode, message)
             );
+
+            Status = statusCode.ToMessageStatus();
+
+            if (!statusCode.IsSuccess() && ProcessingAttempts >= Queue.ProcessingAttempts)
+            {
+                Status = EventBusMessageStatus.PermanentFailure;
+                ProcessingHistory.Add(
+                    ProcessingHistoryLine.Create(DateTime.Now, HttpStatusCode.Locked, "Processing attempt limit reached!")
+                );
+            }
         }
 
         /// <summary>
         /// Atualiza dados básicos da mensagem
         /// </summary>
+        /// <param name="createdAt">Data de criação</param>
         /// <param name="type">Tipo da mensagem</param>
         /// <param name="data">Conteudo da mensagem</param>
-        public void UpdateBasicData(string type, dynamic data)
+        public void UpdateBasicData(DateTime createdAt, string type, dynamic data)
         {
+            CreatedAt = createdAt;
             Type = type;
             Data = data;
         }

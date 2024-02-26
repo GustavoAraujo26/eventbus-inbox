@@ -1,21 +1,21 @@
-﻿namespace EventBusInbox.Domain.Responses.EventBusQueues
+﻿namespace EventBusInbox.Domain.Responses
 {
     /// <summary>
     /// Resposta de persistência da fila do barramento de eventos
     /// </summary>
-    public class EventBusQueueResponse
+    public class AppTaskResponse
     {
         /// <summary>
         /// Construtor vazio
         /// </summary>
-        public EventBusQueueResponse() { }
+        public AppTaskResponse() { }
 
         /// <summary>
         /// Construtor para inicializar as propriedades
         /// </summary>
         /// <param name="id">Identificador</param>
         /// <param name="occurredAt">Data de ocorrência</param>
-        public EventBusQueueResponse(Guid id, DateTime? occurredAt = null)
+        public AppTaskResponse(Guid id, DateTime? occurredAt = null)
         {
             Id = id;
 

@@ -1,5 +1,6 @@
 ﻿using EventBusInbox.Api.Controllers.Base;
 using EventBusInbox.Domain.Requests.EventBusQueues;
+using EventBusInbox.Domain.Responses;
 using EventBusInbox.Domain.Responses.EventBusQueues;
 using EventBusInbox.Shared.Models;
 using MediatR;
@@ -44,7 +45,7 @@ namespace EventBusInbox.Api.Controllers
         /// <param name="command">Comando para execução do método</param>
         /// <returns></returns>
         [HttpDelete]
-        public async Task<ActionResult<AppResponse<EventBusQueueResponse>>> Delete([FromServices] IMediator mediator,
+        public async Task<ActionResult<AppResponse<AppTaskResponse>>> Delete([FromServices] IMediator mediator,
             [FromQuery] DeleteEventBusQueueRequest command) => 
             BuildResponse(await mediator.Send(command));
 
@@ -55,7 +56,7 @@ namespace EventBusInbox.Api.Controllers
         /// <param name="command">Comando para execução do método</param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<ActionResult<AppResponse<EventBusQueueResponse>>> Save([FromServices] IMediator mediator,
+        public async Task<ActionResult<AppResponse<AppTaskResponse>>> Save([FromServices] IMediator mediator,
             [FromBody] SaveEventBusQueueRequest command) => 
             BuildResponse(await mediator.Send(command));
 
@@ -67,7 +68,7 @@ namespace EventBusInbox.Api.Controllers
         /// <returns></returns>
         [HttpGet]
         [Route("status")]
-        public async Task<ActionResult<AppResponse<EventBusQueueResponse>>> UpdateSatus([FromServices] IMediator mediator,
+        public async Task<ActionResult<AppResponse<AppTaskResponse>>> UpdateSatus([FromServices] IMediator mediator,
             [FromQuery] UpdateEventBusQueueStatusRequest command) => 
             BuildResponse(await mediator.Send(command));
     }

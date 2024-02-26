@@ -1,5 +1,5 @@
 ﻿using EventBusInbox.Domain.Enums;
-using EventBusInbox.Domain.Responses.EventBusQueues;
+using EventBusInbox.Domain.Responses;
 using EventBusInbox.Domain.Validations.EventBusQueue;
 using EventBusInbox.Shared.Models;
 using MediatR;
@@ -9,7 +9,7 @@ namespace EventBusInbox.Domain.Requests.EventBusQueues
     /// <summary>
     /// Requisição de persistência de fila do barramento de eventos
     /// </summary>
-    public class SaveEventBusQueueRequest : IRequest<AppResponse<EventBusQueueResponse>>
+    public class SaveEventBusQueueRequest : IRequest<AppResponse<AppTaskResponse>>
     {
         /// <summary>
         /// Construtor vazio
