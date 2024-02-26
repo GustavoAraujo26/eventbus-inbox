@@ -1,11 +1,12 @@
 ﻿using EventBusInbox.Domain.Responses;
+using EventBusInbox.Domain.Validations.EventBusReceivedMessage;
 using EventBusInbox.Shared.Models;
 using MediatR;
 
 namespace EventBusInbox.Domain.Requests.EventBusReceivedMessage
 {
     /// <summary>
-    /// Requisição para persistência de 
+    /// Requisição para persistência de mensagem recebida do barramento de eventos
     /// </summary>
     public class SaveEventBusReceivedMessageRequest : IRequest<AppResponse<AppTaskResponse>>
     {
@@ -56,5 +57,12 @@ namespace EventBusInbox.Domain.Requests.EventBusReceivedMessage
         /// Identificador da fila
         /// </summary>
         public Guid QueueId { get; set; }
+
+        /// <summary>
+        /// Realiza validação das informações
+        /// </summary>
+        /// <returns></returns>
+        public AppResponse<SaveEventBusReceivedMessageRequest> Validate() =>
+            AppResponse<SaveEventBusReceivedMessageRequest>.ValidationResponse(new SaveEventBusReceivedMessageValidation().Validate(this));
     }
 }

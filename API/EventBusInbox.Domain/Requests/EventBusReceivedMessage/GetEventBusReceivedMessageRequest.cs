@@ -1,4 +1,5 @@
 ﻿using EventBusInbox.Domain.Responses.EventBusReceivedMessage;
+using EventBusInbox.Domain.Validations.EventBusReceivedMessage;
 using EventBusInbox.Shared.Models;
 using MediatR;
 
@@ -27,5 +28,12 @@ namespace EventBusInbox.Domain.Requests.EventBusReceivedMessage
         /// Identificador da requisição
         /// </summary>
         public Guid RequestId { get; set; }
+
+        /// <summary>
+        /// Realiza validação das informações
+        /// </summary>
+        /// <returns></returns>
+        public AppResponse<GetEventBusReceivedMessageRequest> Validate() =>
+            AppResponse<GetEventBusReceivedMessageRequest>.ValidationResponse(new GetEventBusReceivedMessageValidation().Validate(this));
     }
 }

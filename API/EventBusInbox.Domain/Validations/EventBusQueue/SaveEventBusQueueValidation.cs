@@ -21,7 +21,7 @@ namespace EventBusInbox.Domain.Validations.EventBusQueue
                 .MaximumLength(100).WithMessage("Field must have {0} chars or less!")
                 .When(x => !string.IsNullOrEmpty(x.Description));
 
-            RuleFor(x => x.Status).IsInEnum().WithMessage("Field invalid!");
+            RuleFor(x => x.Status).IsInEnum().WithMessage("Invalid field!");
 
             RuleFor(x => x.ProcessingAttempts).GreaterThan(0).WithMessage("Field must be greater than {0}");
         }

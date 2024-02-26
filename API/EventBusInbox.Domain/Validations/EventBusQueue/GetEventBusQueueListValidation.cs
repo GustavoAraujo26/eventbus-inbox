@@ -14,7 +14,7 @@ namespace EventBusInbox.Domain.Validations.EventBusQueue
 
             RuleFor(x => x.PageSize).GreaterThan(0).WithMessage("Field must be greater than {0}!");
 
-            RuleFor(x => x.Status).IsInEnum().WithMessage("Field invalid!").When(x => x.Status.HasValue);
+            RuleFor(x => x.Status).IsInEnum().WithMessage("Invalid field!").When(x => x.Status.HasValue);
         }
     }
 }

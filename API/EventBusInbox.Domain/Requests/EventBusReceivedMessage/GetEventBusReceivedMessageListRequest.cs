@@ -1,5 +1,6 @@
 ﻿using EventBusInbox.Domain.Enums;
 using EventBusInbox.Domain.Responses.EventBusReceivedMessage;
+using EventBusInbox.Domain.Validations.EventBusReceivedMessage;
 using EventBusInbox.Shared.Models;
 using MediatR;
 
@@ -49,5 +50,12 @@ namespace EventBusInbox.Domain.Requests.EventBusReceivedMessage
         /// Tamanho da página
         /// </summary>
         public int PageSize { get; set; }
+
+        /// <summary>
+        /// Realiza validação das informações
+        /// </summary>
+        /// <returns></returns>
+        public AppResponse<GetEventBusReceivedMessageListRequest> Validate() =>
+            AppResponse<GetEventBusReceivedMessageListRequest>.ValidationResponse(new GetEventBusReceivedMessageListValidation().Validate(this));
     }
 }

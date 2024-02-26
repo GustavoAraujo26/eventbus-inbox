@@ -10,9 +10,9 @@ namespace EventBusInbox.Domain.Validations.EventBusQueue
     {
         public UpdateEventBusQueueStatusValidation()
         {
-            RuleFor(x => x.Id).NotEqual(Guid.Empty).WithMessage("{PropertyName} invalid!");
+            RuleFor(x => x.Id).NotEqual(Guid.Empty).WithMessage("Invalid field!");
 
-            RuleFor(x => x.Status).IsInEnum().WithMessage("Field invalid!");
+            RuleFor(x => x.Status).IsInEnum().WithMessage("Invalid field!");
         }
     }
 }

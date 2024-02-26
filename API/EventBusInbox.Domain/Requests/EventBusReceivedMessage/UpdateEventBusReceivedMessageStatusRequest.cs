@@ -1,4 +1,5 @@
 ﻿using EventBusInbox.Domain.Responses;
+using EventBusInbox.Domain.Validations.EventBusReceivedMessage;
 using EventBusInbox.Shared.Models;
 using MediatR;
 using System.Net;
@@ -42,5 +43,12 @@ namespace EventBusInbox.Domain.Requests.EventBusReceivedMessage
         /// Mensagem do resultado do processamento
         /// </summary>
         public string ResultMessage { get; set; }
+
+        /// <summary>
+        /// Realiza validação das informações
+        /// </summary>
+        /// <returns></returns>
+        public AppResponse<UpdateEventBusReceivedMessageStatusRequest> Validate() =>
+            AppResponse<UpdateEventBusReceivedMessageStatusRequest>.ValidationResponse(new UpdateEventBusReceivedMessageStatusValidation().Validate(this));
     }
 }

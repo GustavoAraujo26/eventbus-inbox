@@ -10,7 +10,7 @@ namespace EventBusInbox.Domain.Validations.EventBusQueue
     {
         public DeleteEventBusQueueValidation()
         {
-            RuleFor(x => x.Id).NotEqual(Guid.Empty).WithMessage("{PropertyName} invalid!");
+            RuleFor(x => x.Id).NotEqual(Guid.Empty).WithMessage("Invalid field!");
         }
     }
 }

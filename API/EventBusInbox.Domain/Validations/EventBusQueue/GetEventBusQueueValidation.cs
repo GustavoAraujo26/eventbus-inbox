@@ -20,7 +20,7 @@ namespace EventBusInbox.Domain.Validations.EventBusQueue
 
             When(x => x.Id.HasValue, () =>
             {
-                RuleFor(x => x.Id).NotEqual(Guid.Empty).WithMessage("Invalid Field!");
+                RuleFor(x => x.Id).NotEqual(Guid.Empty).WithMessage("Invalid field!");
             });
 
             When(x => !string.IsNullOrEmpty(x.Name), () =>
