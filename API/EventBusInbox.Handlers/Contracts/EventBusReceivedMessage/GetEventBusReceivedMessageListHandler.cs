@@ -32,9 +32,9 @@ namespace EventBusInbox.Handlers.Contracts.EventBusReceivedMessage
                 if (!validationResponse.IsSuccess)
                     return AppResponse<GetEventBusReceivedMessageListResponse>.Copy(validationResponse);
 
-                var queue = await repository.List(request);
+                var response = await repository.List(request);
 
-                return AppResponse<GetEventBusReceivedMessageListResponse>.Success(queue);
+                return AppResponse<GetEventBusReceivedMessageListResponse>.Success(response);
             }
             catch (Exception ex)
             {

@@ -35,7 +35,7 @@ namespace EventBusInbox.Domain.Models
         /// <summary>
         /// Conteudo da mensagem
         /// </summary>
-        public dynamic Data { get; set; }
+        public string Content { get; set; }
 
         /// <summary>
         /// Fila na qual a mensagem foi recebida

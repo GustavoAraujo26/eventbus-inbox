@@ -11,7 +11,7 @@ namespace EventBusInbox.TypeConverters.Entities
                 source.RequestId, 
                 source.CreatedAt,
                 source.Type,
-                source.Data,
+                source.Content,
                 context.Mapper.Map<EventBusQueue>(source.Queue),
                 source.Status,
                 source.ProcessingAttempts,

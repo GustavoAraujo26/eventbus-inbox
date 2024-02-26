@@ -1,4 +1,5 @@
-﻿using EventBusInbox.Domain.Handlers.EventBusReceivedMessage;
+﻿using EventBusInbox.Domain.Enums;
+using EventBusInbox.Domain.Handlers.EventBusReceivedMessage;
 using EventBusInbox.Domain.Notifications;
 using EventBusInbox.Domain.Repositories;
 using EventBusInbox.Domain.Requests.EventBusReceivedMessage;
@@ -34,6 +35,11 @@ namespace EventBusInbox.Handlers.Contracts.EventBusReceivedMessage
                 var currentMessage = await repository.GetById(request.RequestId);
                 if (currentMessage is null)
                     return AppResponse<AppTaskResponse>.Custom(HttpStatusCode.NotFound, $"Message {request.RequestId} not found!");
+
+                if (currentMessage.Status is EventBusMessageStatus.Completed || 
+                    currentMessage.Status is EventBusMessageStatus.PermanentFailure)
+                    return AppResponse<AppTaskResponse>.Custom(HttpStatusCode.BadRequest, 
+                        $"Message {request.RequestId} cannot change status! Please, reactivate to proceed!");
 
                 currentMessage.SetResult(request.ProcessStatus, request.ResultMessage);
 

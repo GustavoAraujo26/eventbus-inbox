@@ -18,7 +18,7 @@ namespace EventBusInbox.Domain.Validations.EventBusReceivedMessage
                 .NotNull().WithMessage("Field is required!")
                 .NotEmpty().WithMessage("Field is required!");
 
-            RuleFor(x => x.Data).NotNull().WithMessage("Invalid field!");
+            RuleFor(x => x.Content).NotNull().WithMessage("Invalid field!");
 
             RuleFor(x => x.QueueId).NotEqual(Guid.Empty).WithMessage("Invalid field!");
         }

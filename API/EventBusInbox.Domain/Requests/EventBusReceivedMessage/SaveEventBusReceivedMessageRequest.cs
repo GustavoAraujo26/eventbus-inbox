@@ -2,6 +2,7 @@
 using EventBusInbox.Domain.Validations.EventBusReceivedMessage;
 using EventBusInbox.Shared.Models;
 using MediatR;
+using Newtonsoft.Json.Linq;
 
 namespace EventBusInbox.Domain.Requests.EventBusReceivedMessage
 {
@@ -21,15 +22,15 @@ namespace EventBusInbox.Domain.Requests.EventBusReceivedMessage
         /// <param name="requestId">Identificador da requisição</param>
         /// <param name="createdAt">Data de criação</param>
         /// <param name="type">Tipo</param>
-        /// <param name="data">Conteudo da mensagem</param>
+        /// <param name="content">Conteudo da mensagem</param>
         /// <param name="queueId">Identificador da fila</param>
         public SaveEventBusReceivedMessageRequest(Guid requestId, DateTime createdAt, string type, 
-            dynamic data, Guid queueId)
+            dynamic content, Guid queueId)
         {
             RequestId = requestId;
             CreatedAt = createdAt;
             Type = type;
-            Data = data;
+            Content = content;
             QueueId = queueId;
         }
 
@@ -51,7 +52,7 @@ namespace EventBusInbox.Domain.Requests.EventBusReceivedMessage
         /// <summary>
         /// Conteudo da mensagem
         /// </summary>
-        public dynamic Data { get; set; }
+        public dynamic Content { get; set; }
 
         /// <summary>
         /// Identificador da fila

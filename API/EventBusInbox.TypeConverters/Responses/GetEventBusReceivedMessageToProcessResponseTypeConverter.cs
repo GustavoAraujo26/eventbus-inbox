@@ -2,6 +2,7 @@
 using EventBusInbox.Domain.Models;
 using EventBusInbox.Domain.Responses.EventBusQueues;
 using EventBusInbox.Domain.Responses.EventBusReceivedMessage;
+using Newtonsoft.Json;
 
 namespace EventBusInbox.TypeConverters.Responses
 {
@@ -27,7 +28,7 @@ namespace EventBusInbox.TypeConverters.Responses
                 RequestId = source.RequestId,
                 CreatedAt = source.CreatedAt,
                 Type = source.Type,
-                Data = source.Data,
+                Content = JsonConvert.DeserializeObject<dynamic>(source.Content),
                 Queue = context.Mapper.Map<GetEventBusQueueResponse>(source.Queue)
             };
     }

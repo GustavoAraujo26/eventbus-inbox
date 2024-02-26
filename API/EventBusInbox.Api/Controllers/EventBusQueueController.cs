@@ -67,7 +67,7 @@ namespace EventBusInbox.Api.Controllers
         /// <param name="command">Comando para execução do método</param>
         /// <returns></returns>
         [HttpGet]
-        [Route("status")]
+        [Route("update/status")]
         public async Task<ActionResult<AppResponse<AppTaskResponse>>> UpdateSatus([FromServices] IMediator mediator,
             [FromQuery] UpdateEventBusQueueStatusRequest command) => 
             BuildResponse(await mediator.Send(command));

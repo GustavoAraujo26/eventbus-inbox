@@ -12,7 +12,7 @@ namespace EventBusInbox.TypeConverters.Models
                 RequestId = source.RequestId,
                 CreatedAt = source.CreatedAt,
                 Type = source.Type,
-                Data = source.Data,
+                Content = System.Convert.ToString(source.Content),
                 Queue = context.Mapper.Map<EventBusQueueModel>(source.Queue),
                 Status = source.Status,
                 ProcessingAttempts = source.ProcessingAttempts,

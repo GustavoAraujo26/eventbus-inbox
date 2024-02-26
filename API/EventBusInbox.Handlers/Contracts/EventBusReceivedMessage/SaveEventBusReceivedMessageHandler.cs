@@ -43,7 +43,7 @@ namespace EventBusInbox.Handlers.Contracts.EventBusReceivedMessage
 
                 var currentMessage = await messageRepository.GetById(request.RequestId);
                 if (currentMessage is not null)
-                    currentMessage.UpdateBasicData(request.CreatedAt, request.Type, request.Data);
+                    currentMessage.UpdateBasicData(request.CreatedAt, request.Type, Convert.ToString(request.Content));
                 else
                     currentMessage = mapper.Map<Domain.Entities.EventBusReceivedMessage>(request);
 

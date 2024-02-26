@@ -21,19 +21,19 @@ namespace EventBusInbox.Domain.Entities
         /// <param name="requestId">Id da requisição</param>
         /// <param name="createdAt">Data de criação</param>
         /// <param name="type">Tipo da mensagem</param>
-        /// <param name="data">Conteudo da mensagem</param>
+        /// <param name="content">Conteudo da mensagem (JSON)</param>
         /// <param name="queue">Fila na qual a mensagem foi recebida</param>
         /// <param name="status">Status da mensagem</param>
         /// <param name="processingAttempts">Quantidade de processamentos</param>
         /// <param name="processingHistory">Histórico de processamento da mensagem</param>
         public EventBusReceivedMessage(Guid requestId, DateTime createdAt, string type, 
-            dynamic data, EventBusQueue queue, EventBusMessageStatus status, int processingAttempts, 
+            string content, EventBusQueue queue, EventBusMessageStatus status, int processingAttempts, 
             IList<ProcessingHistoryLine> processingHistory)
         {
             RequestId = requestId;
             CreatedAt = createdAt;
             Type = type;
-            Data = data;
+            Content = content;
             Queue = queue;
             Status = status;
             ProcessingAttempts = processingAttempts;
@@ -56,9 +56,9 @@ namespace EventBusInbox.Domain.Entities
         public string Type { get; private set; }
 
         /// <summary>
-        /// Conteudo da mensagem
+        /// Conteudo da mensagem (JSON)
         /// </summary>
-        public dynamic Data { get; private set; }
+        public string Content { get; private set; }
 
         /// <summary>
         /// Fila na qual a mensagem foi recebida
@@ -114,15 +114,15 @@ namespace EventBusInbox.Domain.Entities
         /// <param name="requestId">Identificador da requisição</param>
         /// <param name="createdAt">Data de criação</param>
         /// <param name="type">Tipo da mensagem</param>
-        /// <param name="data">Conteudo da mensagem</param>
+        /// <param name="content">Conteudo da mensagem (JSON)</param>
         /// <returns></returns>
-        public static EventBusReceivedMessage Create(Guid requestId, DateTime createdAt, string type, dynamic data) =>
+        public static EventBusReceivedMessage Create(Guid requestId, DateTime createdAt, string type, string content) =>
             new EventBusReceivedMessage
             {
                 RequestId = requestId,
                 CreatedAt = createdAt,
                 Type = type,
-                Data = data,
+                Content = content,
                 ProcessingHistory = new List<ProcessingHistoryLine>
                 {
                     ProcessingHistoryLine.Create(createdAt, HttpStatusCode.Accepted, "Message received successfully!")
@@ -182,7 +182,7 @@ namespace EventBusInbox.Domain.Entities
         {
             CreatedAt = createdAt;
             Type = type;
-            Data = data;
+            Content = data;
         }
 
         /// <summary>

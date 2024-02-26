@@ -29,9 +29,9 @@ namespace EventBusInbox.Domain.Responses.EventBusReceivedMessage
         public string Type { get; set; }
 
         /// <summary>
-        /// Conteudo da mensagem
+        /// Conteudo da mensagem (JSON)
         /// </summary>
-        public dynamic Data { get; set; }
+        public dynamic Content { get; set; }
 
         /// <summary>
         /// Fila na qual a mensagem foi recebida
