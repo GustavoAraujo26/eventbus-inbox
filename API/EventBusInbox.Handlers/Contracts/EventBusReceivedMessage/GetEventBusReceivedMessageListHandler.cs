@@ -1,20 +1,47 @@
 ﻿using EventBusInbox.Domain.Handlers.EventBusReceivedMessage;
+using EventBusInbox.Domain.Notifications;
+using EventBusInbox.Domain.Repositories;
 using EventBusInbox.Domain.Requests.EventBusReceivedMessage;
 using EventBusInbox.Domain.Responses.EventBusReceivedMessage;
 using EventBusInbox.Shared.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using MediatR;
+using System.Net;
 
 namespace EventBusInbox.Handlers.Contracts.EventBusReceivedMessage
 {
     internal class GetEventBusReceivedMessageListHandler : IGetEventBusReceivedMessageListHandler
     {
-        public Task<AppResponse<GetEventBusReceivedMessageListResponse>> Handle(GetEventBusReceivedMessageListRequest request, CancellationToken cancellationToken)
+        private readonly IEventBusReceivedMessageRepository repository;
+        private readonly IMediator mediator;
+
+        public GetEventBusReceivedMessageListHandler(IEventBusReceivedMessageRepository repository, IMediator mediator)
         {
-            throw new NotImplementedException();
+            this.repository = repository;
+            this.mediator = mediator;
+        }
+
+        public async Task<AppResponse<GetEventBusReceivedMessageListResponse>> Handle(GetEventBusReceivedMessageListRequest request, 
+            CancellationToken cancellationToken)
+        {
+            try
+            {
+                if (request is null)
+                    return AppResponse<GetEventBusReceivedMessageListResponse>.Custom(HttpStatusCode.BadRequest, "Invalid request!");
+
+                var validationResponse = request.Validate();
+                if (!validationResponse.IsSuccess)
+                    return AppResponse<GetEventBusReceivedMessageListResponse>.Copy(validationResponse);
+
+                var queue = await repository.List(request);
+
+                return AppResponse<GetEventBusReceivedMessageListResponse>.Success(queue);
+            }
+            catch (Exception ex)
+            {
+                await mediator.Publish(EventLogNotification.Create(this, ex,
+                    $"An error occurred when retrieving event bus message list!"));
+                return AppResponse<GetEventBusReceivedMessageListResponse>.Error(ex);
+            }
         }
     }
 }

@@ -1,20 +1,56 @@
 ﻿using EventBusInbox.Domain.Handlers.EventBusReceivedMessage;
+using EventBusInbox.Domain.Notifications;
+using EventBusInbox.Domain.Repositories;
 using EventBusInbox.Domain.Requests.EventBusReceivedMessage;
 using EventBusInbox.Domain.Responses;
 using EventBusInbox.Shared.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using MediatR;
+using System.Net;
 
 namespace EventBusInbox.Handlers.Contracts.EventBusReceivedMessage
 {
     internal class DeleteEventBusReceivedMessageHandler : IDeleteEventBusReceivedMessageHandler
     {
-        public Task<AppResponse<AppTaskResponse>> Handle(DeleteEventBusReceivedMessageRequest request, CancellationToken cancellationToken)
+        private readonly IEventBusReceivedMessageRepository repository;
+        private readonly IMediator mediator;
+
+        public DeleteEventBusReceivedMessageHandler(IEventBusReceivedMessageRepository repository, IMediator mediator)
         {
-            throw new NotImplementedException();
+            this.repository = repository;
+            this.mediator = mediator;
+        }
+
+        public async Task<AppResponse<AppTaskResponse>> Handle(DeleteEventBusReceivedMessageRequest request, 
+            CancellationToken cancellationToken)
+        {
+            try
+            {
+                if (request is null)
+                    return AppResponse<AppTaskResponse>.Custom(HttpStatusCode.BadRequest, "Invalid request!");
+
+                var validationResponse = request.Validate();
+                if (!validationResponse.IsSuccess)
+                    return AppResponse<AppTaskResponse>.Copy(validationResponse);
+
+                var currentQueue = await repository.GetById(request.RequestId);
+                if (currentQueue is null)
+                    return AppResponse<AppTaskResponse>.Custom(HttpStatusCode.NotFound, "Message not found!");
+
+                var repositoryResponse = await repository.Delete(request.RequestId);
+                if (!repositoryResponse.IsSuccess)
+                    return AppResponse<AppTaskResponse>.Copy(repositoryResponse);
+
+                await mediator.Publish(EventLogNotification.Create(this, $"Event bus message {request.RequestId} deleted!"));
+
+                var responseContent = new List<AppTaskResponse> { new AppTaskResponse(request.RequestId) };
+                return AppResponse<AppTaskResponse>.Success(responseContent);
+            }
+            catch(Exception ex)
+            {
+                await mediator.Publish(EventLogNotification.Create(this, ex,
+                    $"An error occurred when deleting event bus received message {request.RequestId}!"));
+                return AppResponse<AppTaskResponse>.Error(ex);
+            }
         }
     }
 }
