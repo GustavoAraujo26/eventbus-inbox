@@ -184,5 +184,12 @@ namespace EventBusInbox.Domain.Entities
             Type = type;
             Data = data;
         }
+
+        /// <summary>
+        /// Adiciona vínculo com uma fila
+        /// </summary>
+        /// <param name="queue"></param>
+        public void AddQueue(EventBusQueue queue) =>
+            Queue = queue;
     }
 }

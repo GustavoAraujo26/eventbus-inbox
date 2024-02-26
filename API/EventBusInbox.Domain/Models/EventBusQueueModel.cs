@@ -20,7 +20,6 @@ namespace EventBusInbox.Domain.Models
         /// Identificador
         /// </summary>
         [BsonId]
-        //[BsonRepresentation(BsonType.ObjectId)]
         public Guid Id { get; set; }
 
         /// <summary>

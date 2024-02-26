@@ -20,7 +20,6 @@ namespace EventBusInbox.Domain.Models
         /// Identificador da requisição
         /// </summary>
         [BsonId]
-        [BsonRepresentation(BsonType.ObjectId)]
         public Guid RequestId { get; set; }
 
         /// <summary>
