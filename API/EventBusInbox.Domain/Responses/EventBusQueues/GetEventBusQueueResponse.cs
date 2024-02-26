@@ -1,6 +1,4 @@
-﻿using EventBusInbox.Domain.Enums;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
+﻿using EventBusInbox.Shared.Models;
 
 namespace EventBusInbox.Domain.Responses.EventBusQueues
 {
@@ -27,7 +25,7 @@ namespace EventBusInbox.Domain.Responses.EventBusQueues
         /// <summary>
         /// Status
         /// </summary>
-        public QueueStatus Status { get; set; }
+        public EnumData Status { get; set; }
 
         /// <summary>
         /// Quantidade de tentativas de processamento

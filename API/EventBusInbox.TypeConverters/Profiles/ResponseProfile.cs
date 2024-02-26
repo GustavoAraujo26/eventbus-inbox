@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using EventBusInbox.Domain.Entities;
+using EventBusInbox.Domain.Models;
 using EventBusInbox.Domain.Responses.EventBusQueues;
 using EventBusInbox.TypeConverters.Responses;
 
@@ -9,8 +9,11 @@ namespace EventBusInbox.TypeConverters.Profiles
     {
         public ResponseProfile()
         {
-            CreateMap<EventBusQueue, GetEventBusQueueResponse>()
+            CreateMap<EventBusQueueModel, GetEventBusQueueResponse>()
                 .ConvertUsing<GetEventBusQueueResponseTypeConverter>();
+
+            CreateMap<List<EventBusQueueModel>, List<GetEventBusQueueResponse>>()
+                .ConvertUsing<GetEventBusQueueResponseListTypeConverter>();
         }
     }
 }

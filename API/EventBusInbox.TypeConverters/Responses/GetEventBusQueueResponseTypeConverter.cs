@@ -1,18 +1,19 @@
 ﻿using AutoMapper;
-using EventBusInbox.Domain.Entities;
+using EventBusInbox.Domain.Models;
 using EventBusInbox.Domain.Responses.EventBusQueues;
+using EventBusInbox.TypeConverters.Extensions;
 
 namespace EventBusInbox.TypeConverters.Responses
 {
-    internal class GetEventBusQueueResponseTypeConverter : ITypeConverter<EventBusQueue, GetEventBusQueueResponse>
+    internal class GetEventBusQueueResponseTypeConverter : ITypeConverter<EventBusQueueModel, GetEventBusQueueResponse>
     {
-        public GetEventBusQueueResponse Convert(EventBusQueue source, GetEventBusQueueResponse destination, ResolutionContext context) =>
+        public GetEventBusQueueResponse Convert(EventBusQueueModel source, GetEventBusQueueResponse destination, ResolutionContext context) =>
             new GetEventBusQueueResponse
             {
                 Id = source.Id,
                 Name = source.Name,
                 Description = source.Description,
-                Status = source.Status,
+                Status = source.Status.GetData(),
                 ProcessingAttempts = source.ProcessingAttempts
             };
     }

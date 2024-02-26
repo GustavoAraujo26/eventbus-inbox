@@ -22,6 +22,7 @@ namespace EventBusInbox.Handlers.Extensions
             
             services.AddTransient<IDeleteEventBusQueueHandler, DeleteEventBusQueueHandler>();
             services.AddTransient<IGetEventBusQueueHandler, GetEventBusQueueHandler>();
+            services.AddTransient<IGetEventBusQueueListHandler, GetEventBusQueueListHandler>();
             services.AddTransient<ISaveEventBusQueueHandler, SaveEventBusQueueHandler>();
             services.AddTransient<IUpdateEventBusQueueStatusHandler, UpdateEventBusQueueStatusHandler>();
 

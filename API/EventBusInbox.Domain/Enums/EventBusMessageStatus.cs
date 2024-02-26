@@ -1,4 +1,5 @@
 ﻿using EventBusInbox.Shared.Extensions;
+using System.ComponentModel;
 using System.Net;
 
 namespace EventBusInbox.Domain.Enums
@@ -11,18 +12,22 @@ namespace EventBusInbox.Domain.Enums
         /// <summary>
         /// Pendente
         /// </summary>
+        [Description("Pending")]
         Pending = 1,
         /// <summary>
         /// Completada
         /// </summary>
+        [Description("Completed")]
         Completed = 2,
         /// <summary>
         /// Falha temporária
         /// </summary>
+        [Description("Temporary Failure")]
         TemporaryFailure = 3,
         /// <summary>
         /// Falha permanente
         /// </summary>
+        [Description("Permanent Failure")]
         PermanentFailure = 4
     }
 

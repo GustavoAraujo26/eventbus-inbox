@@ -26,6 +26,18 @@ namespace EventBusInbox.Api.Controllers
             BuildResponse(await mediator.Send(command));
 
         /// <summary>
+        /// Endpoint para retorno de uma lista de filas
+        /// </summary>
+        /// <param name="mediator">Interface do mediator</param>
+        /// <param name="command">Comando para execução do método</param>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("list")]
+        public async Task<ActionResult<AppResponse<GetEventBusQueueResponse>>> List([FromServices] IMediator mediator,
+            [FromBody] GetEventBusQueueListRequest command) =>
+            BuildResponse(await mediator.Send(command));
+
+        /// <summary>
         /// Endpoint para apagar uma fila específica
         /// </summary>
         /// <param name="mediator">Interface do mediator</param>

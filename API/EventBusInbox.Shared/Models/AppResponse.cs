@@ -74,7 +74,10 @@ namespace EventBusInbox.Shared.Models
                 if (Data is null || !Data.Any())
                     return null;
 
-                return Data.FirstOrDefault();
+                if (Data.Count > 1)
+                    return null;
+                else
+                    return Data.FirstOrDefault();
             }
         }
 
@@ -156,8 +159,13 @@ namespace EventBusInbox.Shared.Models
             List<string> validationErrors = new List<string>();
 
             foreach(var error in validation.Errors)
-                validationErrors.Add($"[{error.PropertyName}: {error.ErrorMessage}]");
-
+            {
+                if (string.IsNullOrEmpty(error.PropertyName))
+                    validationErrors.Add($"[{error.ErrorMessage}]");
+                else
+                    validationErrors.Add($"[{error.PropertyName}: {error.ErrorMessage}]");
+            }
+            
             var errorJoin =  string.Join(", ", validationErrors);
             var errorMessage = $"Invalid data! {errorJoin}";
 

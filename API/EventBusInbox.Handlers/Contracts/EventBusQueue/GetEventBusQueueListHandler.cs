@@ -9,18 +9,19 @@ using System.Net;
 
 namespace EventBusInbox.Handlers.Contracts.EventBusQueue
 {
-    public class GetEventBusQueueHandler : IGetEventBusQueueHandler
+    internal class GetEventBusQueueListHandler : IGetEventBusQueueListHandler
     {
         private readonly IEventBusQueueRepository repository;
         private readonly IMediator mediator;
 
-        public GetEventBusQueueHandler(IEventBusQueueRepository repository, IMediator mediator)
+        public GetEventBusQueueListHandler(IEventBusQueueRepository repository, IMediator mediator)
         {
             this.repository = repository;
             this.mediator = mediator;
         }
 
-        public async Task<AppResponse<GetEventBusQueueResponse>> Handle(GetEventBusQueueRequest request, CancellationToken cancellationToken)
+        public async Task<AppResponse<GetEventBusQueueResponse>> Handle(GetEventBusQueueListRequest request, 
+            CancellationToken cancellationToken)
         {
             try
             {
@@ -31,14 +32,14 @@ namespace EventBusInbox.Handlers.Contracts.EventBusQueue
                 if (!validationResponse.IsSuccess)
                     return AppResponse<GetEventBusQueueResponse>.Copy(validationResponse);
 
-                var queue = await repository.Get(request);
+                var list = await repository.List(request);
 
-                return AppResponse<GetEventBusQueueResponse>.Success(queue);
+                return AppResponse<GetEventBusQueueResponse>.Success(list);
             }
             catch(Exception ex)
             {
                 await mediator.Publish(EventLogNotification.Create(this, ex,
-                    $"An error occurred when retrieving event bus queue {request.Id}!"));
+                    $"An error occurred when retrieving event bus queue list!"));
                 return AppResponse<GetEventBusQueueResponse>.Error(ex);
             }
         }
