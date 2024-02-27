@@ -1,4 +1,5 @@
 ﻿using EventBusInbox.Domain.Entities;
+using EventBusInbox.Domain.Enums;
 using EventBusInbox.Domain.Repositories;
 using EventBusInbox.Domain.Requests.EventBusReceivedMessage;
 using EventBusInbox.Domain.Responses.EventBusReceivedMessage;
@@ -133,6 +134,58 @@ namespace EventBusInbox.Tests.Mocks
 
             mock.Setup(x => x.List(It.IsAny<GetEventBusReceivedMessageToProcessRequest>()))
                 .ThrowsAsync(new Exception("test"));
+
+            return mock;
+        }
+
+        public static Mock<IEventBusReceivedMessageRepository> ReactivateEventBusReceivedMessageHandler_Success(EventBusMessageStatus? status = null)
+        {
+            var mock = new Mock<IEventBusReceivedMessageRepository>();
+
+            mock.Setup(x => x.GetById(It.IsAny<Guid>()))
+                .ReturnsAsync(EventBusReceivedMessageFakeData.Build(status));
+
+            mock.Setup(x => x.Save(It.IsAny<EventBusReceivedMessage>()))
+                .ReturnsAsync(AppResponse<object>.Success("test"));
+
+            return mock;
+        }
+
+        public static Mock<IEventBusReceivedMessageRepository> ReactivateEventBusReceivedMessageHandler_GetById_NotFound()
+        {
+            var mock = new Mock<IEventBusReceivedMessageRepository>();
+
+            mock.Setup(x => x.GetById(It.IsAny<Guid>()))
+                .ReturnsAsync(EventBusReceivedMessageFakeData.Build());
+
+            mock.Setup(x => x.Save(It.IsAny<EventBusReceivedMessage>()))
+                .ReturnsAsync(AppResponse<object>.Success("test"));
+
+            return mock;
+        }
+
+        public static Mock<IEventBusReceivedMessageRepository> ReactivateEventBusReceivedMessageHandler_SavingError(EventBusMessageStatus? status = null)
+        {
+            var mock = new Mock<IEventBusReceivedMessageRepository>();
+
+            mock.Setup(x => x.GetById(It.IsAny<Guid>()))
+                .ReturnsAsync(EventBusReceivedMessageFakeData.Build(status));
+
+            mock.Setup(x => x.Save(It.IsAny<EventBusReceivedMessage>()))
+                .ReturnsAsync(AppResponse<object>.Error(new Exception("test")));
+
+            return mock;
+        }
+
+        public static Mock<IEventBusReceivedMessageRepository> ReactivateEventBusReceivedMessageHandler_Exception()
+        {
+            var mock = new Mock<IEventBusReceivedMessageRepository>();
+
+            mock.Setup(x => x.GetById(It.IsAny<Guid>()))
+                .ThrowsAsync(new Exception("test"));
+
+            mock.Setup(x => x.Save(It.IsAny<EventBusReceivedMessage>()))
+                .ReturnsAsync(AppResponse<object>.Success("test"));
 
             return mock;
         }

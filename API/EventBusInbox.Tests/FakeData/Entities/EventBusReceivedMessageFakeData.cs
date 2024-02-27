@@ -1,11 +1,13 @@
 ﻿using EventBusInbox.Domain.Entities;
+using EventBusInbox.Domain.Enums;
 using Newtonsoft.Json;
+using System.Net;
 
 namespace EventBusInbox.Tests.FakeData.Entities
 {
     internal static class EventBusReceivedMessageFakeData
     {
-        public static EventBusReceivedMessage Build()
+        public static EventBusReceivedMessage Build(EventBusMessageStatus? status = null)
         {
             var messageContent = new
             {
@@ -22,7 +24,26 @@ namespace EventBusInbox.Tests.FakeData.Entities
 
             var jsonContent = JsonConvert.SerializeObject(messageContent);
 
-            return EventBusReceivedMessage.Create(Guid.NewGuid(), DateTime.Now, "test", jsonContent);
+            var message = EventBusReceivedMessage.Create(Guid.NewGuid(), DateTime.Now, "test", jsonContent);
+            if (status is null)
+                return message;
+
+            switch (status)
+            {
+                case EventBusMessageStatus.Pending:
+                    return message;
+                case EventBusMessageStatus.Completed:
+                    message.SetResult(HttpStatusCode.OK, "test");
+                    return message;
+                case EventBusMessageStatus.TemporaryFailure:
+                    message.SetResult(HttpStatusCode.BadRequest, "test");
+                    return message;
+                case EventBusMessageStatus.PermanentFailure:
+                    message.SetResult(HttpStatusCode.InternalServerError, "test");
+                    return message;
+                default:
+                    return message;
+            }
         }
     }
 }
