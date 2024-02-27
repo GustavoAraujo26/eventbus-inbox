@@ -28,6 +28,8 @@ namespace EventBusInbox.Tests.FakeData.Entities
             if (status is null)
                 return message;
 
+            message.AddQueue(EventBusQueueFakeData.Build());
+
             switch (status)
             {
                 case EventBusMessageStatus.Pending:
@@ -36,10 +38,10 @@ namespace EventBusInbox.Tests.FakeData.Entities
                     message.SetResult(HttpStatusCode.OK, "test");
                     return message;
                 case EventBusMessageStatus.TemporaryFailure:
-                    message.SetResult(HttpStatusCode.BadRequest, "test");
+                    message.SetResult(HttpStatusCode.InternalServerError, "test");
                     return message;
                 case EventBusMessageStatus.PermanentFailure:
-                    message.SetResult(HttpStatusCode.InternalServerError, "test");
+                    message.SetResult(HttpStatusCode.BadRequest, "test");
                     return message;
                 default:
                     return message;

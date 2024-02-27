@@ -241,5 +241,57 @@ namespace EventBusInbox.Tests.Mocks
 
             return mock;
         }
+
+        public static Mock<IEventBusReceivedMessageRepository> UpdateEventBusReceivedMessageStatusHandler_Success(EventBusMessageStatus? status = null)
+        {
+            var mock = new Mock<IEventBusReceivedMessageRepository>();
+
+            mock.Setup(x => x.GetById(It.IsAny<Guid>()))
+                .ReturnsAsync(EventBusReceivedMessageFakeData.Build(status));
+
+            mock.Setup(x => x.Save(It.IsAny<EventBusReceivedMessage>()))
+                .ReturnsAsync(AppResponse<object>.Success("test"));
+
+            return mock;
+        }
+
+        public static Mock<IEventBusReceivedMessageRepository> UpdateEventBusReceivedMessageStatusHandler_GetById_NotFound()
+        {
+            var mock = new Mock<IEventBusReceivedMessageRepository>();
+
+            mock.Setup(x => x.GetById(It.IsAny<Guid>()))
+                .ReturnsAsync((EventBusReceivedMessage)null);
+
+            mock.Setup(x => x.Save(It.IsAny<EventBusReceivedMessage>()))
+                .ReturnsAsync(AppResponse<object>.Success("test"));
+
+            return mock;
+        }
+
+        public static Mock<IEventBusReceivedMessageRepository> UpdateEventBusReceivedMessageStatusHandler_SavingError(EventBusMessageStatus? status = null)
+        {
+            var mock = new Mock<IEventBusReceivedMessageRepository>();
+
+            mock.Setup(x => x.GetById(It.IsAny<Guid>()))
+                .ReturnsAsync(EventBusReceivedMessageFakeData.Build(status));
+
+            mock.Setup(x => x.Save(It.IsAny<EventBusReceivedMessage>()))
+                .ReturnsAsync(AppResponse<object>.Error(new Exception("test")));
+
+            return mock;
+        }
+
+        public static Mock<IEventBusReceivedMessageRepository> UpdateEventBusReceivedMessageStatusHandler_Exception()
+        {
+            var mock = new Mock<IEventBusReceivedMessageRepository>();
+
+            mock.Setup(x => x.GetById(It.IsAny<Guid>()))
+                .ThrowsAsync(new Exception("test"));
+
+            mock.Setup(x => x.Save(It.IsAny<EventBusReceivedMessage>()))
+                .ReturnsAsync(AppResponse<object>.Success("test"));
+
+            return mock;
+        }
     }
 }
