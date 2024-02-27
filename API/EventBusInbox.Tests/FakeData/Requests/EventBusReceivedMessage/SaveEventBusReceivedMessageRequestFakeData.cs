@@ -4,7 +4,7 @@ namespace EventBusInbox.Tests.FakeData.Requests.EventBusReceivedMessage
 {
     internal static class SaveEventBusReceivedMessageRequestFakeData
     {
-        public static SaveEventBusReceivedMessageRequest Build()
+        public static SaveEventBusReceivedMessageRequest BuildSuccess()
         {
             var messageContent = new
             {
@@ -22,5 +22,8 @@ namespace EventBusInbox.Tests.FakeData.Requests.EventBusReceivedMessage
             return new SaveEventBusReceivedMessageRequest(Guid.NewGuid(), DateTime.Now, "test", 
                 messageContent, Guid.NewGuid());
         }
+
+        public static SaveEventBusReceivedMessageRequest BuildFailure() =>
+            new SaveEventBusReceivedMessageRequest(Guid.Empty, DateTime.MinValue, null, null, Guid.Empty);
     }
 }
