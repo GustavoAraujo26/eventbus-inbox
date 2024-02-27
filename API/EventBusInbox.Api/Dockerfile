@@ -5,6 +5,9 @@ WORKDIR /app
 EXPOSE 80
 EXPOSE 443
 
+ENV MONGODB_CONNECTION_STRING "mongodb://localhost:27017"
+ENV MONGODB_DATABASE_NAME EventBusInbox
+
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
