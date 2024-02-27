@@ -25,9 +25,7 @@
 
   <ItemGroup>
     <Folder Include="FakeData\Models\" />
-    <Folder Include="HandlerTests\EventBusQueue\" />
     <Folder Include="HandlerTests\EventBusReceivedMessage\" />
-    <Folder Include="Mocks\" />
   </ItemGroup>
 
   <ItemGroup>
