@@ -10,14 +10,31 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Bogus" Version="35.4.0" />
     <PackageReference Include="coverlet.collector" Version="3.2.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.5.0" />
+    <PackageReference Include="Moq" Version="4.20.70" />
     <PackageReference Include="xunit" Version="2.4.2" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.5" />
   </ItemGroup>
 
   <ItemGroup>
     <Using Include="Xunit" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="FakeData\Models\" />
+    <Folder Include="HandlerTests\EventBusQueue\" />
+    <Folder Include="HandlerTests\EventBusReceivedMessage\" />
+    <Folder Include="Mocks\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\EventBusInbox.Domain\EventBusInbox.Domain.csproj" />
+    <ProjectReference Include="..\EventBusInbox.Handlers\EventBusInbox.Handlers.csproj" />
+    <ProjectReference Include="..\EventBusInbox.Shared\EventBusInbox.Shared.csproj" />
+    <ProjectReference Include="..\EventBusInbox.TypeConverters\EventBusInbox.TypeConverters.csproj" />
   </ItemGroup>
 
 </Project>
