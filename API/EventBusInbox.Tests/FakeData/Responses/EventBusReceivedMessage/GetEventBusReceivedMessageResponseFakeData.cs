@@ -12,7 +12,7 @@ namespace EventBusInbox.Tests.FakeData.Responses.EventBusReceivedMessage
         {
             var faker = new Faker();
 
-            var queue = GetEventBusQueueResponseFakeData.Build(faker.Random.Enum<QueueStatus>());
+            var queue = GetEventBusQueueResponseFakeData.BuildLine(faker.Random.Enum<QueueStatus>());
 
             var messageContent = new
             {

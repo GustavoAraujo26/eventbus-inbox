@@ -71,7 +71,7 @@ namespace EventBusInbox.Tests.Mocks
             var mock = new Mock<IEventBusQueueRepository>();
 
             mock.Setup(x => x.Get(It.IsAny<GetEventBusQueueRequest>()))
-                .ReturnsAsync(GetEventBusQueueResponseFakeData.Build(It.IsAny<QueueStatus>()));
+                .ReturnsAsync(GetEventBusQueueResponseFakeData.BuildLine(It.IsAny<QueueStatus>()));
 
             return mock;
         }
@@ -91,6 +91,26 @@ namespace EventBusInbox.Tests.Mocks
             var mock = new Mock<IEventBusQueueRepository>();
 
             mock.Setup(x => x.Get(It.IsAny<GetEventBusQueueRequest>()))
+                .ThrowsAsync(new Exception("test"));
+
+            return mock;
+        }
+
+        public static Mock<IEventBusQueueRepository> GetEventBusQueueListHandler_Success()
+        {
+            var mock = new Mock<IEventBusQueueRepository>();
+
+            mock.Setup(x => x.List(It.IsAny<GetEventBusQueueListRequest>()))
+                .ReturnsAsync(GetEventBusQueueResponseFakeData.BuildList());
+
+            return mock;
+        }
+
+        public static Mock<IEventBusQueueRepository> GetEventBusQueueListHandler_Exception()
+        {
+            var mock = new Mock<IEventBusQueueRepository>();
+
+            mock.Setup(x => x.List(It.IsAny<GetEventBusQueueListRequest>()))
                 .ThrowsAsync(new Exception("test"));
 
             return mock;

@@ -8,7 +8,7 @@ namespace EventBusInbox.Tests.FakeData.Responses.EventBusQueue
 {
     internal static class GetEventBusQueueResponseFakeData
     {
-        public static GetEventBusQueueResponse Build(QueueStatus status)
+        public static GetEventBusQueueResponse BuildLine(QueueStatus status)
         {
             var faker = new Faker();
 
@@ -21,6 +21,22 @@ namespace EventBusInbox.Tests.FakeData.Responses.EventBusQueue
                 ProcessingAttempts = 3,
                 MessagesSummarization = SummarizeEventBusReceivedMessagesResponseFakeData.Build()
             };
+        }
+
+        public static List<GetEventBusQueueResponse> BuildList()
+        {
+            var faker = new Faker();
+
+            var result = new List<GetEventBusQueueResponse>();
+
+            var count = 1;
+            while(count < 5)
+            {
+                result.Add(BuildLine(faker.Random.Enum<QueueStatus>()));
+                count++;
+            }
+
+            return result;
         }
     }
 }
