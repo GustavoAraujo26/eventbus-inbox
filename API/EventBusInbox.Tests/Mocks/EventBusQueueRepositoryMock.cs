@@ -206,5 +206,25 @@ namespace EventBusInbox.Tests.Mocks
 
             return mock;
         }
+
+        public static Mock<IEventBusQueueRepository> EventBusReceivedMessageHandler_Success()
+        {
+            var mock = new Mock<IEventBusQueueRepository>();
+
+            mock.Setup(x => x.GetById(It.IsAny<Guid>()))
+                .ReturnsAsync(EventBusQueueFakeData.Build());
+
+            return mock;
+        }
+
+        public static Mock<IEventBusQueueRepository> EventBusReceivedMessageHandler_GetById_NotFound()
+        {
+            var mock = new Mock<IEventBusQueueRepository>();
+
+            mock.Setup(x => x.GetById(It.IsAny<Guid>()))
+                .ReturnsAsync((EventBusQueue)default);
+
+            return mock;
+        }
     }
 }

@@ -32,8 +32,8 @@ namespace EventBusInbox.Handlers.Contracts.EventBusReceivedMessage
                 if (!validationResponse.IsSuccess)
                     return AppResponse<AppTaskResponse>.Copy(validationResponse);
 
-                var currentQueue = await repository.GetById(request.RequestId);
-                if (currentQueue is null)
+                var currentMessage = await repository.GetById(request.RequestId);
+                if (currentMessage is null)
                     return AppResponse<AppTaskResponse>.Custom(HttpStatusCode.NotFound, "Message not found!");
 
                 var repositoryResponse = await repository.Delete(request.RequestId);

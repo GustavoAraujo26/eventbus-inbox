@@ -4,7 +4,10 @@ namespace EventBusInbox.Tests.FakeData.Requests.EventBusReceivedMessage
 {
     internal static class DeleteEventBusReceivedMessageRequestFakeData
     {
-        public static DeleteEventBusReceivedMessageRequest Build() =>
+        public static DeleteEventBusReceivedMessageRequest BuildSuccess() =>
             new DeleteEventBusReceivedMessageRequest(Guid.NewGuid());
+
+        public static DeleteEventBusReceivedMessageRequest BuildFailure() =>
+            new DeleteEventBusReceivedMessageRequest(Guid.Empty);
     }
 }
