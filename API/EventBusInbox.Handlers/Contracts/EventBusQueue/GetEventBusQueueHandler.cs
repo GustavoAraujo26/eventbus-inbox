@@ -36,8 +36,10 @@ namespace EventBusInbox.Handlers.Contracts.EventBusQueue
                     return AppResponse<GetEventBusQueueResponse>.Copy(validationResponse);
 
                 var queue = await queueRepository.Get(request);
+                if (queue is null)
+                    return AppResponse<GetEventBusQueueResponse>.Custom(HttpStatusCode.NotFound, "Queue not found!");
 
-                if (request.SummarizeMessages && queue is not null)
+                if (request.SummarizeMessages)
                 {
                     var summarizationList = await messageRepository.Summarize(new List<Guid>{ queue.Id });
                     EventBusQueueFactory.LinkMessageSummarization(queue, summarizationList);

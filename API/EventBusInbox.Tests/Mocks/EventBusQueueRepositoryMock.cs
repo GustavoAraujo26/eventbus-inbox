@@ -1,7 +1,11 @@
 ﻿using EventBusInbox.Domain.Entities;
+using EventBusInbox.Domain.Enums;
 using EventBusInbox.Domain.Repositories;
+using EventBusInbox.Domain.Requests.EventBusQueues;
+using EventBusInbox.Domain.Responses.EventBusQueues;
 using EventBusInbox.Shared.Models;
 using EventBusInbox.Tests.FakeData.Entities;
+using EventBusInbox.Tests.FakeData.Responses.EventBusQueue;
 using Moq;
 
 namespace EventBusInbox.Tests.Mocks
@@ -58,6 +62,36 @@ namespace EventBusInbox.Tests.Mocks
 
             mock.Setup(x => x.Delete(It.IsAny<Guid>()))
                 .ReturnsAsync(AppResponse<object>.Error(new Exception("test")));
+
+            return mock;
+        }
+
+        public static Mock<IEventBusQueueRepository> GetEventBusQueueHandler_Success()
+        {
+            var mock = new Mock<IEventBusQueueRepository>();
+
+            mock.Setup(x => x.Get(It.IsAny<GetEventBusQueueRequest>()))
+                .ReturnsAsync(GetEventBusQueueResponseFakeData.Build(It.IsAny<QueueStatus>()));
+
+            return mock;
+        }
+
+        public static Mock<IEventBusQueueRepository> GetEventBusQueueHandler_Get_NotFound()
+        {
+            var mock = new Mock<IEventBusQueueRepository>();
+
+            mock.Setup(x => x.Get(It.IsAny<GetEventBusQueueRequest>()))
+                .ReturnsAsync((GetEventBusQueueResponse)null);
+
+            return mock;
+        }
+
+        public static Mock<IEventBusQueueRepository> GetEventBusQueueHandler_Exception()
+        {
+            var mock = new Mock<IEventBusQueueRepository>();
+
+            mock.Setup(x => x.Get(It.IsAny<GetEventBusQueueRequest>()))
+                .ThrowsAsync(new Exception("test"));
 
             return mock;
         }
