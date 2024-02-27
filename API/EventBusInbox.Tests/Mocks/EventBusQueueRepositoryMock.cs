@@ -115,5 +115,18 @@ namespace EventBusInbox.Tests.Mocks
 
             return mock;
         }
+
+        public static Mock<IEventBusQueueRepository> SaveEventBusQueueHandler_Success(Guid? id = null)
+        {
+            var mock = new Mock<IEventBusQueueRepository>();
+
+            mock.Setup(x => x.GetByName(It.IsAny<string>()))
+                .ReturnsAsync(EventBusQueueFakeData.Build(id));
+
+            mock.Setup(x => x.Save(It.IsAny<EventBusQueue>()))
+                .ReturnsAsync(AppResponse<object>.Success("test"));
+
+            return mock;
+        }
     }
 }

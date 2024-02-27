@@ -6,11 +6,12 @@ namespace EventBusInbox.Tests.FakeData.Entities
 {
     internal static class EventBusQueueFakeData
     {
-        public static EventBusQueue Build()
+        public static EventBusQueue Build(Guid? id = null)
         {
             var faker = new Faker();
 
-            return EventBusQueue.Create(Guid.NewGuid(), faker.Commerce.ProductName().ToLowerInvariant(), 
+            return EventBusQueue.Create(id ?? Guid.NewGuid(), 
+                faker.Commerce.ProductName().ToLowerInvariant(), 
                 faker.Commerce.ProductDescription(), faker.Random.Enum<QueueStatus>(), 3);
         }
     }

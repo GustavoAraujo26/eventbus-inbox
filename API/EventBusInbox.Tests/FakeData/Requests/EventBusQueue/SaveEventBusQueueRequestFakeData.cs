@@ -6,12 +6,22 @@ namespace EventBusInbox.Tests.FakeData.Requests.EventBusQueue
 {
     internal static class SaveEventBusQueueRequestFakeData
     {
-        public static SaveEventBusQueueRequest Build(QueueStatus status)
+        public static SaveEventBusQueueRequest BuildSuccess(Guid? id = null)
         {
             var faker = new Faker();
 
-            return new SaveEventBusQueueRequest(Guid.NewGuid(), 
-                faker.Commerce.ProductName().ToLowerInvariant(), faker.Commerce.ProductDescription(), status, 3);
+            return new SaveEventBusQueueRequest(id ?? Guid.NewGuid(), 
+                faker.Commerce.ProductName().ToLowerInvariant(), 
+                faker.Commerce.ProductDescription().Substring(0, 100), 
+                faker.Random.Enum<QueueStatus>(), 3);
+        }
+        public static SaveEventBusQueueRequest BuildFailure()
+        {
+            var faker = new Faker();
+
+            return new SaveEventBusQueueRequest(Guid.Empty,
+                string.Empty, faker.Commerce.ProductDescription(), 
+                faker.Random.Enum<QueueStatus>(), 0);
         }
     }
 }
