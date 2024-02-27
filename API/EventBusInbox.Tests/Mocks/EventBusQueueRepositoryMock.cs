@@ -154,5 +154,57 @@ namespace EventBusInbox.Tests.Mocks
 
             return mock;
         }
+
+        public static Mock<IEventBusQueueRepository> UpdateEventBusQueueStatusHandler_Success()
+        {
+            var mock = new Mock<IEventBusQueueRepository>();
+
+            mock.Setup(x => x.GetById(It.IsAny<Guid>()))
+                .ReturnsAsync(EventBusQueueFakeData.Build());
+
+            mock.Setup(x => x.Save(It.IsAny<EventBusQueue>()))
+                .ReturnsAsync(AppResponse<object>.Success("test"));
+
+            return mock;
+        }
+
+        public static Mock<IEventBusQueueRepository> UpdateEventBusQueueStatusHandler_GetById_NotFound()
+        {
+            var mock = new Mock<IEventBusQueueRepository>();
+
+            mock.Setup(x => x.GetById(It.IsAny<Guid>()))
+                .ReturnsAsync((EventBusQueue)default);
+
+            mock.Setup(x => x.Save(It.IsAny<EventBusQueue>()))
+                .ReturnsAsync(AppResponse<object>.Success("test"));
+
+            return mock;
+        }
+
+        public static Mock<IEventBusQueueRepository> UpdateEventBusQueueStatusHandler_SavingFailure()
+        {
+            var mock = new Mock<IEventBusQueueRepository>();
+
+            mock.Setup(x => x.GetById(It.IsAny<Guid>()))
+                .ReturnsAsync(EventBusQueueFakeData.Build());
+
+            mock.Setup(x => x.Save(It.IsAny<EventBusQueue>()))
+                .ReturnsAsync(AppResponse<object>.Error(new Exception("test")));
+
+            return mock;
+        }
+
+        public static Mock<IEventBusQueueRepository> UpdateEventBusQueueStatusHandler_Exception()
+        {
+            var mock = new Mock<IEventBusQueueRepository>();
+
+            mock.Setup(x => x.GetById(It.IsAny<Guid>()))
+                .ThrowsAsync(new Exception("test"));
+
+            mock.Setup(x => x.Save(It.IsAny<EventBusQueue>()))
+                .ReturnsAsync(AppResponse<object>.Success("test"));
+
+            return mock;
+        }
     }
 }
