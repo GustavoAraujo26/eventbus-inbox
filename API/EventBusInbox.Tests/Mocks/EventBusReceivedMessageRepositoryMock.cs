@@ -1,5 +1,6 @@
 ﻿using EventBusInbox.Domain.Entities;
 using EventBusInbox.Domain.Repositories;
+using EventBusInbox.Domain.Requests.EventBusReceivedMessage;
 using EventBusInbox.Domain.Responses.EventBusReceivedMessage;
 using EventBusInbox.Shared.Models;
 using EventBusInbox.Tests.FakeData.Entities;
@@ -91,6 +92,26 @@ namespace EventBusInbox.Tests.Mocks
             var mock = new Mock<IEventBusReceivedMessageRepository>();
 
             mock.Setup(x => x.GetResponse(It.IsAny<Guid>()))
+                .ThrowsAsync(new Exception("test"));
+
+            return mock;
+        }
+
+        public static Mock<IEventBusReceivedMessageRepository> GetEventBusReceivedMessageListHandler_Success()
+        {
+            var mock = new Mock<IEventBusReceivedMessageRepository>();
+
+            mock.Setup(x => x.List(It.IsAny<GetEventBusReceivedMessageListRequest>()))
+                .ReturnsAsync(GetEventBusReceivedMessageListResponseFakeData.BuildList());
+
+            return mock;
+        }
+
+        public static Mock<IEventBusReceivedMessageRepository> GetEventBusReceivedMessageListHandler_Exception()
+        {
+            var mock = new Mock<IEventBusReceivedMessageRepository>();
+
+            mock.Setup(x => x.List(It.IsAny<GetEventBusReceivedMessageListRequest>()))
                 .ThrowsAsync(new Exception("test"));
 
             return mock;
