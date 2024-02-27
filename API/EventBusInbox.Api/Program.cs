@@ -22,6 +22,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
+    options.EnableAnnotations();
     // using System.Reflection;
     List<string> xmlFiles = Directory.GetFiles(AppContext.BaseDirectory, "*.xml", SearchOption.TopDirectoryOnly).ToList();
     xmlFiles.ForEach(xmlFile => options.IncludeXmlComments(xmlFile));

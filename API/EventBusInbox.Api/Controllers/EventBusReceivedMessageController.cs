@@ -6,6 +6,7 @@ using EventBusInbox.Domain.Responses.EventBusReceivedMessage;
 using EventBusInbox.Shared.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace EventBusInbox.Api.Controllers
 {
@@ -15,6 +16,7 @@ namespace EventBusInbox.Api.Controllers
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/event-bus/received-messages")]
     [ApiController]
+    [SwaggerTag("Controle de mensagens recebidas do barramento de eventos")]
     public class EventBusReceivedMessageController : BaseController
     {
         /// <summary>

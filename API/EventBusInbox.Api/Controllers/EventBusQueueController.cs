@@ -6,6 +6,7 @@ using EventBusInbox.Domain.Responses.EventBusQueues;
 using EventBusInbox.Shared.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace EventBusInbox.Api.Controllers
 {
@@ -15,6 +16,7 @@ namespace EventBusInbox.Api.Controllers
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/event-bus/queue")]
     [ApiController]
+    [SwaggerTag("Filas do barramento de eventos")]
     public class EventBusQueueController : BaseController
     {
         /// <summary>

@@ -4,6 +4,7 @@ using EventBusInbox.Domain.Enums;
 using EventBusInbox.Shared.Extensions;
 using EventBusInbox.Shared.Models;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace EventBusInbox.Api.Controllers
 {
@@ -13,6 +14,7 @@ namespace EventBusInbox.Api.Controllers
     [ApiVersion("2.0")]
     [Route("api/v{version:apiVersion}/enums")]
     [ApiController]
+    [SwaggerTag("Enumeradores utilizados no sistema")]
     public class EnumsController : BaseController
     {
         /// <summary>

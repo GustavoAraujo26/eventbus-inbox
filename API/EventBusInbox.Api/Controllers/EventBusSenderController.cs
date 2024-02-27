@@ -5,6 +5,7 @@ using EventBusInbox.Domain.Responses;
 using EventBusInbox.Shared.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace EventBusInbox.Api.Controllers
 {
@@ -14,6 +15,7 @@ namespace EventBusInbox.Api.Controllers
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/event-bus/sender")]
     [ApiController]
+    [SwaggerTag("Remetente de mensagens para o barramento de eventos")]
     public class EventBusSenderController : BaseController
     {
         /// <summary>

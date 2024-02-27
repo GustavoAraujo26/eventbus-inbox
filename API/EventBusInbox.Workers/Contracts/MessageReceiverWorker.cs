@@ -16,22 +16,29 @@ namespace EventBusInbox.Workers.Contracts
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            while (!stoppingToken.IsCancellationRequested)
+            try
             {
-                using (var scope = serviceScopeFactory.CreateScope())
+                while (!stoppingToken.IsCancellationRequested)
                 {
-                    var queueRepository = scope.ServiceProvider.GetRequiredService<IEventBusQueueRepository>();
-                    var rabbitMqRepository = scope.ServiceProvider.GetRequiredService<IRabbitMqRepository>();
-                    var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+                    using (var scope = serviceScopeFactory.CreateScope())
+                    {
+                        var queueRepository = scope.ServiceProvider.GetRequiredService<IEventBusQueueRepository>();
+                        var rabbitMqRepository = scope.ServiceProvider.GetRequiredService<IRabbitMqRepository>();
+                        var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
 
-                    var queueList = await queueRepository.GetActiveList();
-                    if (!queueList.Any())
-                        continue;
+                        var queueList = await queueRepository.GetActiveList();
+                        if (!queueList.Any())
+                            continue;
 
-                    await rabbitMqRepository.StartConsumption(queueList, stoppingToken);
+                        await rabbitMqRepository.StartConsumption(queueList, stoppingToken);
+                    }
+
+                    await Task.Delay(TimeSpan.FromMinutes(1));
                 }
-
-                await Task.Delay(TimeSpan.FromMinutes(1));
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
             }
         }
     }

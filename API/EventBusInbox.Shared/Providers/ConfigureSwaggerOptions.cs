@@ -55,7 +55,17 @@ namespace EventBusInbox.Shared.Providers
             {
                 Title = "Event Bus Inbox API",
                 Version = description.ApiVersion.ToString(),
-                Description = "An .NET Core API to act like a inbox for event bus, on microsservices environment."
+                Description = "API construída em .NET 6, que tem como foco principal atuar como uma caixa de entrada " +
+                "para uma mensageria (no sistema está sendo utilizado RabbitMQ), visando simplificar/facilitar o tratamento " +
+                "de deadletters por parte dos microsserviços. <br/> Principais funcionalidades da API: <br/> " +
+                "<ul><li>Controle automatizado de filas a serem lidas, através de um cadastro</li>" +
+                "<li>Persistência de mensagens recebidas do barramento em um banco de dados (MongoDB)</li>" +
+                "<li>Controle do estado/status das mensagens</li><li>Endpoint para envio de mensagens para filas já previamente cadastradas.</li></ul>",
+                Contact = new OpenApiContact
+                {
+                    Email = "gustavo.dearaujo26@gmail.com",
+                    Url = new Uri("https://github.com/GustavoAraujo26/eventbus-inbox")
+                }
             };
 
             if (description.IsDeprecated)
