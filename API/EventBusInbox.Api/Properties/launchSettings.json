@@ -7,8 +7,7 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
         "MONGODB_CONNECTION_STRING": "mongodb://localhost:27017",
-        "MONGODB_DATABASE_NAME": "EventBusInbox",
-        "RABBITMQ_CONNECTION_STRING": "amqps://guest:guest@localhost"
+        "MONGODB_DATABASE_NAME": "EventBusInbox"
       },
       "dotnetRunMessages": true,
       "applicationUrl": "https://localhost:7185;http://localhost:5043"
@@ -20,8 +19,7 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
         "MONGODB_CONNECTION_STRING": "mongodb://localhost:27017",
-        "MONGODB_DATABASE_NAME": "EventBusInbox",
-        "RABBITMQ_CONNECTION_STRING": "amqps://guest:guest@localhost"
+        "MONGODB_DATABASE_NAME": "EventBusInbox"
       }
     },
     "Container (Dockerfile)": {
@@ -31,8 +29,7 @@
       "environmentVariables": {
         "ASPNETCORE_URLS": "https://+:443;http://+:80",
         "MONGODB_CONNECTION_STRING": "mongodb://localhost:27017",
-        "MONGODB_DATABASE_NAME": "EventBusInbox",
-        "RABBITMQ_CONNECTION_STRING": "amqps://guest:guest@localhost"
+        "MONGODB_DATABASE_NAME": "EventBusInbox"
       },
       "publishAllPorts": true,
       "useSSL": true

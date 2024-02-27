@@ -1,4 +1,5 @@
-﻿using EventBusInbox.Api.Controllers.Base;
+﻿using Asp.Versioning;
+using EventBusInbox.Api.Controllers.Base;
 using EventBusInbox.Domain.Enums;
 using EventBusInbox.Shared.Extensions;
 using EventBusInbox.Shared.Models;
@@ -9,7 +10,8 @@ namespace EventBusInbox.Api.Controllers
     /// <summary>
     /// Controlador responsável por disponibilizar as opções de enumeradores do sistema
     /// </summary>
-    [Route("api/enums")]
+    [ApiVersion("2.0")]
+    [Route("api/v{version:apiVersion}/enums")]
     [ApiController]
     public class EnumsController : BaseController
     {

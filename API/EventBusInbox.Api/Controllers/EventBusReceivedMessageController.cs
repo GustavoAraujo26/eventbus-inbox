@@ -1,4 +1,5 @@
-﻿using EventBusInbox.Api.Controllers.Base;
+﻿using Asp.Versioning;
+using EventBusInbox.Api.Controllers.Base;
 using EventBusInbox.Domain.Requests.EventBusReceivedMessage;
 using EventBusInbox.Domain.Responses;
 using EventBusInbox.Domain.Responses.EventBusReceivedMessage;
@@ -11,7 +12,8 @@ namespace EventBusInbox.Api.Controllers
     /// <summary>
     /// Controlador para mensagens recebidas do barramento de eventos
     /// </summary>
-    [Route("api/event-bus/received-messages")]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/event-bus/received-messages")]
     [ApiController]
     public class EventBusReceivedMessageController : BaseController
     {

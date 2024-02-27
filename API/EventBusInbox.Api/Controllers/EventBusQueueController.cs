@@ -1,4 +1,5 @@
-﻿using EventBusInbox.Api.Controllers.Base;
+﻿using Asp.Versioning;
+using EventBusInbox.Api.Controllers.Base;
 using EventBusInbox.Domain.Requests.EventBusQueues;
 using EventBusInbox.Domain.Responses;
 using EventBusInbox.Domain.Responses.EventBusQueues;
@@ -11,7 +12,8 @@ namespace EventBusInbox.Api.Controllers
     /// <summary>
     /// Controlador de fila do barramento de eventos
     /// </summary>
-    [Route("api/event-bus/queue")]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/event-bus/queue")]
     [ApiController]
     public class EventBusQueueController : BaseController
     {

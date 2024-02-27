@@ -1,4 +1,6 @@
-﻿namespace EventBusInbox.Shared.Models
+﻿using Asp.Versioning;
+
+namespace EventBusInbox.Shared.Models
 {
     /// <summary>
     /// Classe de configurações com base no ambiente
@@ -13,7 +15,6 @@
                 Environment.GetEnvironmentVariable("MONGODB_DATABASE_NAME"),
                 Environment.GetEnvironmentVariable("MONGODB_CONNECTION_STRING")
             );
-            RabbitMqConnectionString = Environment.GetEnvironmentVariable("RABBITMQ_CONNECTION_STRING");
         }
 
         /// <summary>
@@ -31,11 +32,6 @@
         /// Configuração de string de conexão para o MongoDB
         /// </summary>
         public KeyValuePair<string, string> MongoDbCredentials { get; private set; }
-
-        /// <summary>
-        /// String de conexão do RabbitMQ
-        /// </summary>
-        public string RabbitMqConnectionString { get; private set; }
 
         /// <summary>
         /// Constrói string de conexão do MongoDB, especificando o banco de dados
