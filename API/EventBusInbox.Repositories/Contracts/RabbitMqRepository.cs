@@ -1,4 +1,5 @@
 ﻿using EventBusInbox.Domain.Entities;
+using EventBusInbox.Domain.Notifications;
 using EventBusInbox.Domain.Repositories;
 using EventBusInbox.Domain.Requests.EventBusReceivedMessage;
 using EventBusInbox.Shared.Models;
@@ -6,6 +7,7 @@ using MediatR;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
+using System.Text;
 
 namespace EventBusInbox.Repositories.Contracts
 {
@@ -13,14 +15,16 @@ namespace EventBusInbox.Repositories.Contracts
     {
         private readonly IMediator mediator;
         private readonly EnvironmentSettings envSettings;
+        private DateTime LastActivity;
 
         public RabbitMqRepository(IMediator mediator, EnvironmentSettings envSettings)
         {
             this.mediator = mediator;
             this.envSettings = envSettings;
+            LastActivity = DateTime.Now;
         }
 
-        public async Task SendMessage(EventBusReceivedMessage message)
+        public void SendMessage(EventBusReceivedMessage message)
         {
             var eventBusMessage = new EventBusMessage(message.RequestId, message.CreatedAt, 
                 message.Type, message.Content);
@@ -30,7 +34,9 @@ namespace EventBusInbox.Repositories.Contracts
             {
                 var subscription = new RabbitMqSubscription(message.Queue.Name, false);
 
-                channel.BasicPublish(exchange: subscription.Exchange,
+                subscription.ConfigureSenderChannel(channel);
+
+                channel.BasicPublish(exchange: string.Empty,
                     routingKey: subscription.Queue, basicProperties: null,
                     body: eventBusMessage.ToBytes());
             }
@@ -44,38 +50,41 @@ namespace EventBusInbox.Repositories.Contracts
         /// <returns></returns>
         public async Task StartConsumption(List<EventBusQueue> queues, CancellationToken cancellationToken)
         {
-            using (var connection = BuildConnection())
+            try
             {
-                List<Task> tasks = new List<Task>();
+                using (var connection = BuildConnection())
+                {
+                    List<Task> tasks = new List<Task>();
 
-                queues.ForEach(x => tasks.Add(ConsumeQueue(connection, x, cancellationToken)));
-
-                await Task.WhenAll(tasks);
+                    queues.ForEach(x => tasks.Add(ConsumeQueue(connection, x, cancellationToken)));
+                    
+                    await Task.WhenAll(tasks);
+                }
+            }
+            catch(Exception ex)
+            {
+                await mediator.Publish(EventLogNotification.Create(this, ex,
+                    $"An error occurred on RabbitMQ repository!"));
             }
         }
 
         private async Task ConsumeQueue(IConnection connection, EventBusQueue queue, CancellationToken cancellationToken)
         {
-            string workerExchange = $"worker.{queue.Name}.exchange";
-            string workerQueue = $"worker.{queue.Name}.queue";
-            string retryExchange = $"retry.{queue.Name}.exchange";
-            string retryQueue = $"retry.{queue.Name}.queue";
+            var consumptionState = new RabbitMqConsumptionState();
 
             using (var channel = connection.CreateModel())
             {
-                var activeSubscription = new RabbitMqSubscription(queue.Name, false);
-                var deadletterSubscription = new RabbitMqSubscription(queue.Name, true);
+                var subscription = new RabbitMqSubscription(queue.Name, false);
 
-                activeSubscription.ConfigureConsumerChannel(channel, deadletterSubscription);
-                deadletterSubscription.ConfigureConsumerChannel(channel, activeSubscription);
+                subscription.ConfigureConsumerChannel(channel);
 
                 var consumer = new AsyncEventingBasicConsumer(channel);
-                consumer.Received += async (ch, ea) => await ReceiveMessage(channel, ch, ea, queue);
+                consumer.Received += async (ch, ea) => await ReceiveMessage(channel, ch, ea, queue, consumptionState);
 
-                channel.BasicConsume(workerQueue, false, consumer);
+                channel.BasicConsume(subscription.Queue, false, consumer);
 
-                while (!cancellationToken.IsCancellationRequested)
-                    await Task.Delay(60000);
+                while (!cancellationToken.IsCancellationRequested && !consumptionState.CanFinish)
+                    await Task.Delay(TimeSpan.FromSeconds(10));
             }
         }
 
@@ -83,16 +92,16 @@ namespace EventBusInbox.Repositories.Contracts
         {
             var factory = new ConnectionFactory
             {
-                Uri = new Uri(envSettings.RabbitMqConnectionString),
+                HostName = "localhost",
                 DispatchConsumersAsync = true
             };
 
             return factory.CreateConnection();
         }
 
-        private async Task ReceiveMessage(IModel channel, object ch, BasicDeliverEventArgs ea, EventBusQueue queue)
+        private async Task ReceiveMessage(IModel channel, object ch, BasicDeliverEventArgs ea, EventBusQueue queue, RabbitMqConsumptionState consumptionState)
         {
-            var json = ea.Body.ToString();
+            var json = Encoding.UTF8.GetString(ea.Body.ToArray());
             var message = JsonConvert.DeserializeObject<EventBusMessage>(json);
             if (message is null)
             {
@@ -108,6 +117,8 @@ namespace EventBusInbox.Repositories.Contracts
                 channel.BasicAck(ea.DeliveryTag, false);
             else
                 channel.BasicNack(ea.DeliveryTag, false, true);
+
+            consumptionState.Update();
         }
     }
 }

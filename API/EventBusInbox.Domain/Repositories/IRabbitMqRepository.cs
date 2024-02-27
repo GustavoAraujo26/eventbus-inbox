@@ -14,5 +14,12 @@ namespace EventBusInbox.Domain.Repositories
         /// <param name="cancellationToken">Token para cancelamento</param>
         /// <returns></returns>
         Task StartConsumption(List<EventBusQueue> queues, CancellationToken cancellationToken);
+
+        /// <summary>
+        /// Envia mensagem
+        /// </summary>
+        /// <param name="message">Mensagem a ser enviada</param>
+        /// <returns></returns>
+        void SendMessage(EventBusReceivedMessage message);
     }
 }

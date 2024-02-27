@@ -36,6 +36,8 @@ namespace EventBusInbox.Handlers.Extensions
             services.AddTransient<ISaveEventBusReceivedMessageHandler, SaveEventBusReceivedMessageHandler>();
             services.AddTransient<IUpdateEventBusReceivedMessageStatusHandler, UpdateEventBusReceivedMessageStatusHandler>();
 
+            services.AddTransient<ISendMessageHandler, SendMessageHandler>();
+
             var configuration = new MediatRServiceConfiguration();
             configuration.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
 

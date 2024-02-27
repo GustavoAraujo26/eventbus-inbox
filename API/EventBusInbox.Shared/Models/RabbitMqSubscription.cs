@@ -1,5 +1,5 @@
 ﻿using RabbitMQ.Client;
-using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace EventBusInbox.Shared.Models
 {
@@ -15,12 +15,14 @@ namespace EventBusInbox.Shared.Models
         /// <param name="isDeadletter">Fila é uma deadletter?</param>
         public RabbitMqSubscription(string queueName, bool isDeadletter)
         {
+            string treatedQueueName = TreatQueueName(queueName);
+
             string sufix = "active";
             if (isDeadletter)
                 sufix = "deadletter";
 
-            Exchange = $"{queueName}.{sufix}.exchange";
-            Queue = $"{queueName}.{sufix}.exchange";
+            Exchange = $"{treatedQueueName}.{sufix}.exchange";
+            Queue = $"{treatedQueueName}.{sufix}.queue";
             Type = isDeadletter ? "fanout" : "direct";
             IsDeadletter = isDeadletter;
         }
@@ -49,35 +51,12 @@ namespace EventBusInbox.Shared.Models
         /// Configura canal para recebimento das mensagens
         /// </summary>
         /// <param name="channel">Canal</param>
-        /// <param name="linkedSubscription">Assinatura vinculada</param>
-        public void ConfigureConsumerChannel(IModel channel, RabbitMqSubscription linkedSubscription)
+        public void ConfigureConsumerChannel(IModel channel)
         {
-            var dictionary = new Dictionary<string, object>
-            {
-                { "x-dead-letter-exchange", linkedSubscription.Exchange },
-                { "x-dead-letter-routing-key", linkedSubscription.Queue },
-            };
-            if (IsDeadletter)
-            {
-                dictionary = new Dictionary<string, object>
-                {
-                    { "x-dead-letter-exchange", linkedSubscription.Exchange },
-                    { "x-message-ttl", 30000 },
-                };
-            }
-
-            channel.ExchangeDeclare(Exchange,
-                    type: Type,
-                    durable: true,
-                    autoDelete: false);
-
             channel.QueueDeclare(queue: Queue,
                 durable: true,
                 exclusive: false,
-                autoDelete: false,
-                dictionary);
-
-            channel.QueueBind(Queue, Exchange, string.Empty);
+                autoDelete: false);
         }
 
         /// <summary>
@@ -86,17 +65,19 @@ namespace EventBusInbox.Shared.Models
         /// <param name="channel">Canal</param>
         public void ConfigureSenderChannel(IModel channel)
         {
-            channel.ExchangeDeclare(Exchange,
-                    type: Type,
-                    durable: true,
-                    autoDelete: false);
-
             channel.QueueDeclare(queue: Queue,
                 durable: true,
                 exclusive: false,
-                autoDelete: false);
+                autoDelete: false,
+                null);
+        }
 
-            channel.QueueBind(Queue, Exchange, string.Empty);
+        private string TreatQueueName(string queueName)
+        {
+            string withoutSpecialCharecters = Regex.Replace(queueName, "[^0-9A-Za-z _-]", "").ToLower();
+            string withoutWhiteSpace = Regex.Replace(withoutSpecialCharecters, @"\s+", "");
+
+            return withoutWhiteSpace.ToLowerInvariant();
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using EventBusInbox.Domain.Notifications;
-using EventBusInbox.Domain.Repositories;
+﻿using EventBusInbox.Domain.Repositories;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -8,37 +7,31 @@ namespace EventBusInbox.Workers.Contracts
 {
     internal class MessageReceiverWorker : BackgroundService
     {
-        private readonly IEventBusQueueRepository queueRepository;
-        private readonly IRabbitMqRepository rabbitMqRepository;
-        private readonly IMediator mediator;
+        private readonly IServiceScopeFactory serviceScopeFactory;
 
-        public MessageReceiverWorker(IServiceProvider serviceProvider)
+        public MessageReceiverWorker(IServiceScopeFactory serviceScopeFactory)
         {
-            queueRepository = serviceProvider.GetRequiredService<IEventBusQueueRepository>();
-            rabbitMqRepository = serviceProvider.GetRequiredService<IRabbitMqRepository>();
-            mediator = serviceProvider.GetRequiredService<IMediator>();
+            this.serviceScopeFactory = serviceScopeFactory;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            try
+            while (!stoppingToken.IsCancellationRequested)
             {
-                using (var timer = new PeriodicTimer(TimeSpan.FromMinutes(1)))
+                using (var scope = serviceScopeFactory.CreateScope())
                 {
-                    while (await timer.WaitForNextTickAsync(stoppingToken))
-                    {
-                        var queueList = await queueRepository.GetActiveList();
-                        if (!queueList.Any())
-                            continue;
+                    var queueRepository = scope.ServiceProvider.GetRequiredService<IEventBusQueueRepository>();
+                    var rabbitMqRepository = scope.ServiceProvider.GetRequiredService<IRabbitMqRepository>();
+                    var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
 
-                        await rabbitMqRepository.StartConsumption(queueList, stoppingToken);
-                    }
+                    var queueList = await queueRepository.GetActiveList();
+                    if (!queueList.Any())
+                        continue;
+
+                    await rabbitMqRepository.StartConsumption(queueList, stoppingToken);
                 }
-            }
-            catch(Exception ex)
-            {
-                await mediator.Publish(EventLogNotification.Create(this, ex,
-                    $"An error occurred on message receiver worker!"));
+
+                await Task.Delay(TimeSpan.FromMinutes(1));
             }
         }
     }
