@@ -4,7 +4,7 @@ namespace EventBusInbox.Tests.FakeData.Requests
 {
     internal static class SendMessageRequestFakeData
     {
-        public static SendMessageRequest Build()
+        public static SendMessageRequest BuildSuccess()
         {
             var messageContent = new
             {
@@ -21,5 +21,8 @@ namespace EventBusInbox.Tests.FakeData.Requests
 
             return new SendMessageRequest(Guid.NewGuid(), DateTime.Now, "test", messageContent, Guid.NewGuid());
         }
+
+        public static SendMessageRequest BuildFailure() =>
+            new SendMessageRequest(Guid.Empty, DateTime.MinValue, null, null, Guid.Empty);
     }
 }

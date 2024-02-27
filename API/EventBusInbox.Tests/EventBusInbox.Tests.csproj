@@ -24,14 +24,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="FakeData\Models\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\EventBusInbox.Domain\EventBusInbox.Domain.csproj" />
     <ProjectReference Include="..\EventBusInbox.Handlers\EventBusInbox.Handlers.csproj" />
     <ProjectReference Include="..\EventBusInbox.Shared\EventBusInbox.Shared.csproj" />
     <ProjectReference Include="..\EventBusInbox.TypeConverters\EventBusInbox.TypeConverters.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="FakeData\Notifications\" />
   </ItemGroup>
 
 </Project>
