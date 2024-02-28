@@ -45,8 +45,8 @@ namespace EventBusInbox.Shared.Extensions
 
             var newLogger = new LoggerConfiguration()
                 .Enrich.FromLogContext()
-                .MinimumLevel.Override("Microsoft", LogEventLevel.Error)
-                .MinimumLevel.Override("System", LogEventLevel.Information)
+                //.MinimumLevel.Override("Microsoft", LogEventLevel.Error)
+                //.MinimumLevel.Override("System", LogEventLevel.Information)
                 .WriteTo.MongoDB(envSettings.GetMongoDbDatabaseUrl(), "LogsInboxAPI")
                 .WriteTo.Console()
                 .CreateLogger();

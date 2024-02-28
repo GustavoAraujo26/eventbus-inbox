@@ -3,9 +3,10 @@
     "EventBusInbox.Api": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "swagger",
+      "launchUrl": "",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
+        "ASPNETCORE_URLS": "http://localhost:44356",
         "MONGODB_CONNECTION_STRING": "mongodb://localhost:27017",
         "MONGODB_DATABASE_NAME": "EventBusInbox"
       },
@@ -15,9 +16,10 @@
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
-      "launchUrl": "swagger",
+      "launchUrl": "",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
+        "ASPNETCORE_URLS": "http://localhost:44356",
         "MONGODB_CONNECTION_STRING": "mongodb://localhost:27017",
         "MONGODB_DATABASE_NAME": "EventBusInbox"
       }
@@ -25,7 +27,7 @@
     "Container (Dockerfile)": {
       "commandName": "Docker",
       "launchBrowser": true,
-      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/swagger",
+      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
       "environmentVariables": {
         "ASPNETCORE_URLS": "https://+:443;http://+:80",
         "MONGODB_CONNECTION_STRING": "mongodb://localhost:27017",

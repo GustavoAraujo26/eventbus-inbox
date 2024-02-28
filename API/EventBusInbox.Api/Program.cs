@@ -32,6 +32,11 @@ builder.Services.ConfigureAppVersioning();
 
 builder.Services.AddCors();
 
+builder.WebHost.UseKestrel()
+    .UseContentRoot(Directory.GetCurrentDirectory())
+    .UseUrls(Environment.GetEnvironmentVariable("ASPNETCORE_URLS"))
+    .UseIISIntegration();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -44,6 +49,8 @@ if (app.Environment.IsDevelopment())
     {
         foreach (var description in apiVersionDescriptionProvider.ApiVersionDescriptions)
             options.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json", description.GroupName.ToUpperInvariant());
+
+        options.RoutePrefix = string.Empty;
     });
 }
 
