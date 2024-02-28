@@ -6,6 +6,7 @@ using EventBusInbox.Api.Middlewares;
 using Serilog;
 using EventBusInbox.Workers.Extensions;
 using Asp.Versioning.ApiExplorer;
+using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -36,6 +37,11 @@ builder.WebHost.UseKestrel()
     .UseContentRoot(Directory.GetCurrentDirectory())
     .UseUrls(Environment.GetEnvironmentVariable("ASPNETCORE_URLS"))
     .UseIISIntegration();
+
+builder.Services.Configure<ApiBehaviorOptions>(options =>
+{
+    options.SuppressModelStateInvalidFilter = true;
+});
 
 var app = builder.Build();
 
