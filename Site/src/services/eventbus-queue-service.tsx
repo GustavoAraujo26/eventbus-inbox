@@ -4,9 +4,8 @@ import SaveEventbusQueueRequest from "../interfaces/requests/eventbus-queue/save
 import GetEventBusQueueListRequest from "../interfaces/requests/eventbus-queue/get-eventbus-queue-list-request";
 import UpdateEventbusQueueStatusRequest from "../interfaces/requests/eventbus-queue/update-eventbus-queue-status-request";
 import GetEventbusQueueResponse from "../interfaces/responses/eventbus-queue/get-eventbus-queue-response";
+import { ApiResponse } from "../interfaces/api-response";
 import AppTaskResponse from "../interfaces/app-task-response";
-import GetEventbusMessageListResponse from "../interfaces/responses/eventbus-received-message/get-eventbus-message-list-response";
-import { ApiEventBusMessageListResponse, ApiEventBusQueueResponse, ApiTaskResponse } from "../interfaces/api-response";
 
 export class EventBusQueueService extends HttpService {
 
@@ -18,26 +17,26 @@ export class EventBusQueueService extends HttpService {
 
         const url = `/v1/event-bus/queue?${propertyName}&SummarizeMessages=${request.summarizeMessages}`;
 
-        return this.get<ApiEventBusQueueResponse>(url);
+        return this.get<ApiResponse<GetEventbusQueueResponse>>(url);
     }
 
     DeleteQueue(id: string) {
         const url = `/v1/event-bus/queue?Id=${id}`;
 
-        return this.delete<ApiTaskResponse>(url);
+        return this.delete<ApiResponse<AppTaskResponse>>(url);
     }
 
     SaveQueue(request: SaveEventbusQueueRequest) {
-        return this.post<ApiTaskResponse>('/v1/event-bus/queue', request);
+        return this.post<ApiResponse<AppTaskResponse>>('/v1/event-bus/queue', request);
     }
 
     ListQueues(request: GetEventBusQueueListRequest) {
-        return this.post<ApiEventBusQueueResponse>('/v1/event-bus/queue/list', request);
+        return this.post<ApiResponse<GetEventbusQueueResponse>>('/v1/event-bus/queue/list', request);
     }
 
     UpdateStatus(request: UpdateEventbusQueueStatusRequest) {
         const url = `/v1/event-bus/queue/update/status?Id=${request.id}&Status=${request.status}`;
 
-        return this.get<ApiTaskResponse>(url);
+        return this.get<ApiResponse<AppTaskResponse>>(url);
     }
 }
