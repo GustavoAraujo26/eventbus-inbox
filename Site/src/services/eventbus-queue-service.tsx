@@ -6,37 +6,38 @@ import UpdateEventbusQueueStatusRequest from "../interfaces/requests/eventbus-qu
 import GetEventbusQueueResponse from "../interfaces/responses/eventbus-queue/get-eventbus-queue-response";
 import AppTaskResponse from "../interfaces/app-task-response";
 import GetEventbusMessageListResponse from "../interfaces/responses/eventbus-received-message/get-eventbus-message-list-response";
+import { ApiEventBusMessageListResponse, ApiEventBusQueueResponse, ApiTaskResponse } from "../interfaces/api-response";
 
 export class EventBusQueueService extends HttpService {
-    
-    async GetQueue(request: GetEventBusQueueRequest) {
+
+    GetQueue(request: GetEventBusQueueRequest) {
         let propertyName = 'Name';
-        if (request.id){
+        if (request.id) {
             propertyName = 'Id';
         }
 
         const url = `/v1/event-bus/queue?${propertyName}&SummarizeMessages=${request.summarizeMessages}`;
 
-        return this.get<GetEventbusQueueResponse>(url);
+        return this.get<ApiEventBusQueueResponse>(url);
     }
 
-    async DeleteQueue(id: string) {
+    DeleteQueue(id: string) {
         const url = `/v1/event-bus/queue?Id=${id}`;
 
-        return this.delete<AppTaskResponse>(url);
+        return this.delete<ApiTaskResponse>(url);
     }
 
-    async SaveQueue(request: SaveEventbusQueueRequest) {
-        return this.post<AppTaskResponse>('/v1/event-bus/queue', request);
+    SaveQueue(request: SaveEventbusQueueRequest) {
+        return this.post<ApiTaskResponse>('/v1/event-bus/queue', request);
     }
 
-    async ListQueues(request: GetEventBusQueueListRequest){
-        return this.post<GetEventbusMessageListResponse>('/v1/event-bus/queue/list', request);
+    ListQueues(request: GetEventBusQueueListRequest) {
+        return this.post<ApiEventBusQueueResponse>('/v1/event-bus/queue/list', request);
     }
 
-    async UpdateStatus(request: UpdateEventbusQueueStatusRequest){
+    UpdateStatus(request: UpdateEventbusQueueStatusRequest) {
         const url = `/v1/event-bus/queue/update/status?Id=${request.id}&Status=${request.status}`;
 
-        return this.get<AppTaskResponse>(url);
+        return this.get<ApiTaskResponse>(url);
     }
 }

@@ -1,6 +1,5 @@
 ﻿using EventBusInbox.Shared.Models;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 
 namespace EventBusInbox.Api.Controllers.Base
 {
@@ -17,7 +16,7 @@ namespace EventBusInbox.Api.Controllers.Base
         /// <returns></returns>
         public ActionResult BuildResponse<T>(AppResponse<T> appResponse) where T : class
         {
-            return StatusCode((int)appResponse.Status, JsonConvert.SerializeObject(appResponse));
+            return StatusCode((int)appResponse.Status, appResponse);
         }
     }
 }

@@ -1,7 +1,7 @@
 export default interface GetEventBusQueueListRequest {
-    nameMatch: string,
-    descriptionMatch: string,
-    status: number,
+    nameMatch: string | null,
+    descriptionMatch: string | null,
+    status: number | null,
     page: number,
     pageSize: number,
     summarizeMessages: boolean

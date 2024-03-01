@@ -1,20 +1,29 @@
+import { Route, Routes } from "react-router-dom";
+import BasicPage from "./pages/basic-page";
+import Home from "./pages/home";
+import EventBusQueuesDashboard from "./pages/event-bus-queues/eventbus-queues-dashboard";
+import EventBusQueueForm from "./pages/event-bus-queues/eventbus-queue-form";
+import EventBusMessagesDashboard from "./pages/event-bus-messages/eventbus-messages-dashboard";
+import EventBusMessageForm from "./pages/event-bus-messages/eventbus-message-form";
+import EventBusMessageDetails from "./pages/event-bus-messages/eventbus-message-details";
+
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Routes>
+      <Route element={<BasicPage/>}>
+        <Route path="/" element={<Home/>} />
+        
+        <Route path="eventbus-queues/dashboard" element={<EventBusQueuesDashboard/>} />
+        <Route path="eventbus-queues/new" element={<EventBusQueueForm/>} />
+        <Route path="eventbus-queues/:id" element={<EventBusQueueForm/>} />
+        <Route path="eventbus-queues/details/:id" element={<Home/>} />
+
+        <Route path="eventbus-messages/dashboard" element={<EventBusMessagesDashboard/>} />
+        <Route path="eventbus-messages/new" element={<EventBusMessageForm/>} />
+        <Route path="eventbus-messages/:id" element={<EventBusMessageForm/>} />
+        <Route path="eventbus-messages/details/:id" element={<EventBusMessageDetails/>} />
+      </Route>
+    </Routes>
   );
 }
 

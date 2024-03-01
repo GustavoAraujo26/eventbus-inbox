@@ -5,6 +5,7 @@ using EventBusInbox.Shared.Extensions;
 using EventBusInbox.Shared.Models;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
+using System.Net;
 
 namespace EventBusInbox.Api.Controllers
 {
@@ -38,6 +39,18 @@ namespace EventBusInbox.Api.Controllers
         public ActionResult<AppResponse<EnumData>> ListEventBusMessageStatus()
         {
             var enumValueList = EventBusMessageStatus.Pending.List<EventBusMessageStatus>();
+            return BuildResponse(AppResponse<EnumData>.Success(enumValueList));
+        }
+
+        /// <summary>
+        /// Lista todas as opções do enumerador de código de status HTTP
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("http-status-code")]
+        public ActionResult<AppResponse<EnumData>> ListHttpStatus()
+        {
+            var enumValueList = HttpStatusCode.OK.List<HttpStatusCode>();
             return BuildResponse(AppResponse<EnumData>.Success(enumValueList));
         }
     }

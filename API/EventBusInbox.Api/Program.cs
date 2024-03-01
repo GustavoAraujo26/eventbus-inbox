@@ -7,6 +7,8 @@ using Serilog;
 using EventBusInbox.Workers.Extensions;
 using Asp.Versioning.ApiExplorer;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
+using Newtonsoft.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,7 +20,11 @@ builder.Services.ConfigureAppRepositories();
 builder.Services.ConfigureAppMediator();
 builder.Services.ConfigureWorkers();
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddNewtonsoftJson(options =>
+    {
+        options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+    });
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>

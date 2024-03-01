@@ -1,52 +1,27 @@
 import axios, { AxiosInstance } from "axios";
-import ApiResponse from "../interfaces/api-response";
 
 export class HttpService {
     http: AxiosInstance;
 
-    constructor(){
+    constructor() {
         this.http = axios.create({
-            baseURL: process.env.API_URL
+            baseURL: 'http://localhost:9000/api'
         });
     }
 
-    get defaultHeaders() {
-        return {
-            'Content-Type': 'application/json'
-        }
+    get<Response>(url: string, customHeaders: {} = {}) {
+        return this.http.get<Response>(url);
     }
 
-    async request<Response>(method: string, url: string, data: {} | null = null, customHeaders: {} = {}){
-        const headers = { ...this.defaultHeaders, ...customHeaders };
-        const source = axios.CancelToken.source();
-
-        let config = {
-            method, 
-            url, 
-            headers, 
-            data,
-            cancelToken: source.token
-        };
-
-        return {
-            request: this.http<any, ApiResponse<Response>>(config),
-            cancel: source.cancel
-        }
+    post<Response>(url: string, data: {}, customHeaders: {} = {}) {
+        return this.http.post<Response>(url, data);
     }
 
-    get<Response>(url: string, customHeaders: {} = {}){
-        return this.request<Response>('get', url, null, customHeaders);
+    put<Response>(url: string, data: {}, customHeaders: {} = {}) {
+        return this.http.put<Response>(url, data);
     }
 
-    post<Response>(url: string, data: {}, customHeaders: {} = {}){
-        return this.request<Response>('post', url, data, customHeaders);
-    }
-
-    put<Response>(url: string, data: {}, customHeaders: {} = {}){
-        return this.request<Response>('put', url, data, customHeaders);
-    }
-
-    delete<Response>(url: string, customHeaders: {} = {}){
-        return this.request<Response>('delete', url, null, customHeaders);
+    delete<Response>(url: string, customHeaders: {} = {}) {
+        return this.http.delete<Response>(url);
     }
 }
