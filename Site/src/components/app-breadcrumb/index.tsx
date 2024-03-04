@@ -1,7 +1,7 @@
 import { Breadcrumbs, Container, Paper, Typography } from "@mui/material";
 import AppBreadcrumbItem from "../../interfaces/app-breadcrumb-item";
 import { Link as RouterLink } from "react-router-dom";
-import { Link } from "@mui/icons-material";
+import Link from '@mui/material/Link';
 
 interface BreadcrumbProps {
     breadcrumbItems: AppBreadcrumbItem[]
@@ -17,9 +17,10 @@ const AppBreadcrumb = ({ breadcrumbItems }: BreadcrumbProps) => {
 
     const buildPreviousPage = (item: AppBreadcrumbItem) => {
         return (
-            <Link key={item.id} component={RouterLink} to={item.goTo} sx={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
+            <Link key={item.id} component={RouterLink} to={item.goTo} sx={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }} color="primary">
                 {item.icon}
                 {item.text}
+                Test
             </Link>
         );
     }

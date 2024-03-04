@@ -41,7 +41,6 @@ const Home = () => {
         buildbreadcrumb();
 
         queueService.ListQueues(listRequest).then(response => {
-            debugger;
             console.log(response);
             const apiResponse = response.data;
 
@@ -62,9 +61,6 @@ const Home = () => {
                 <CircularProgress color="inherit" />
             </Backdrop>
             <AppBreadcrumb breadcrumbItems={breadcrumbItems} />
-            <Paper elevation={3} sx={{ marginBottom: 3, padding: 1, textAlign: 'center' }}>
-                <Typography variant="h5">Some event bus queues registered...</Typography>
-            </Paper>
             <Grid container justifyContent='center' spacing={2}>
                 {queues && queues.map(queue => <Grid key={queue.id} item xs={6} md={4}>
                     <EventBusQueueCard queue={queue} showDescription={false} showSummarization={false} />

@@ -1,5 +1,5 @@
 import { AssignmentInd, Book, Description, GridOn, Inbox, Visibility } from "@mui/icons-material";
-import { Avatar, Button, Card, CardActions, CardContent, Chip, Divider, List, ListItem, ListItemAvatar, ListItemText, Typography } from "@mui/material";
+import { Avatar, Button, Card, CardActions, CardContent, CardHeader, Chip, Divider, List, ListItem, ListItemAvatar, ListItemText, Typography } from "@mui/material";
 import GetEventbusQueueResponse from "../../interfaces/responses/eventbus-queue/get-eventbus-queue-response";
 import EventBusQueueStatus from "../eventbus-queue-status";
 import { useNavigate } from "react-router-dom";
@@ -15,7 +15,9 @@ const EventBusQueueCard = ({ queue, showDescription, showSummarization = false }
 
     return (
         <Card>
+            <CardHeader title="Event Bus Queue" sx={{ textAlign: 'center' }} />
             <CardContent>
+                <Divider/>
                 <List>
                     <ListItem>
                         <ListItemAvatar>
@@ -61,13 +63,13 @@ const EventBusQueueCard = ({ queue, showDescription, showSummarization = false }
                         }>
                             <ListItemAvatar>
                                 <Avatar>
-                                    <Inbox/>
+                                    <Inbox />
                                 </Avatar>
                             </ListItemAvatar>
                             <ListItemText primary={itemSum.status.description} />
                         </ListItem>)}
                     </List>
-                    <Divider/>
+                    <Divider />
                 </> : null}
             </CardContent>
             <CardActions>
