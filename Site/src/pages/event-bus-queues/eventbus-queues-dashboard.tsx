@@ -13,11 +13,16 @@ import EventBusQueueModal from "./eventbus-queue-modal";
 import { AppActionType } from "../../enums/app-action-type";
 import AppSnackbarResponse from "../../interfaces/requests/app-snackbar-response";
 import AppSnackBar from "../../components/app-snackbar";
+import EventBusQueueSearchCard from "./event-bus-queue-search-card";
+import EnumData from "../../interfaces/enum-data";
+import { EnumsService } from "../../services/enums-service";
 
 const EventBusQueuesDashboard = () => {
     const navigateTo = useNavigate();
     const [queues, setQueues] = useState<GetEventbusQueueResponse[]>([]);
+    const [statusList, setStatusList] = useState<EnumData[]>([]);
     const queueService = new EventBusQueueService();
+    const enumService = new EnumsService();
 
     const [currentPage, setCurrentPage] = useState(1);
     const [currentPageSize, setCurrentPageSize] = useState(10);
@@ -105,8 +110,45 @@ const EventBusQueuesDashboard = () => {
         });
     }
 
+    const getStatusList = () => {
+        enumService.ListQueueStatus().then(response => {
+            const apiResponse = response.data;
+
+            if (apiResponse.isSuccess) {
+                const queueStatusList = apiResponse.data;
+                setStatusList(queueStatusList);
+            }
+            else{
+                const response: AppSnackbarResponse = {
+                    success: false,
+                    message: apiResponse.message,
+                    stackTrace: apiResponse.stackTrace,
+                    statusCode: apiResponse.status
+                }
+    
+                setSnackbarResponse(response);
+            }
+        }).catch(error => {
+            console.log(error);
+            let response: AppSnackbarResponse = {
+                success: false,
+                message: error.toString().substring(0, 50)
+            }
+
+            const apiResponse = error.response.data;
+            if (typeof apiResponse !== 'undefined'){
+                response.message = apiResponse.message;
+                response.stackTrace = apiResponse.stackTrace;
+                response.statusCode = apiResponse.status;
+            }
+
+            setSnackbarResponse(response);
+        });
+    }
+
     useEffect(() => {
         buildbreadcrumb();
+        getStatusList();
         getPaginatedList();
     }, []);
 
@@ -130,12 +172,23 @@ const EventBusQueuesDashboard = () => {
         setShowModal(false);
     }
 
+    const searchQueues = (name: string, description: string, currentStatus: number) => {
+        setNameMatch(name);
+        setdescriptionMatch(description);
+        setStatus(currentStatus === 0 ? null : currentStatus);
+    }
+
+    useEffect(() => {
+        getPaginatedList();
+    }, [nameMatch, descriptionMatch, status]);
+
     return (
         <>
             <Backdrop open={isLoading}>
                 <CircularProgress color="inherit" />
             </Backdrop>
             <AppBreadcrumb breadcrumbItems={breadcrumbItems} />
+            <EventBusQueueSearchCard statusList={statusList} searchQueues={searchQueues}/>
             <TableContainer component={Paper}>
                 <Table>
                     <TableHead>
