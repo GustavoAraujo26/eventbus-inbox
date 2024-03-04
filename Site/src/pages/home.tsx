@@ -7,6 +7,7 @@ import { Backdrop, CircularProgress, Grid, Paper, Typography } from "@mui/materi
 import AppBreadcrumbItem from "../interfaces/app-breadcrumb-item";
 import { HomeOutlined } from "@mui/icons-material";
 import AppBreadcrumb from "../components/app-breadcrumb";
+import AppSnackbarResponse from "../interfaces/requests/app-snackbar-response";
 
 const Home = () => {
     const [queues, setQueues] = useState<GetEventbusQueueResponse[]>([]);
@@ -36,6 +37,7 @@ const Home = () => {
     }
 
     const [isLoading, setLoading] = useState(true);
+    const [snackbarResponse, setSnackbarResponse] = useState<AppSnackbarResponse>();
 
     useEffect(() => {
         buildbreadcrumb();
@@ -44,14 +46,38 @@ const Home = () => {
             console.log(response);
             const apiResponse = response.data;
 
-            if (apiResponse.data) {
+            if (apiResponse.isSuccess) {
                 const queueList = apiResponse.data;
                 console.log(queueList);
                 setQueues(queueList);
                 console.log(queues);
             }
+            else{
+                const response: AppSnackbarResponse = {
+                    success: false,
+                    message: apiResponse.message
+                }
+    
+                setSnackbarResponse(response);
+            }
 
             setLoading(false);
+        })
+        .catch(error => {
+            console.log(error);
+            let errorMessage = error.toString().substring(0, 50);
+
+            const apiResponse = error.response.data;
+            if (typeof apiResponse !== 'undefined'){
+                errorMessage = apiResponse.message;
+            }
+
+            const response: AppSnackbarResponse = {
+                success: false,
+                message: errorMessage
+            }
+
+            setSnackbarResponse(response);
         });
     }, []);
 

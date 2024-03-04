@@ -11,11 +11,13 @@ export class EventBusQueueService extends HttpService {
 
     GetQueue(request: GetEventBusQueueRequest) {
         let propertyName = 'Name';
+        let propertyValue = request.name;
         if (request.id) {
             propertyName = 'Id';
+            propertyValue = request.id;
         }
 
-        const url = `/v1/event-bus/queue?${propertyName}&SummarizeMessages=${request.summarizeMessages}`;
+        const url = `/v1/event-bus/queue?${propertyName}=${propertyValue}&SummarizeMessages=${request.summarizeMessages}`;
 
         return this.get<ApiResponse<GetEventbusQueueResponse>>(url);
     }

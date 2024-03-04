@@ -2,14 +2,16 @@ import { useEffect, useState } from "react";
 import GetEventbusQueueResponse from "../../interfaces/responses/eventbus-queue/get-eventbus-queue-response";
 import { EventBusQueueService } from "../../services/eventbus-queue-service";
 import AppBreadcrumbItem from "../../interfaces/app-breadcrumb-item";
-import { Apps, HomeOutlined } from "@mui/icons-material";
-import { Backdrop, Card, CardContent, CircularProgress, Pagination, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography } from "@mui/material";
+import { Add, Apps, Delete, Edit, HomeOutlined } from "@mui/icons-material";
+import { Backdrop, Card, CardContent, CircularProgress, Fab, IconButton, Pagination, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography } from "@mui/material";
 import AppBreadcrumb from "../../components/app-breadcrumb";
 import GetEventBusQueueListRequest from "../../interfaces/requests/eventbus-queue/get-eventbus-queue-list-request";
 import EventBusQueueStatus from "../../components/eventbus-queue-status";
 import AppPagination from "../../components/app-pagination";
+import { useNavigate } from "react-router-dom";
 
 const EventBusQueuesDashboard = () => {
+    const navigateTo = useNavigate();
     const [queues, setQueues] = useState<GetEventbusQueueResponse[]>([]);
     const queueService = new EventBusQueueService();
 
@@ -34,7 +36,7 @@ const EventBusQueuesDashboard = () => {
             id: 2,
             icon: <Apps sx={{ mr: 0.5 }} />,
             text: 'Event Bus Queues Dashboard',
-            goTo: '/eventbus-queues/dashboard',
+            goTo: '',
             isPage: true
         };
 
@@ -111,12 +113,22 @@ const EventBusQueuesDashboard = () => {
                             <TableCell align="left">{item.name}</TableCell>
                             <TableCell align="left">{item.processingAttempts}</TableCell>
                             <TableCell align="left"><EventBusQueueStatus status={item.status} /></TableCell>
-                            <TableCell align="left"></TableCell>
+                            <TableCell align="left">
+                                <IconButton aria-label="Edit" size="small" color="info" onClick={() => navigateTo(`/eventbus-queues/${item.id}`)}>
+                                    <Edit/>
+                                </IconButton>
+                                <IconButton aria-label="Delete" size="small" color="error">
+                                    <Delete/>
+                                </IconButton>
+                            </TableCell>
                         </TableRow>)}
                     </TableBody>
                 </Table>
                 <AppPagination changePageData={changePageData} rowsFounded={rowsFounded} />
             </TableContainer>
+            <Fab color="info" sx={{margin: 0, top: 'auto', right: 20, bottom: 20, left: 'auto', position: 'fixed'}} onClick={() => navigateTo("/eventbus-queues/new")}>
+                <Add/>
+            </Fab>
         </>
     );
 }

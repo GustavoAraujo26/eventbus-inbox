@@ -20,7 +20,6 @@ const AppBreadcrumb = ({ breadcrumbItems }: BreadcrumbProps) => {
             <Link key={item.id} component={RouterLink} to={item.goTo} sx={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }} color="primary">
                 {item.icon}
                 {item.text}
-                Test
             </Link>
         );
     }
