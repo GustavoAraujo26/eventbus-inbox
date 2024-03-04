@@ -1,5 +1,5 @@
 import { Button, Typography } from "@mui/material";
-import EnumData from "../../interfaces/enum-data"
+import EnumData from "../../../interfaces/enum-data"
 import { DisabledByDefault, DoneOutlined } from "@mui/icons-material";
 
 interface StatusProps {

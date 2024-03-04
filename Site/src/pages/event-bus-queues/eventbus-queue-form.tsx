@@ -1,4 +1,4 @@
-import { HomeOutlined, Apps, Add, Edit, Save } from "@mui/icons-material";
+import { HomeOutlined, Apps, Add, Edit, Save, ArrowBack } from "@mui/icons-material";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import AppBreadcrumbItem from "../../interfaces/app-breadcrumb-item";
@@ -95,23 +95,25 @@ const EventBusQueueForm = () => {
             else{
                 const response: AppSnackbarResponse = {
                     success: false,
-                    message: apiResponse.message
+                    message: apiResponse.message,
+                    stackTrace: apiResponse.stackTrace,
+                    statusCode: apiResponse.status
                 }
     
                 setSnackbarResponse(response);
             }
         }).catch(error => {
             console.log(error);
-            let errorMessage = error.toString().substring(0, 50);
+            let response: AppSnackbarResponse = {
+                success: false,
+                message: error.toString().substring(0, 50)
+            }
 
             const apiResponse = error.response.data;
             if (typeof apiResponse !== 'undefined'){
-                errorMessage = apiResponse.message;
-            }
-
-            const response: AppSnackbarResponse = {
-                success: false,
-                message: errorMessage
+                response.message = apiResponse.message;
+                response.stackTrace = apiResponse.stackTrace;
+                response.statusCode = apiResponse.status;
             }
 
             setSnackbarResponse(response);
@@ -136,7 +138,9 @@ const EventBusQueueForm = () => {
             else{
                 const response: AppSnackbarResponse = {
                     success: false,
-                    message: apiResponse.message
+                    message: apiResponse.message,
+                    stackTrace: apiResponse.stackTrace,
+                    statusCode: apiResponse.status
                 }
     
                 setSnackbarResponse(response);
@@ -144,16 +148,16 @@ const EventBusQueueForm = () => {
         })
         .catch(error => {
             console.log(error);
-            let errorMessage = error.toString().substring(0, 50);
+            let response: AppSnackbarResponse = {
+                success: false,
+                message: error.toString().substring(0, 50)
+            }
 
             const apiResponse = error.response.data;
             if (typeof apiResponse !== 'undefined'){
-                errorMessage = apiResponse.message;
-            }
-
-            const response: AppSnackbarResponse = {
-                success: false,
-                message: errorMessage
+                response.message = apiResponse.message;
+                response.stackTrace = apiResponse.stackTrace;
+                response.statusCode = apiResponse.status;
             }
 
             setSnackbarResponse(response);
@@ -202,6 +206,9 @@ const EventBusQueueForm = () => {
                                     onChange={event => setProcessingAttempts(+event.target.value)}/>
                                 <Button variant="contained" color="primary" sx={{ marginTop: 3 }} type="submit">
                                     <Save/> Save
+                                </Button>
+                                <Button variant="contained" color="secondary" sx={{ marginTop: 3, marginLeft: 1 }} type="button" onClick={() => navigateTo(-1)}>
+                                    <ArrowBack/> Go Back
                                 </Button>
                             </Box>
                         </CardContent>

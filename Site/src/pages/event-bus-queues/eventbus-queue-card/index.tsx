@@ -1,23 +1,24 @@
 import { AssignmentInd, Book, Description, GridOn, Inbox, Visibility } from "@mui/icons-material";
 import { Avatar, Button, Card, CardActions, CardContent, CardHeader, Chip, Divider, List, ListItem, ListItemAvatar, ListItemText, Typography } from "@mui/material";
-import GetEventbusQueueResponse from "../../interfaces/responses/eventbus-queue/get-eventbus-queue-response";
+import GetEventbusQueueResponse from "../../../interfaces/responses/eventbus-queue/get-eventbus-queue-response";
 import EventBusQueueStatus from "../eventbus-queue-status";
 import { useNavigate } from "react-router-dom";
 
 interface QueueProps {
     queue: GetEventbusQueueResponse,
     showDescription: boolean,
-    showSummarization: boolean
+    showSummarization: boolean,
+    showNavigation: boolean
 }
 
-const EventBusQueueCard = ({ queue, showDescription, showSummarization = false }: QueueProps) => {
+const EventBusQueueCard = ({ queue, showDescription, showSummarization, showNavigation }: QueueProps) => {
     const navigateTo = useNavigate();
 
     return (
         <Card>
             <CardHeader title="Event Bus Queue" sx={{ textAlign: 'center' }} />
             <CardContent>
-                <Divider/>
+                <Divider />
                 <List>
                     <ListItem>
                         <ListItemAvatar>
@@ -56,7 +57,7 @@ const EventBusQueueCard = ({ queue, showDescription, showSummarization = false }
                     </ListItem> : null}
                 </List>
                 <Divider />
-                {queue.messagesSummarization.length > 0 && showDescription === true ? <>
+                {queue.messagesSummarization && showDescription === true ? <>
                     <List>
                         {queue.messagesSummarization && queue.messagesSummarization.map(itemSum => <ListItem key={itemSum.status.intKey} secondaryAction={
                             <Chip label={itemSum.messageCount} />
@@ -72,12 +73,12 @@ const EventBusQueueCard = ({ queue, showDescription, showSummarization = false }
                     <Divider />
                 </> : null}
             </CardContent>
-            <CardActions>
+            {showNavigation && <CardActions>
                 <Button onClick={() => navigateTo(`/eventbus-queues/details/${queue.id}`)}>
                     <Visibility />
                     <Typography>View</Typography>
                 </Button>
-            </CardActions>
+            </CardActions>}
         </Card>
     );
 }

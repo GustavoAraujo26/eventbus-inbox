@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import GetEventbusQueueResponse from "../interfaces/responses/eventbus-queue/get-eventbus-queue-response";
 import { EventBusQueueService } from "../services/eventbus-queue-service";
 import GetEventBusQueueListRequest from "../interfaces/requests/eventbus-queue/get-eventbus-queue-list-request";
-import EventBusQueueCard from "../components/eventbus-queue-card";
+import EventBusQueueCard from "./event-bus-queues/eventbus-queue-card";
 import { Backdrop, CircularProgress, Grid, Paper, Typography } from "@mui/material";
 import AppBreadcrumbItem from "../interfaces/app-breadcrumb-item";
 import { HomeOutlined } from "@mui/icons-material";
@@ -55,7 +55,9 @@ const Home = () => {
             else{
                 const response: AppSnackbarResponse = {
                     success: false,
-                    message: apiResponse.message
+                    message: apiResponse.message,
+                    stackTrace: apiResponse.stackTrace,
+                    statusCode: apiResponse.status
                 }
     
                 setSnackbarResponse(response);
@@ -65,16 +67,16 @@ const Home = () => {
         })
         .catch(error => {
             console.log(error);
-            let errorMessage = error.toString().substring(0, 50);
+            let response: AppSnackbarResponse = {
+                success: false,
+                message: error.toString().substring(0, 50)
+            }
 
             const apiResponse = error.response.data;
             if (typeof apiResponse !== 'undefined'){
-                errorMessage = apiResponse.message;
-            }
-
-            const response: AppSnackbarResponse = {
-                success: false,
-                message: errorMessage
+                response.message = apiResponse.message;
+                response.stackTrace = apiResponse.stackTrace;
+                response.statusCode = apiResponse.status;
             }
 
             setSnackbarResponse(response);
@@ -89,7 +91,7 @@ const Home = () => {
             <AppBreadcrumb breadcrumbItems={breadcrumbItems} />
             <Grid container justifyContent='center' spacing={2}>
                 {queues && queues.map(queue => <Grid key={queue.id} item xs={6} md={4}>
-                    <EventBusQueueCard queue={queue} showDescription={false} showSummarization={false} />
+                    <EventBusQueueCard queue={queue} showDescription={false} showSummarization={false} showNavigation={true} />
                 </Grid>)}
             </Grid>
         </>

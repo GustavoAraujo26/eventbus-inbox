@@ -2,13 +2,17 @@ import { useEffect, useState } from "react";
 import GetEventbusQueueResponse from "../../interfaces/responses/eventbus-queue/get-eventbus-queue-response";
 import { EventBusQueueService } from "../../services/eventbus-queue-service";
 import AppBreadcrumbItem from "../../interfaces/app-breadcrumb-item";
-import { Add, Apps, Delete, Edit, HomeOutlined } from "@mui/icons-material";
-import { Backdrop, Card, CardContent, CircularProgress, Fab, IconButton, Pagination, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography } from "@mui/material";
+import { Add, Apps, Delete, Edit, HomeOutlined, Info, Lock, LockOpen } from "@mui/icons-material";
+import { Backdrop, CircularProgress, Fab, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
 import AppBreadcrumb from "../../components/app-breadcrumb";
 import GetEventBusQueueListRequest from "../../interfaces/requests/eventbus-queue/get-eventbus-queue-list-request";
-import EventBusQueueStatus from "../../components/eventbus-queue-status";
+import EventBusQueueStatus from "./eventbus-queue-status";
 import AppPagination from "../../components/app-pagination";
 import { useNavigate } from "react-router-dom";
+import EventBusQueueModal from "./eventbus-queue-modal";
+import { AppActionType } from "../../enums/app-action-type";
+import AppSnackbarResponse from "../../interfaces/requests/app-snackbar-response";
+import AppSnackBar from "../../components/app-snackbar";
 
 const EventBusQueuesDashboard = () => {
     const navigateTo = useNavigate();
@@ -21,6 +25,12 @@ const EventBusQueuesDashboard = () => {
     const [nameMatch, setNameMatch] = useState('');
     const [descriptionMatch, setdescriptionMatch] = useState('');
     const [status, setStatus] = useState<number | null>(null);
+
+    const [selectedQueue, setSelectedQueue] = useState<GetEventbusQueueResponse>();
+    const [showModal, setShowModal] = useState(false);
+    const [modalAction, setModalAction] = useState<AppActionType>(AppActionType.View);
+
+    const [snackbarResponse, setSnackbarResponse] = useState<AppSnackbarResponse>();
 
     const [breadcrumbItems, setBreadcrumbItems] = useState<AppBreadcrumbItem[]>([]);
     const buildbreadcrumb = () => {
@@ -60,13 +70,38 @@ const EventBusQueuesDashboard = () => {
         queueService.ListQueues(listRequest).then(response => {
             const apiResponse = response.data;
 
-            if (apiResponse.data) {
+            if (apiResponse.isSuccess) {
                 const queueList = apiResponse.data;
                 setQueues(queueList);
                 setRowsFounded((queueList.length > 0 && queueList.length >= currentPageSize));
             }
+            else{
+                const response: AppSnackbarResponse = {
+                    success: false,
+                    message: apiResponse.message,
+                    stackTrace: apiResponse.stackTrace,
+                    statusCode: apiResponse.status
+                }
+    
+                setSnackbarResponse(response);
+            }
 
             setLoading(false);
+        }).catch(error => {
+            console.log(error);
+            let response: AppSnackbarResponse = {
+                success: false,
+                message: error.toString().substring(0, 50)
+            }
+
+            const apiResponse = error.response.data;
+            if (typeof apiResponse !== 'undefined'){
+                response.message = apiResponse.message;
+                response.stackTrace = apiResponse.stackTrace;
+                response.statusCode = apiResponse.status;
+            }
+
+            setSnackbarResponse(response);
         });
     }
 
@@ -83,6 +118,16 @@ const EventBusQueuesDashboard = () => {
     const changePageData = (selectedPage: number, selectedPageSize: number) => {
         setCurrentPage(selectedPage);
         setCurrentPageSize(selectedPageSize);
+    }
+
+    const selectQueue = (currentQueue: GetEventbusQueueResponse, action: AppActionType) => {
+        setSelectedQueue(currentQueue);
+        setModalAction(action);
+        setShowModal(true);
+    }
+
+    const closeStatusModal = () => {
+        setShowModal(false);
     }
 
     return (
@@ -114,11 +159,17 @@ const EventBusQueuesDashboard = () => {
                             <TableCell align="left">{item.processingAttempts}</TableCell>
                             <TableCell align="left"><EventBusQueueStatus status={item.status} /></TableCell>
                             <TableCell align="left">
-                                <IconButton aria-label="Edit" size="small" color="info" onClick={() => navigateTo(`/eventbus-queues/${item.id}`)}>
-                                    <Edit/>
+                                <IconButton aria-label="Edit" size="small" color="info" onClick={() => navigateTo(`/eventbus-queues/details/${item.id}`)} title="Details">
+                                    <Info />
                                 </IconButton>
-                                <IconButton aria-label="Delete" size="small" color="error">
-                                    <Delete/>
+                                <IconButton aria-label="Edit" size="small" color="success" onClick={() => navigateTo(`/eventbus-queues/${item.id}`)} title="Edit">
+                                    <Edit />
+                                </IconButton>
+                                <IconButton aria-label="Edit" size="small" color="warning" title="Change status" onClick={() => selectQueue(item, AppActionType.Update)}>
+                                    {item.status.intKey == 1 ? <Lock /> : <LockOpen />}
+                                </IconButton>
+                                <IconButton aria-label="Delete" size="small" color="error" title="Delete" onClick={() => selectQueue(item, AppActionType.Delete)}>
+                                    <Delete />
                                 </IconButton>
                             </TableCell>
                         </TableRow>)}
@@ -126,9 +177,11 @@ const EventBusQueuesDashboard = () => {
                 </Table>
                 <AppPagination changePageData={changePageData} rowsFounded={rowsFounded} />
             </TableContainer>
-            <Fab color="info" sx={{margin: 0, top: 'auto', right: 20, bottom: 20, left: 'auto', position: 'fixed'}} onClick={() => navigateTo("/eventbus-queues/new")}>
-                <Add/>
+            <Fab color="info" sx={{ margin: 0, top: 'auto', right: 20, bottom: 20, left: 'auto', position: 'fixed' }} onClick={() => navigateTo("/eventbus-queues/new")}>
+                <Add />
             </Fab>
+            <AppSnackBar response={snackbarResponse} />
+            <EventBusQueueModal queue={selectedQueue} showModal={showModal} closeModal={closeStatusModal} action={modalAction} updateList={getPaginatedList} />
         </>
     );
 }
