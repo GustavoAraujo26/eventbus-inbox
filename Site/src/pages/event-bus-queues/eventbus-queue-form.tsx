@@ -44,7 +44,7 @@ const EventBusQueueForm = () => {
         };
 
         const queueForm: AppBreadcrumbItem = {
-            id: 2,
+            id: 3,
             icon: parameters.id ? <Edit sx={{ mr: 0.5 }} /> : <Add sx={{ mr: 0.5 }} />,
             text: parameters.id ? `Edit event Bus queue ${parameters.id}` : 'Add new event bus queue',
             goTo: '',

@@ -212,7 +212,7 @@ const EventBusQueuesDashboard = () => {
                             <TableCell align="left">{item.processingAttempts}</TableCell>
                             <TableCell align="left"><EventBusQueueStatus status={item.status} /></TableCell>
                             <TableCell align="left">
-                                <IconButton aria-label="Edit" size="small" color="info" onClick={() => navigateTo(`/eventbus-queues/details/${item.id}`)} title="Details">
+                                <IconButton aria-label="Details" size="small" color="info" onClick={() => navigateTo(`/eventbus-queues/details/${item.id}`)} title="Details">
                                     <Info />
                                 </IconButton>
                                 <IconButton aria-label="Edit" size="small" color="success" onClick={() => navigateTo(`/eventbus-queues/${item.id}`)} title="Edit">
