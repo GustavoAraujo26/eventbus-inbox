@@ -6,6 +6,7 @@ import EventBusQueueForm from "./pages/event-bus-queues/eventbus-queue-form";
 import EventBusMessagesDashboard from "./pages/event-bus-messages/eventbus-messages-dashboard";
 import EventBusMessageForm from "./pages/event-bus-messages/eventbus-message-form";
 import EventBusMessageDetails from "./pages/event-bus-messages/eventbus-message-details";
+import EventBusQueueDetails from "./pages/event-bus-queues/eventbus-queue-details";
 
 function App() {
   return (
@@ -16,7 +17,7 @@ function App() {
         <Route path="eventbus-queues/dashboard" element={<EventBusQueuesDashboard/>} />
         <Route path="eventbus-queues/new" element={<EventBusQueueForm/>} />
         <Route path="eventbus-queues/:id" element={<EventBusQueueForm/>} />
-        <Route path="eventbus-queues/details/:id" element={<Home/>} />
+        <Route path="eventbus-queues/details/:id" element={<EventBusQueueDetails/>} />
 
         <Route path="eventbus-messages/dashboard" element={<EventBusMessagesDashboard/>} />
         <Route path="eventbus-messages/new" element={<EventBusMessageForm/>} />

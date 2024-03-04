@@ -11,17 +11,16 @@ import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
 import { useState } from 'react';
-import { Collapse, Container, ThemeProvider, Link, Button } from '@mui/material';
+import { Collapse, Container, ThemeProvider, Link } from '@mui/material';
 import { Outlet } from 'react-router-dom';
 import InboxTheme from '../themes';
-import { Add, Apps, ExpandLess, ExpandMore, PlusOne, Send, StarBorder } from '@mui/icons-material';
+import { Add, Apps, ExpandLess, ExpandMore, Home, Send } from '@mui/icons-material';
 import { Link as RouterLink } from "react-router-dom";
 
 const drawerWidth = 240;
@@ -132,6 +131,14 @@ const BasicPage = () => {
                         </DrawerHeader>
                         <Divider />
                         <List>
+                            <Link component={RouterLink} to="/" sx={{ textDecoration: 'none' }}>
+                                <ListItemButton sx={{ pl: 4, color: 'white' }}>
+                                    <ListItemIcon>
+                                        <Home />
+                                    </ListItemIcon>
+                                    <ListItemText primary="Home" />
+                                </ListItemButton>
+                            </Link>
                             <ListItemButton onClick={() => setQueueSubMenuOpen(!queueSubMenuOpen)}>
                                 <ListItemIcon>
                                     <InboxIcon />
