@@ -8,18 +8,15 @@ import { Backdrop, CircularProgress, Grid, Paper, Table, TableBody, TableCell, T
 import AppSnackBar from "../../../components/app-snackbar";
 import EventBusMessageStatus from "../eventbus-message-status";
 import AppPagination from "../../../components/app-pagination";
+import EventBusMessageTableFilter from "../eventbus-message-table-filter";
 
 interface MessageTableProps {
-    queueId: string | null,
-    creationDateSearch: Period | null,
-    updateDateSearch: Period | null,
-    typeMatch: string | null,
-    statusToSearch: number[] | null,
     gridSize: number,
-    showQueue: boolean
+    showQueue: boolean,
+    showFilter: boolean
 }
 
-const EventBusMessageTable = ({ queueId, creationDateSearch, updateDateSearch, typeMatch, statusToSearch, gridSize, showQueue }: MessageTableProps) => {
+const EventBusMessageTable = ({ gridSize, showQueue, showFilter }: MessageTableProps) => {
     const messageService = new EventBusMessageService();
     const [isLoading, setLoading] = useState(false);
     const [snackbarResponse, setSnackbarResponse] = useState<AppSnackbarResponse>();
@@ -28,6 +25,12 @@ const EventBusMessageTable = ({ queueId, creationDateSearch, updateDateSearch, t
     const [currentPage, setCurrentPage] = useState(1);
     const [currentPageSize, setCurrentPageSize] = useState(10);
     const [rowsFounded, setRowsFounded] = useState(true);
+
+    const [queueId, setQueueId] = useState<string | null>(null);
+    const [creationDateSearch, setCreationDateSearch] = useState<Period | null>(null);
+    const [updateDateSearch, setUpdateDateSearch] = useState<Period | null>(null);
+    const [typeMatch, setTypeMatch] = useState<string | null>(null);
+    const [statusToSearch, setStatusToSearch] = useState<number[] | null>(null);
 
     const getEventBusMessages = () => {
         setLoading(true);
@@ -82,13 +85,26 @@ const EventBusMessageTable = ({ queueId, creationDateSearch, updateDateSearch, t
         setCurrentPageSize(selectedPageSize);
     }
 
+    const executeFilter = (selectedQueue: string | null, selectedCreationDateSearch: Period | null, 
+        selectedUpdateDateSearch: Period | null, selectedTypeMatch: string | null, selectedStatus: number[] | null) => {
+        setQueueId(selectedQueue);
+        setCreationDateSearch(selectedCreationDateSearch);
+        setUpdateDateSearch(selectedUpdateDateSearch);
+        setTypeMatch(selectedTypeMatch);
+        setStatusToSearch(selectedStatus);
+    }
+
     useEffect(() => {
         getEventBusMessages();
     }, []);
 
     useEffect(() => {
         getEventBusMessages();
-    }, [currentPage, currentPageSize])
+    }, [currentPage, currentPageSize]);
+
+    useEffect(() => {
+        getEventBusMessages();
+    }, [queueId, creationDateSearch, updateDateSearch, typeMatch, statusToSearch]);
 
     return (
         <>
@@ -96,6 +112,7 @@ const EventBusMessageTable = ({ queueId, creationDateSearch, updateDateSearch, t
                 <CircularProgress color="inherit" />
             </Backdrop>
             {queueMessages && <Grid item md={gridSize}>
+                {showFilter && <EventBusMessageTableFilter executeFilter={executeFilter}/>}
                 <TableContainer component={Paper}>
                     <Table>
                         <TableHead>
