@@ -8,7 +8,7 @@ interface StatusProps {
 
 const EventBusQueueStatus = ({ status }: StatusProps) => {
     return (
-        <Button variant="contained" color={status.intKey === 1 ? 'success' : 'error'} disabled={true}>
+        <Button variant="contained" disabled={true}>
             { status.intKey === 1 ? <DoneOutlined/> : <DisabledByDefault/> }
             <Typography>{status.description}</Typography>
         </Button>

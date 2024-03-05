@@ -25,7 +25,7 @@ export class EventBusMessageService extends HttpService {
     }
 
     ListMessage(request: GetEventbusMessageListRequest) {
-        return this.post<ApiResponse<GetEventbusMessageListResponse>>('/v1/event-bus/received-messages', request);
+        return this.post<ApiResponse<GetEventbusMessageListResponse>>('/v1/event-bus/received-messages/list', request);
     }
 
     ReactivateMessage(id: string) {

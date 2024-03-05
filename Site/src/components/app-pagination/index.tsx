@@ -39,7 +39,7 @@ const AppPagination = ({ rowsFounded, changePageData }: PaginationProps) => {
         <>
             <Box padding={1}>
                 <Grid container spacing={2} justifyContent="center">
-                    <Grid item md={2}>
+                    <Grid item md={3}>
                         <FormControl sx={{ minWidth: '150px' }}>
                             <InputLabel variant="standard" htmlFor="page-size-select">Select the page size</InputLabel>
                             <Select id="page-size-select" value={currentPageSize} onChange={event => changePageSize(event.target.value)}>

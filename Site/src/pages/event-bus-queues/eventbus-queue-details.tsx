@@ -10,6 +10,10 @@ import GetEventBusQueueRequest from "../../interfaces/requests/eventbus-queue/ge
 import AppSnackBar from "../../components/app-snackbar";
 import GetEventbusQueueResponse from "../../interfaces/responses/eventbus-queue/get-eventbus-queue-response";
 import EventBusQueueCard from "./eventbus-queue-card";
+import { EventBusMessageService } from "../../services/eventbus-message-service";
+import GetEventbusMessageListResponse from "../../interfaces/responses/eventbus-received-message/get-eventbus-message-list-response";
+import GetEventbusMessageListRequest from "../../interfaces/requests/eventbus-received-message/get-eventbus-message-list-request";
+import EventBusMessageTable from "../event-bus-messages/eventbus-message-table";
 
 const EventBusQueueDetails = () => {
     const queueService = new EventBusQueueService();
@@ -64,7 +68,7 @@ const EventBusQueueDetails = () => {
     const getEventBusQueue = (parameterId: string) => {
         const request: GetEventBusQueueRequest = {
             id: parameterId,
-            summarizeMessages: false
+            summarizeMessages: true
         }
 
         queueService.GetQueue(request).then(response => {
@@ -111,9 +115,14 @@ const EventBusQueueDetails = () => {
             </Backdrop>
             <AppBreadcrumb breadcrumbItems={breadcrumbItems} />
             <Grid container justifyContent="center" spacing={2}>
-                {currentQueue && <Grid item md={4}>
-                    <EventBusQueueCard queue={currentQueue!} showDescription={true} showSummarization={true} showNavigation={false} />
-                </Grid>}
+                {currentQueue && <>
+                    <Grid item md={4}>
+                        <EventBusQueueCard queue={currentQueue!} showDescription={true} showSummarization={true} showNavigation={false} />
+                    </Grid>
+                    <EventBusMessageTable queueId={currentQueue!.id} 
+                        creationDateSearch={null} updateDateSearch={null} 
+                        typeMatch={null} statusToSearch={null} gridSize={8} showQueue={false} />
+                </>}
             </Grid>
             <AppSnackBar response={snackbarResponse} />
         </>
