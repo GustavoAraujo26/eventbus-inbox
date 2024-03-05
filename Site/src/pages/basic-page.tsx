@@ -192,7 +192,7 @@ const BasicPage = () => {
                                             <ListItemText primary="Add New" />
                                         </ListItemButton>
                                     </Link>
-                                    <Link component={RouterLink} to="/eventbus-messages/new" sx={{ textDecoration: 'none' }}>
+                                    <Link component={RouterLink} to="/eventbus-messages/send" sx={{ textDecoration: 'none' }}>
                                         <ListItemButton sx={{ pl: 4, color: 'white' }}>
                                             <ListItemIcon>
                                                 <Send />

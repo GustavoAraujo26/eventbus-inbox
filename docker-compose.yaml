@@ -7,21 +7,32 @@ services:
       - 27017:27017
     volumes:
       - ./mongo:/mongo-data
+    networks:
+      - eventbus-inbox
   
   rabbitmq:
     container_name: inboxapi-rabbitmq
     image: rabbitmq:3-management
+    hostname: rabbitmq
     ports:
       - 8080:15672
       - 5672:5672
     volumes:
       - ./rabbitmq:/rabbitmq-data
+    networks:
+      - eventbus-inbox
   
   backend:
     container_name: inbox-api
     image: gustavoaraujo26/eventbus-inbox-api:latest
     ports:
       - 9000:9000
+    networks:
+      - eventbus-inbox
     depends_on:
       - mongodb
       - rabbitmq
+networks:
+  eventbus-inbox:
+    external:
+      name: eventbus-inbox

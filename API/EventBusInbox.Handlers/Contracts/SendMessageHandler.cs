@@ -35,7 +35,7 @@ namespace EventBusInbox.Handlers.Contracts
 
                 var queue = await queueRepository.GetById(request.QueueId);
                 if (queue is null)
-                    return AppResponse<AppTaskResponse>.Custom(HttpStatusCode.NotFound, $"Message {request.RequestId} not found!");
+                    return AppResponse<AppTaskResponse>.Custom(HttpStatusCode.NotFound, $"Queue {request.QueueId} not found!");
 
                 Domain.Entities.EventBusReceivedMessage entity = Domain.Entities.EventBusReceivedMessage.Create(request.RequestId, 
                     request.CreatedAt, request.Type, Convert.ToString(request.Content));

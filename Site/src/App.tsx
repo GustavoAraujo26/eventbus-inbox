@@ -7,6 +7,7 @@ import EventBusMessagesDashboard from "./pages/event-bus-messages/eventbus-messa
 import EventBusMessageForm from "./pages/event-bus-messages/eventbus-message-form";
 import EventBusMessageDetails from "./pages/event-bus-messages/eventbus-message-details";
 import EventBusQueueDetails from "./pages/event-bus-queues/eventbus-queue-details";
+import EventBusMessageSender from "./pages/event-bus-message-sender";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
         <Route path="eventbus-messages/dashboard" element={<EventBusMessagesDashboard/>} />
         <Route path="eventbus-messages/new" element={<EventBusMessageForm/>} />
         <Route path="eventbus-messages/:id" element={<EventBusMessageForm/>} />
+        <Route path="eventbus-messages/send" element={<EventBusMessageSender/>} />
         <Route path="eventbus-messages/details/:id" element={<EventBusMessageDetails/>} />
       </Route>
     </Routes>
