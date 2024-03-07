@@ -24,7 +24,6 @@ function App() {
           <Route path="eventbus-queues/details/:id" element={<EventBusQueueDetails />} />
 
           <Route path="eventbus-messages/dashboard" element={<EventBusMessagesDashboard />} />
-          <Route path="eventbus-messages/new" element={<EventBusMessageForm />} />
           <Route path="eventbus-messages/:id" element={<EventBusMessageForm />} />
           <Route path="eventbus-messages/send" element={<EventBusMessageSender />} />
           <Route path="eventbus-messages/details/:id" element={<EventBusMessageDetails />} />

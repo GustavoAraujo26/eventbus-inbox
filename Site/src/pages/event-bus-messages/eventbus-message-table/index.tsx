@@ -4,11 +4,13 @@ import AppSnackbarResponse from "../../../interfaces/requests/app-snackbar-respo
 import GetEventbusMessageListRequest from "../../../interfaces/requests/eventbus-received-message/get-eventbus-message-list-request";
 import { EventBusMessageService } from "../../../services/eventbus-message-service";
 import GetEventbusMessageListResponse from "../../../interfaces/responses/eventbus-received-message/get-eventbus-message-list-response";
-import { Backdrop, CircularProgress, Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
+import { Backdrop, CircularProgress, Grid, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
 import AppSnackBar from "../../../components/app-snackbar";
 import EventBusMessageStatus from "../eventbus-message-status";
 import AppPagination from "../../../components/app-pagination";
 import EventBusMessageTableFilter from "../eventbus-message-table-filter";
+import { Info } from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
 
 interface MessageTableProps {
     gridSize: number,
@@ -18,6 +20,7 @@ interface MessageTableProps {
 }
 
 const EventBusMessageTable = ({ gridSize, showQueue, showFilter, currentQueueId }: MessageTableProps) => {
+    const navigateTo = useNavigate();
     const messageService = new EventBusMessageService();
     const [isLoading, setLoading] = useState(false);
     const [snackbarResponse, setSnackbarResponse] = useState<AppSnackbarResponse>();
@@ -86,7 +89,7 @@ const EventBusMessageTable = ({ gridSize, showQueue, showFilter, currentQueueId 
         setCurrentPageSize(selectedPageSize);
     }
 
-    const executeFilter = (selectedQueue: string | null, selectedCreationDateSearch: Period | null, 
+    const executeFilter = (selectedQueue: string | null, selectedCreationDateSearch: Period | null,
         selectedUpdateDateSearch: Period | null, selectedTypeMatch: string | null, selectedStatus: number[] | null) => {
         setQueueId(selectedQueue);
         setCreationDateSearch(selectedCreationDateSearch);
@@ -113,7 +116,7 @@ const EventBusMessageTable = ({ gridSize, showQueue, showFilter, currentQueueId 
                 <CircularProgress color="inherit" />
             </Backdrop>
             {queueMessages && <Grid item md={gridSize}>
-                {showFilter && <EventBusMessageTableFilter executeFilter={executeFilter}/>}
+                {showFilter && <EventBusMessageTableFilter executeFilter={executeFilter} />}
                 <TableContainer component={Paper}>
                     <Table>
                         <TableHead>
@@ -139,10 +142,14 @@ const EventBusMessageTable = ({ gridSize, showQueue, showFilter, currentQueueId 
                                 {showQueue && <TableCell>{message.queue.name}</TableCell>}
                                 <TableCell>{message.type}</TableCell>
                                 <TableCell>
-                                    <EventBusMessageStatus status={message.status}/>
+                                    <EventBusMessageStatus status={message.status} />
                                 </TableCell>
                                 <TableCell>{message.processingAttempts}</TableCell>
-                                <TableCell></TableCell>
+                                <TableCell>
+                                    <IconButton aria-label="Details" size="small" color="info" onClick={() => navigateTo(`/eventbus-messages/details/${message.requestId}`)} title="Details">
+                                        <Info />
+                                    </IconButton>
+                                </TableCell>
                             </TableRow>)}
                         </TableBody>
                     </Table>

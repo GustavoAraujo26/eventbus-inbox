@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Period from "../../interfaces/period";
 import AppSnackbarResponse from "../../interfaces/requests/app-snackbar-response";
 import AppBreadcrumbItem from "../../interfaces/app-breadcrumb-item";
 import { Add, Apps, HomeOutlined } from "@mui/icons-material";
@@ -25,7 +24,7 @@ const EventBusMessagesDashboard = () => {
             isPage: false
         };
 
-        const queueDashboard: AppBreadcrumbItem = {
+        const messageDashboard: AppBreadcrumbItem = {
             id: 2,
             icon: <Apps sx={{ mr: 0.5 }} />,
             text: 'Event Bus Messages Dashboard',
@@ -33,7 +32,7 @@ const EventBusMessagesDashboard = () => {
             isPage: true
         };
 
-        const newList: AppBreadcrumbItem[] = [home, queueDashboard];
+        const newList: AppBreadcrumbItem[] = [home, messageDashboard];
 
         setBreadcrumbItems(newList);
     }

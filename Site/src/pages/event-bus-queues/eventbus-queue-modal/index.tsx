@@ -5,7 +5,6 @@ import { Close, Delete, Lock, LockOpen } from "@mui/icons-material";
 import { AppActionType } from "../../../enums/app-action-type";
 import { useEffect, useState } from "react";
 import { EventBusQueueService } from "../../../services/eventbus-queue-service";
-import { useNavigate } from "react-router-dom";
 import UpdateEventbusQueueStatusRequest from "../../../interfaces/requests/eventbus-queue/update-eventbus-queue-status-request";
 import AppSnackbarResponse from "../../../interfaces/requests/app-snackbar-response";
 import AppSnackBar from "../../../components/app-snackbar";

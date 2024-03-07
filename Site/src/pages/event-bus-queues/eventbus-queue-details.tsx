@@ -3,16 +3,13 @@ import { EventBusQueueService } from "../../services/eventbus-queue-service";
 import { useEffect, useState } from "react";
 import AppSnackbarResponse from "../../interfaces/requests/app-snackbar-response";
 import AppBreadcrumbItem from "../../interfaces/app-breadcrumb-item";
-import { HomeOutlined, Apps, Edit, Add, Info } from "@mui/icons-material";
+import { HomeOutlined, Apps, Info } from "@mui/icons-material";
 import { Backdrop, CircularProgress, Grid } from "@mui/material";
 import AppBreadcrumb from "../../components/app-breadcrumb";
 import GetEventBusQueueRequest from "../../interfaces/requests/eventbus-queue/get-eventbus-queue-request";
 import AppSnackBar from "../../components/app-snackbar";
 import GetEventbusQueueResponse from "../../interfaces/responses/eventbus-queue/get-eventbus-queue-response";
 import EventBusQueueCard from "./eventbus-queue-card";
-import { EventBusMessageService } from "../../services/eventbus-message-service";
-import GetEventbusMessageListResponse from "../../interfaces/responses/eventbus-received-message/get-eventbus-message-list-response";
-import GetEventbusMessageListRequest from "../../interfaces/requests/eventbus-received-message/get-eventbus-message-list-request";
 import EventBusMessageTable from "../event-bus-messages/eventbus-message-table";
 
 const EventBusQueueDetails = () => {
