@@ -9,7 +9,7 @@ import AppSnackBar from "../../../components/app-snackbar";
 import EventBusMessageStatus from "../eventbus-message-status";
 import AppPagination from "../../../components/app-pagination";
 import EventBusMessageTableFilter from "../eventbus-message-table-filter";
-import { Info } from "@mui/icons-material";
+import { Delete, DomainVerification, Edit, Info } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 
 interface MessageTableProps {
@@ -148,6 +148,15 @@ const EventBusMessageTable = ({ gridSize, showQueue, showFilter, currentQueueId 
                                 <TableCell>
                                     <IconButton aria-label="Details" size="small" color="info" onClick={() => navigateTo(`/eventbus-messages/details/${message.requestId}`)} title="Details">
                                         <Info />
+                                    </IconButton>
+                                    <IconButton aria-label="Processing Attempt" size="small" color="warning" title="Processing Attempt">
+                                        <DomainVerification />
+                                    </IconButton>
+                                    <IconButton aria-label="Edit" size="small" color="secondary" onClick={() => navigateTo(`/eventbus-messages/${message.requestId}`)} title="Edit">
+                                        <Edit />
+                                    </IconButton>
+                                    <IconButton aria-label="Delete" size="small" color="error" title="Delete">
+                                        <Delete />
                                     </IconButton>
                                 </TableCell>
                             </TableRow>)}
