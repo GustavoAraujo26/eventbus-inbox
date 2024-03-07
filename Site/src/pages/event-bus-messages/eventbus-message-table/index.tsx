@@ -13,10 +13,11 @@ import EventBusMessageTableFilter from "../eventbus-message-table-filter";
 interface MessageTableProps {
     gridSize: number,
     showQueue: boolean,
-    showFilter: boolean
+    showFilter: boolean,
+    currentQueueId: string | null
 }
 
-const EventBusMessageTable = ({ gridSize, showQueue, showFilter }: MessageTableProps) => {
+const EventBusMessageTable = ({ gridSize, showQueue, showFilter, currentQueueId }: MessageTableProps) => {
     const messageService = new EventBusMessageService();
     const [isLoading, setLoading] = useState(false);
     const [snackbarResponse, setSnackbarResponse] = useState<AppSnackbarResponse>();
@@ -35,7 +36,7 @@ const EventBusMessageTable = ({ gridSize, showQueue, showFilter }: MessageTableP
     const getEventBusMessages = () => {
         setLoading(true);
         const request: GetEventbusMessageListRequest = {
-            queueId: queueId,
+            queueId: currentQueueId ? currentQueueId : queueId,
             creationDateSearch: creationDateSearch,
             updateDateSearch: updateDateSearch,
             typeMatch: typeMatch,

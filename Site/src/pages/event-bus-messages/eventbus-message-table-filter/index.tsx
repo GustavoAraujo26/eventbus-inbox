@@ -1,4 +1,4 @@
-import { Backdrop, Box, Button, Card, CardContent, CircularProgress, FormControl, Grid, InputLabel, MenuItem, Paper, Select, TextField } from "@mui/material";
+import { Backdrop, Box, Button, Card, CardContent, CircularProgress, Divider, FormControl, FormControlLabel, Grid, InputLabel, MenuItem, Paper, Select, Switch, TextField, Typography } from "@mui/material";
 import { EventBusQueueService } from "../../../services/eventbus-queue-service";
 import GetEventbusQueueResponse from "../../../interfaces/responses/eventbus-queue/get-eventbus-queue-response";
 import { useEffect, useState } from "react";
@@ -10,6 +10,7 @@ import EnumData from "../../../interfaces/enum-data";
 import Period from "../../../interfaces/period";
 import { CleaningServices, Search } from "@mui/icons-material";
 import EventBusMessageStatusFilter from "../eventbus-message-status-filter";
+import AppPeriodForm from "../../../components/app-period-form";
 
 interface TableFilterProps {
     executeFilter: (queueId: string | null, creationDateSearch: Period | null,
@@ -24,13 +25,15 @@ const EventBusMessageTableFilter = ({ executeFilter }: TableFilterProps) => {
     const [statusList, setStatusList] = useState<EnumData[]>([]);
     const [snackbarResponse, setSnackbarResponse] = useState<AppSnackbarResponse>();
     const [isLoading, setLoading] = useState(true);
-    const [queueId, setQueueId] = useState<string | null>(null);
+    const [queueId, setQueueId] = useState<string>('');
     const [creationStartDateSearch, setCreationStartDateSearch] = useState<Date | null>(null);
     const [creationEndDateSearch, setCreationEndDateSearch] = useState<Date | null>(null);
     const [updateStartDateSearch, setUpdateStartDateSearch] = useState<Date | null>(null);
     const [updateEndDateSearch, setUpdateEndDateSearch] = useState<Date | null>(null);
-    const [typeMatch, setTypeMatch] = useState<string | null>(null);
+    const [typeMatch, setTypeMatch] = useState<string>('');
     const [statusToSearch, setStatusToSearch] = useState<number[] | null>(null);
+    const [creationDateToogle, setCreationDateToogle] = useState<boolean>(true);
+    const [updateDateToogle, setUpdateDateToogle] = useState<boolean>(false);
 
     const loadQueueList = () => {
         setLoading(true);
@@ -127,6 +130,7 @@ const EventBusMessageTableFilter = ({ executeFilter }: TableFilterProps) => {
 
     const filterTable = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
+        debugger;
 
         let selectedQueue: string | null = null;
         let creationDateSearch: Period | null = null;
@@ -164,12 +168,12 @@ const EventBusMessageTableFilter = ({ executeFilter }: TableFilterProps) => {
     }
 
     const cleanForm = () => {
-        setQueueId(null);
+        setQueueId('');
         setCreationStartDateSearch(null);
         setCreationEndDateSearch(null);
         setUpdateStartDateSearch(null);
         setUpdateEndDateSearch(null);
-        setTypeMatch(null);
+        setTypeMatch('');
         setStatusToSearch(null);
     }
 
@@ -183,9 +187,11 @@ const EventBusMessageTableFilter = ({ executeFilter }: TableFilterProps) => {
                     <Card sx={{ marginBottom: 3 }}>
                         <CardContent>
                             <Box component="form" onSubmit={filterTable}>
+                                <Typography component="h3" sx={{fontWeight: 'bold'}}>Filters</Typography>
+                                <Divider/>
                                 <Grid container justifyContent="left" spacing={2}>
-                                    {queueList && <Grid item md={3}>
-                                        <FormControl fullWidth>
+                                    {queueList && <Grid item md={6}>
+                                        <FormControl variant="standard" fullWidth>
                                             <InputLabel variant="standard" htmlFor="queue-select">Select the Queue</InputLabel>
                                             <Select id="queue-select" value={queueId} onChange={event => setQueueId(event.target.value)} fullWidth>
                                                 <MenuItem value="">Select an option</MenuItem>
@@ -195,19 +201,61 @@ const EventBusMessageTableFilter = ({ executeFilter }: TableFilterProps) => {
                                             </Select>
                                         </FormControl>
                                     </Grid>}
-                                    <Grid item md={3}>
+                                    <Grid item md={6}>
                                         <TextField value={typeMatch}
                                             label="Type to search"
                                             variant="standard"
                                             fullWidth
                                             onChange={event => setTypeMatch(event.target.value)} />
                                     </Grid>
-                                    
-                                    <Grid item md={3}>
+                                </Grid>
+                                <br/>
+                                <Grid justifyContent="center" container spacing={2}>
+                                    <Grid item md={6}>
+                                        <Typography>Search By</Typography>
+                                        <FormControlLabel label="Creation date" control={<Switch checked={creationDateToogle} value={creationDateToogle} onChange={(event) => {
+                                            const checked: boolean = event.target.checked;
+                                            if (checked) {
+                                                setCreationDateToogle(true);
+                                                setUpdateDateToogle(false);
+                                            }
+                                            else {
+                                                setCreationDateToogle(false);
+                                                setUpdateDateToogle(true);
+                                            }
+                                        }} />} />
+
+                                        <FormControlLabel label="Update date" control={<Switch checked={updateDateToogle} value={updateDateToogle} onChange={(event) => {
+                                            const checked: boolean = event.target.checked;
+                                            if (checked) {
+                                                setCreationDateToogle(false);
+                                                setUpdateDateToogle(true);
+                                            }
+                                            else {
+                                                setCreationDateToogle(true);
+                                                setUpdateDateToogle(false);
+                                            }
+                                        }} />} />
+
+                                        {creationDateToogle && <AppPeriodForm currentStart={creationStartDateSearch} currentEnd={creationEndDateSearch} 
+                                            cleanForm={(creationStartDateSearch === null && creationEndDateSearch === null)}
+                                            onUpdatePeriod={function (selectedStart: Date, selectedEnd: Date): void {
+                                            setCreationStartDateSearch(selectedStart);
+                                            setCreationEndDateSearch(selectedEnd);
+                                        }} />}
+
+                                        {updateDateToogle && <AppPeriodForm currentStart={updateStartDateSearch} currentEnd={updateEndDateSearch} 
+                                            cleanForm={(updateStartDateSearch === null && updateEndDateSearch === null)}
+                                            onUpdatePeriod={function (selectedStart: Date, selectedEnd: Date): void {
+                                            setUpdateStartDateSearch(selectedStart);
+                                            setUpdateEndDateSearch(selectedEnd);
+                                        }} />}
 
                                     </Grid>
+                                    {statusList && <Grid item md={6}>
+                                        <EventBusMessageStatusFilter statusList={statusList} updateStatusFilter={obj => setStatusToSearch(obj)} cleanList={statusToSearch === null} />
+                                    </Grid>}
                                 </Grid>
-                                {statusList && <EventBusMessageStatusFilter statusList={statusList} updateStatusFilter={obj => setStatusToSearch(obj)} cleanList={statusToSearch === null} />}
                                 <Button variant="contained" color="primary" sx={{ marginTop: 3 }} type="submit">
                                     <Search /> Search
                                 </Button>

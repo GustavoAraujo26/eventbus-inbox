@@ -48,7 +48,7 @@ const EventBusMessagesDashboard = () => {
                 <CircularProgress color="inherit" />
             </Backdrop>
             <AppBreadcrumb breadcrumbItems={breadcrumbItems} />
-            <EventBusMessageTable gridSize={12} showQueue={true} showFilter={true} />
+            <EventBusMessageTable gridSize={12} showQueue={true} showFilter={true} currentQueueId={null} />
             <AppSnackBar response={snackbarResponse} />
         </>
     );

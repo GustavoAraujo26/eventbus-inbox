@@ -119,7 +119,7 @@ const EventBusQueueDetails = () => {
                     <Grid item md={4}>
                         <EventBusQueueCard queue={currentQueue!} showDescription={true} showSummarization={true} showNavigation={false} />
                     </Grid>
-                    <EventBusMessageTable gridSize={8} showQueue={false} showFilter={false} />
+                    <EventBusMessageTable gridSize={8} showQueue={false} showFilter={false} currentQueueId={currentQueue!.id} />
                 </>}
             </Grid>
             <AppSnackBar response={snackbarResponse} />

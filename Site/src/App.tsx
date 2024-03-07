@@ -8,25 +8,29 @@ import EventBusMessageForm from "./pages/event-bus-messages/eventbus-message-for
 import EventBusMessageDetails from "./pages/event-bus-messages/eventbus-message-details";
 import EventBusQueueDetails from "./pages/event-bus-queues/eventbus-queue-details";
 import EventBusMessageSender from "./pages/event-bus-message-sender";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 
 function App() {
   return (
-    <Routes>
-      <Route element={<BasicPage/>}>
-        <Route path="/" element={<Home/>} />
-        
-        <Route path="eventbus-queues/dashboard" element={<EventBusQueuesDashboard/>} />
-        <Route path="eventbus-queues/new" element={<EventBusQueueForm/>} />
-        <Route path="eventbus-queues/:id" element={<EventBusQueueForm/>} />
-        <Route path="eventbus-queues/details/:id" element={<EventBusQueueDetails/>} />
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <Routes>
+        <Route element={<BasicPage />}>
+          <Route path="/" element={<Home />} />
 
-        <Route path="eventbus-messages/dashboard" element={<EventBusMessagesDashboard/>} />
-        <Route path="eventbus-messages/new" element={<EventBusMessageForm/>} />
-        <Route path="eventbus-messages/:id" element={<EventBusMessageForm/>} />
-        <Route path="eventbus-messages/send" element={<EventBusMessageSender/>} />
-        <Route path="eventbus-messages/details/:id" element={<EventBusMessageDetails/>} />
-      </Route>
-    </Routes>
+          <Route path="eventbus-queues/dashboard" element={<EventBusQueuesDashboard />} />
+          <Route path="eventbus-queues/new" element={<EventBusQueueForm />} />
+          <Route path="eventbus-queues/:id" element={<EventBusQueueForm />} />
+          <Route path="eventbus-queues/details/:id" element={<EventBusQueueDetails />} />
+
+          <Route path="eventbus-messages/dashboard" element={<EventBusMessagesDashboard />} />
+          <Route path="eventbus-messages/new" element={<EventBusMessageForm />} />
+          <Route path="eventbus-messages/:id" element={<EventBusMessageForm />} />
+          <Route path="eventbus-messages/send" element={<EventBusMessageSender />} />
+          <Route path="eventbus-messages/details/:id" element={<EventBusMessageDetails />} />
+        </Route>
+      </Routes>
+    </LocalizationProvider>
   );
 }
 

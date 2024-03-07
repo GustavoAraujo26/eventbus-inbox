@@ -153,8 +153,8 @@ namespace EventBusInbox.Repositories.Contracts
 
             if (request.CreationDateSearch is not null)
             {
-                var creationStartDateFilter = filterBuilder.Gte(x => x.CreatedAt, request.CreationDateSearch.Start.Value);
-                var creationEndDateFilter = filterBuilder.Lte(x => x.CreatedAt, request.CreationDateSearch.End.Value);
+                var creationStartDateFilter = filterBuilder.Gte(x => x.CreatedAt, request.CreationDateSearch.Start.Value.Date);
+                var creationEndDateFilter = filterBuilder.Lte(x => x.CreatedAt, request.CreationDateSearch.End.Value.ToEndOfDay());
 
                 if (filter is null)
                     filter = creationStartDateFilter & creationEndDateFilter;
@@ -164,8 +164,8 @@ namespace EventBusInbox.Repositories.Contracts
 
             if (request.UpdateDateSearch is not null)
             {
-                var updateStartDateFilter = filterBuilder.Gte(x => x.CreatedAt, request.CreationDateSearch.Start.Value);
-                var updateEndDateFilter = filterBuilder.Lte(x => x.CreatedAt, request.CreationDateSearch.End.Value);
+                var updateStartDateFilter = filterBuilder.Gte(x => x.CreatedAt, request.CreationDateSearch.Start.Value.Date);
+                var updateEndDateFilter = filterBuilder.Lte(x => x.CreatedAt, request.CreationDateSearch.End.Value.ToEndOfDay());
 
                 if (filter is null)
                     filter = updateStartDateFilter & updateEndDateFilter;
