@@ -195,7 +195,7 @@ const EventBusMessageDetails = () => {
                             <CardHeader title="Message Content" sx={{ textAlign: 'center' }} />
                             <CardContent>
                                 <Divider />
-                                <Box sx={{ padding: 1 }}>
+                                <Box sx={{ padding: 1, maxHeight: '300px', overflow: 'auto' }}>
                                     <pre>{JSON.stringify(eventbusMessage.content, null, 2)}</pre>
                                 </Box>
                             </CardContent>

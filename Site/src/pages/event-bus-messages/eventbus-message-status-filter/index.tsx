@@ -35,7 +35,7 @@ const EventBusMessageStatusFilter = ({ statusList, updateStatusFilter, cleanList
             
             {statusList && statusList.length > 0 && <>
                 <p>Select the status to search</p>
-                <Paper sx={{ maxHeight: '300px', overflow: 'scroll' }}>
+                <Paper sx={{ maxHeight: '300px', overflow: 'auto' }}>
                     {statusList.map(item => <FormControlLabel key={item.intKey} control={
                         <Checkbox checked={selectedStatus.indexOf(item.intKey) !== -1} onChange={event => onCheckStatus(item.intKey, event)} name={item.stringKey} />} label={item.description}/>)}
                 </Paper>
