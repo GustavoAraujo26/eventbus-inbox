@@ -130,7 +130,6 @@ const EventBusMessageTableFilter = ({ executeFilter }: TableFilterProps) => {
 
     const filterTable = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        debugger;
 
         let selectedQueue: string | null = null;
         let creationDateSearch: Period | null = null;
@@ -169,12 +168,16 @@ const EventBusMessageTableFilter = ({ executeFilter }: TableFilterProps) => {
 
     const cleanForm = () => {
         setQueueId('');
+        cleanDates();
+        setTypeMatch('');
+        setStatusToSearch(null);
+    }
+
+    const cleanDates = () => {
         setCreationStartDateSearch(null);
         setCreationEndDateSearch(null);
         setUpdateStartDateSearch(null);
         setUpdateEndDateSearch(null);
-        setTypeMatch('');
-        setStatusToSearch(null);
     }
 
     return (
@@ -215,6 +218,7 @@ const EventBusMessageTableFilter = ({ executeFilter }: TableFilterProps) => {
                                         <Typography>Search By</Typography>
                                         <FormControlLabel label="Creation date" control={<Switch checked={creationDateToogle} value={creationDateToogle} onChange={(event) => {
                                             const checked: boolean = event.target.checked;
+                                            cleanDates();
                                             if (checked) {
                                                 setCreationDateToogle(true);
                                                 setUpdateDateToogle(false);
@@ -227,6 +231,7 @@ const EventBusMessageTableFilter = ({ executeFilter }: TableFilterProps) => {
 
                                         <FormControlLabel label="Update date" control={<Switch checked={updateDateToogle} value={updateDateToogle} onChange={(event) => {
                                             const checked: boolean = event.target.checked;
+                                            cleanDates();
                                             if (checked) {
                                                 setCreationDateToogle(false);
                                                 setUpdateDateToogle(true);
