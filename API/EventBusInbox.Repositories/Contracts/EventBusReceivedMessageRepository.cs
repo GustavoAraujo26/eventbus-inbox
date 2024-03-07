@@ -156,7 +156,10 @@ namespace EventBusInbox.Repositories.Contracts
                 var creationStartDateFilter = filterBuilder.Gte(x => x.CreatedAt, request.CreationDateSearch.Start.Value);
                 var creationEndDateFilter = filterBuilder.Lte(x => x.CreatedAt, request.CreationDateSearch.End.Value);
 
-                filter = filter & creationStartDateFilter & creationEndDateFilter;
+                if (filter is null)
+                    filter = creationStartDateFilter & creationEndDateFilter;
+                else
+                    filter = filter & creationStartDateFilter & creationEndDateFilter;
             }
 
             if (request.UpdateDateSearch is not null)
@@ -164,21 +167,30 @@ namespace EventBusInbox.Repositories.Contracts
                 var updateStartDateFilter = filterBuilder.Gte(x => x.CreatedAt, request.CreationDateSearch.Start.Value);
                 var updateEndDateFilter = filterBuilder.Lte(x => x.CreatedAt, request.CreationDateSearch.End.Value);
 
-                filter = filter & updateStartDateFilter & updateEndDateFilter;
+                if (filter is null)
+                    filter = updateStartDateFilter & updateEndDateFilter;
+                else
+                    filter = filter & updateStartDateFilter & updateEndDateFilter;
             }
 
             if (request.StatusToSearch is not null && request.StatusToSearch.Any())
             {
-                var statusFilter = filterBuilder.Where(x => request.StatusToSearch.Contains(x.Status));
+                var statusFilter = filterBuilder.In(x => x.Status, request.StatusToSearch);
 
-                filter = filter & statusFilter;
+                if (filter is null)
+                    filter = statusFilter;
+                else
+                    filter = filter & statusFilter;
             }
 
             if (!string.IsNullOrEmpty(request.TypeMatch))
             {
                 var typeFilter = filterBuilder.Where(x => x.Type.Contains(request.TypeMatch));
 
-                filter = filter & filter;
+                if (filter is null)
+                    filter = typeFilter;
+                else
+                    filter = filter & filter;
             }
 
             if (filter is null)

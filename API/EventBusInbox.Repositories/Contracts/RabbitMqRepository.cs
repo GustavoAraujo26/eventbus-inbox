@@ -90,6 +90,15 @@ namespace EventBusInbox.Repositories.Contracts
 
         private IConnection BuildConnection()
         {
+#if DEBUG
+            var factory = new ConnectionFactory
+            {
+                HostName = "localhost",
+                DispatchConsumersAsync = true
+            };
+
+            return factory.CreateConnection();
+#else
             var factory = new ConnectionFactory
             {
                 DispatchConsumersAsync = true,
@@ -100,6 +109,9 @@ namespace EventBusInbox.Repositories.Contracts
             };
 
             return factory.CreateConnection();
+#endif
+
+
         }
 
         private async Task ReceiveMessage(IModel channel, object ch, BasicDeliverEventArgs ea, EventBusQueue queue, RabbitMqConsumptionState consumptionState)
