@@ -78,7 +78,7 @@ const EventBusQueuesDashboard = () => {
             if (apiResponse.isSuccess) {
                 const queueList = apiResponse.data;
                 setQueues(queueList);
-                setRowsFounded((queueList.length > 0 && queueList.length >= currentPageSize));
+                setRowsFounded((apiResponse.data.length > 0 && apiResponse.data.length >= currentPageSize));
             }
             else{
                 const response: AppSnackbarResponse = {

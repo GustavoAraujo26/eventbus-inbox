@@ -50,7 +50,7 @@ const AppPagination = ({ rowsFounded, changePageData }: PaginationProps) => {
                         </FormControl>
                     </Grid>
                     <Grid item md={4}>
-                        <ButtonGroup variant="outlined">
+                        <ButtonGroup variant="contained">
                             <Button disabled={currentPage == 1} onClick={goToPreviousPage}>
                                 <ArrowBackIos />
                                 Previous

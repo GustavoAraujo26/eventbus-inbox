@@ -62,7 +62,7 @@ const EventBusMessageTable = ({ gridSize, showQueue, showFilter, currentQueueId 
             const apiResponse = response.data;
             if (apiResponse.isSuccess) {
                 setQueueMessages(apiResponse.data);
-                setRowsFounded((queueMessages.length > 0 && queueMessages.length >= currentPageSize));
+                setRowsFounded((apiResponse.data.length > 0 && apiResponse.data.length >= currentPageSize));
             }
             else {
                 const response: AppSnackbarResponse = {
@@ -105,6 +105,7 @@ const EventBusMessageTable = ({ gridSize, showQueue, showFilter, currentQueueId 
         setUpdateDateSearch(selectedUpdateDateSearch);
         setTypeMatch(selectedTypeMatch);
         setStatusToSearch(selectedStatus);
+        setCurrentPage(1);
     }
 
     const closeStatusModal = () => {
