@@ -8,7 +8,7 @@ import GetEventbusMessageResponse from "../../interfaces/responses/eventbus-rece
 import { Avatar, Backdrop, Box, Card, CardContent, CardHeader, Chip, CircularProgress, Divider, Grid, List, ListItem, ListItemAvatar, ListItemText, Paper, SpeedDial, SpeedDialAction, SpeedDialIcon, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip, Typography } from "@mui/material";
 import AppBreadcrumb from "../../components/app-breadcrumb";
 import AppSnackBar from "../../components/app-snackbar";
-import EventBusMessageStatus from "./eventbus-message-status";
+import EventBusMessageCard from "./eventbus-message-card";
 
 const EventBusMessageDetails = () => {
     const messageService = new EventBusMessageService();
@@ -110,85 +110,10 @@ const EventBusMessageDetails = () => {
             {eventbusMessage && <>
                 <Grid justifyContent="center" spacing={2} container>
                     <Grid item md={6}>
-                        <Card>
-                            <CardHeader title="Message Details" sx={{ textAlign: 'center' }} />
-                            <CardContent>
-                                <Divider />
-                                <List>
-                                    <ListItem>
-                                        <ListItemAvatar>
-                                            <Tooltip title="Request Id">
-                                                <Avatar>
-                                                    <AssignmentInd />
-                                                </Avatar>
-                                            </Tooltip>
-                                        </ListItemAvatar>
-                                        <ListItemText primary={eventbusMessage.requestId} />
-                                    </ListItem>
-                                </List>
-                                <Divider />
-                                <List>
-                                    <ListItem>
-                                        <ListItemAvatar>
-                                            <Tooltip title="Type">
-                                                <Avatar>
-                                                    <Code />
-                                                </Avatar>
-                                            </Tooltip>
-                                        </ListItemAvatar>
-                                        <ListItemText primary={eventbusMessage.type} />
-                                    </ListItem>
-                                    <ListItem>
-                                        <ListItemAvatar>
-                                            <Tooltip title="Creation Date">
-                                                <Avatar>
-                                                    <Today />
-                                                </Avatar>
-                                            </Tooltip>
-                                        </ListItemAvatar>
-                                        <ListItemText primary={(new Date(eventbusMessage.createdAt).toLocaleDateString())} />
-                                    </ListItem>
-                                    <ListItem>
-                                        <ListItemAvatar>
-                                            <Tooltip title="Queue">
-                                                <Avatar>
-                                                    <Queue />
-                                                </Avatar>
-                                            </Tooltip>
-                                        </ListItemAvatar>
-                                        <ListItemText primary={eventbusMessage.queue.name} />
-                                    </ListItem>
-                                    <ListItem>
-                                        <ListItemAvatar>
-                                            <Tooltip title="Status">
-                                                <Avatar>
-                                                    <GridOn />
-                                                </Avatar>
-                                            </Tooltip>
-                                        </ListItemAvatar>
-                                        <EventBusMessageStatus status={eventbusMessage.status} />
-                                    </ListItem>
-                                    <ListItem>
-                                        <ListItemAvatar>
-                                            <Tooltip title="Processing Attempts">
-                                                <Avatar>
-                                                    <Task />
-                                                </Avatar>
-                                            </Tooltip>
-                                        </ListItemAvatar>
-                                        {eventbusMessage.processingAttempts > eventbusMessage.queue.processingAttempts && <Chip label={processingAttempts} color="error" />}
-                                        {(eventbusMessage.processingAttempts <= eventbusMessage.queue.processingAttempts) && eventbusMessage.status.intKey === 1 &&
-                                            <Chip label={processingAttempts} color="primary" variant="outlined" />}
-                                        {(eventbusMessage.processingAttempts <= eventbusMessage.queue.processingAttempts) && eventbusMessage.status.intKey === 2 &&
-                                            <Chip label={processingAttempts} color="success" />}
-                                        {(eventbusMessage.processingAttempts <= eventbusMessage.queue.processingAttempts) && eventbusMessage.status.intKey === 3 &&
-                                            <Chip label={processingAttempts} color="error" variant="outlined" />}
-                                        {(eventbusMessage.processingAttempts <= eventbusMessage.queue.processingAttempts) && eventbusMessage.status.intKey === 4 &&
-                                            <Chip label={processingAttempts} color="error" />}
-                                    </ListItem>
-                                </List>
-                            </CardContent>
-                        </Card>
+                        <EventBusMessageCard requestId={eventbusMessage.requestId} type={eventbusMessage.type} 
+                            creationDate={eventbusMessage.createdAt} processingAttempts={eventbusMessage.processingAttempts} 
+                            status={eventbusMessage.status} queueName={eventbusMessage.queue.name} 
+                            queueProcessingAttempts={eventbusMessage.queue.processingAttempts}/>
                     </Grid>
                     <Grid item md={6}>
                         <Card>

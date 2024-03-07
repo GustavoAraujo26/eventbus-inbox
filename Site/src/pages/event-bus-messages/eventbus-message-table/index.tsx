@@ -12,6 +12,8 @@ import EventBusMessageTableFilter from "../eventbus-message-table-filter";
 import { Delete, DomainVerification, Edit, Info, RestartAlt } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import EventBusMessageProcessAttemptModal from "../eventbus-message-process-attempt-modal";
+import { AppActionType } from "../../../enums/app-action-type";
+import EventBusMessageActionModal from "../eventbus-message-action-modal";
 
 interface MessageTableProps {
     gridSize: number,
@@ -37,8 +39,11 @@ const EventBusMessageTable = ({ gridSize, showQueue, showFilter, currentQueueId 
     const [typeMatch, setTypeMatch] = useState<string | null>(null);
     const [statusToSearch, setStatusToSearch] = useState<number[] | null>(null);
 
-    const [showModal, setShowModal] = useState(false);
-    const [selectedMessage, setSelectedMessage] = useState('');
+    const [showStatusModal, setShowStatusModal] = useState(false);
+    const [showActionModal, setShowActionModal] = useState(false);
+    const [selectedStatusMessage, setSelectedStatusMessage] = useState<GetEventbusMessageListResponse | null>(null);
+    const [selectedActionMessage, setSelectedActionMessage] = useState<GetEventbusMessageListResponse | null>(null);
+    const [selectedActionType, setActionType] = useState<AppActionType | null>(null);
 
     const getEventBusMessages = () => {
         setLoading(true);
@@ -103,12 +108,23 @@ const EventBusMessageTable = ({ gridSize, showQueue, showFilter, currentQueueId 
     }
 
     const closeStatusModal = () => {
-        setShowModal(false);
-        setSelectedMessage('');
+        setShowStatusModal(false);
+        setSelectedStatusMessage(null);
     }
 
-    const selectMessage = (requestId: string) => {
-        setSelectedMessage(requestId);
+    const closeActionModal = () => {
+        setShowActionModal(false);
+        setSelectedActionMessage(null);
+        setActionType(null);
+    }
+
+    const selectStatusMessage = (currentMessage: GetEventbusMessageListResponse) => {
+        setSelectedStatusMessage(currentMessage);
+    }
+
+    const selectActionMessage = (currentMessage: GetEventbusMessageListResponse, selectedAction: AppActionType) => {
+        setSelectedActionMessage(currentMessage);
+        setActionType(selectedAction);
     }
 
     useEffect(() => {
@@ -124,13 +140,22 @@ const EventBusMessageTable = ({ gridSize, showQueue, showFilter, currentQueueId 
     }, [queueId, creationDateSearch, updateDateSearch, typeMatch, statusToSearch]);
 
     useEffect(() => {
-        if (selectedMessage === null || selectedMessage === '') {
-            setShowModal(false);
+        if (selectedStatusMessage === null) {
+            setShowStatusModal(false);
         }
         else {
-            setShowModal(true);
+            setShowStatusModal(true);
         }
-    }, [selectedMessage]);
+    }, [selectedStatusMessage]);
+
+    useEffect(() => {
+        if (selectedActionMessage === null) {
+            setShowActionModal(false);
+        }
+        else {
+            setShowActionModal(true);
+        }
+    }, [selectedActionMessage]);
 
     return (
         <>
@@ -172,17 +197,17 @@ const EventBusMessageTable = ({ gridSize, showQueue, showFilter, currentQueueId 
                                         <Info />
                                     </IconButton>
                                     {message.status.intKey != 2 && message.status.intKey != 4 && <IconButton aria-label="Processing Attempt"
-                                        size="small" color="warning" title="Processing Attempt" onClick={() => selectMessage(message.requestId)}>
+                                        size="small" color="warning" title="Processing Attempt" onClick={() => selectStatusMessage(message)}>
                                         <DomainVerification />
                                     </IconButton>}
-                                    {(message.status.intKey === 2 || message.status.intKey === 4) && <IconButton aria-label="Processing Attempt"
+                                    {(message.status.intKey === 2 || message.status.intKey === 4) && <IconButton aria-label="Reactivate" onClick={() => selectActionMessage(message, AppActionType.Update)}
                                         size="small" color="success" title="Reactivate">
                                         <RestartAlt />
                                     </IconButton>}
                                     <IconButton aria-label="Edit" size="small" color="secondary" onClick={() => navigateTo(`/eventbus-messages/${message.requestId}`)} title="Edit">
                                         <Edit />
                                     </IconButton>
-                                    <IconButton aria-label="Delete" size="small" color="error" title="Delete">
+                                    <IconButton aria-label="Delete" size="small" color="error" title="Delete" onClick={() => selectActionMessage(message, AppActionType.Delete)}>
                                         <Delete />
                                     </IconButton>
                                 </TableCell>
@@ -192,8 +217,10 @@ const EventBusMessageTable = ({ gridSize, showQueue, showFilter, currentQueueId 
                     <AppPagination changePageData={changePageData} rowsFounded={rowsFounded} />
                 </TableContainer>
             </Grid>}
-            {selectedMessage !== null && selectedMessage != '' && <EventBusMessageProcessAttemptModal requestId={selectedMessage}
-                showModal={showModal} updateList={getEventBusMessages} closeModal={closeStatusModal} />}
+            {selectedStatusMessage !== null && <EventBusMessageProcessAttemptModal requestId={selectedStatusMessage.requestId}
+                showModal={showStatusModal} updateList={getEventBusMessages} closeModal={closeStatusModal} />}
+            {selectedActionMessage !== null && <EventBusMessageActionModal selectedMessage={selectedActionMessage} onClose={closeActionModal} 
+                updateList={getEventBusMessages} showModal={showActionModal} actionType={selectedActionType!}/>}
             <AppSnackBar response={snackbarResponse} />
         </>
     );

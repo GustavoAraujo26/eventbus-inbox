@@ -20,8 +20,6 @@ const EventBusMessageProcessAttemptModal = ({ requestId, showModal, closeModal, 
     const enumService = new EnumsService();
     const messageService = new EventBusMessageService();
 
-    const navigateTo = useNavigate();
-
     const [statusList, setStatusList] = useState<EnumData[]>([]);
 
     const [snackbarResponse, setSnackbarResponse] = useState<AppSnackbarResponse>();

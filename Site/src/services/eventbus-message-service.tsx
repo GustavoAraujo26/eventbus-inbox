@@ -29,6 +29,6 @@ export class EventBusMessageService extends HttpService {
     }
 
     ReactivateMessage(id: string) {
-        return this.get<ApiResponse<AppTaskResponse>>(`/v1/event-bus/received-messages?RequestId=${id}`);
+        return this.get<ApiResponse<AppTaskResponse>>(`/v1/event-bus/received-messages/reactivate?RequestId=${id}`);
     }
 }
