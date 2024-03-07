@@ -1,4 +1,4 @@
-import { Button, Typography } from "@mui/material";
+import { Chip, Typography } from "@mui/material";
 import EnumData from "../../../interfaces/enum-data"
 import { DisabledByDefault, DoneOutlined } from "@mui/icons-material";
 
@@ -8,10 +8,10 @@ interface StatusProps {
 
 const EventBusQueueStatus = ({ status }: StatusProps) => {
     return (
-        <Button variant="contained" disabled={true}>
-            { status.intKey === 1 ? <DoneOutlined/> : <DisabledByDefault/> }
-            <Typography>{status.description}</Typography>
-        </Button>
+        <>
+            {status.intKey === 1 && <Chip variant="filled" color="success" icon={<DoneOutlined/>} label={status.description}/>}
+            {status.intKey === 2 && <Chip variant="filled" color="secondary" icon={<DisabledByDefault/>} label={status.description}/>}
+        </>
     );
 }
 

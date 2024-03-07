@@ -9,8 +9,9 @@ import AppSnackBar from "../../../components/app-snackbar";
 import EventBusMessageStatus from "../eventbus-message-status";
 import AppPagination from "../../../components/app-pagination";
 import EventBusMessageTableFilter from "../eventbus-message-table-filter";
-import { Delete, DomainVerification, Edit, Info } from "@mui/icons-material";
+import { Delete, DomainVerification, Edit, Info, RestartAlt } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
+import EventBusMessageProcessAttemptModal from "../eventbus-message-process-attempt-modal";
 
 interface MessageTableProps {
     gridSize: number,
@@ -35,6 +36,9 @@ const EventBusMessageTable = ({ gridSize, showQueue, showFilter, currentQueueId 
     const [updateDateSearch, setUpdateDateSearch] = useState<Period | null>(null);
     const [typeMatch, setTypeMatch] = useState<string | null>(null);
     const [statusToSearch, setStatusToSearch] = useState<number[] | null>(null);
+
+    const [showModal, setShowModal] = useState(false);
+    const [selectedMessage, setSelectedMessage] = useState('');
 
     const getEventBusMessages = () => {
         setLoading(true);
@@ -98,6 +102,15 @@ const EventBusMessageTable = ({ gridSize, showQueue, showFilter, currentQueueId 
         setStatusToSearch(selectedStatus);
     }
 
+    const closeStatusModal = () => {
+        setShowModal(false);
+        setSelectedMessage('');
+    }
+
+    const selectMessage = (requestId: string) => {
+        setSelectedMessage(requestId);
+    }
+
     useEffect(() => {
         getEventBusMessages();
     }, []);
@@ -109,6 +122,15 @@ const EventBusMessageTable = ({ gridSize, showQueue, showFilter, currentQueueId 
     useEffect(() => {
         getEventBusMessages();
     }, [queueId, creationDateSearch, updateDateSearch, typeMatch, statusToSearch]);
+
+    useEffect(() => {
+        if (selectedMessage === null || selectedMessage === '') {
+            setShowModal(false);
+        }
+        else {
+            setShowModal(true);
+        }
+    }, [selectedMessage]);
 
     return (
         <>
@@ -126,7 +148,7 @@ const EventBusMessageTable = ({ gridSize, showQueue, showFilter, currentQueueId 
                                 {showQueue && <TableCell align="left">Queue</TableCell>}
                                 <TableCell align="left">Type</TableCell>
                                 <TableCell align="left">Status</TableCell>
-                                <TableCell align="left">Processing Attempts</TableCell>
+                                <TableCell align="center">Attempts</TableCell>
                                 <TableCell align="left">Actions</TableCell>
                             </TableRow>
                         </TableHead>
@@ -144,14 +166,19 @@ const EventBusMessageTable = ({ gridSize, showQueue, showFilter, currentQueueId 
                                 <TableCell>
                                     <EventBusMessageStatus status={message.status} />
                                 </TableCell>
-                                <TableCell>{message.processingAttempts}</TableCell>
+                                <TableCell align="center">{message.processingAttempts}</TableCell>
                                 <TableCell>
                                     <IconButton aria-label="Details" size="small" color="info" onClick={() => navigateTo(`/eventbus-messages/details/${message.requestId}`)} title="Details">
                                         <Info />
                                     </IconButton>
-                                    <IconButton aria-label="Processing Attempt" size="small" color="warning" title="Processing Attempt">
+                                    {message.status.intKey != 2 && message.status.intKey != 4 && <IconButton aria-label="Processing Attempt"
+                                        size="small" color="warning" title="Processing Attempt" onClick={() => selectMessage(message.requestId)}>
                                         <DomainVerification />
-                                    </IconButton>
+                                    </IconButton>}
+                                    {(message.status.intKey === 2 || message.status.intKey === 4) && <IconButton aria-label="Processing Attempt"
+                                        size="small" color="success" title="Reactivate">
+                                        <RestartAlt />
+                                    </IconButton>}
                                     <IconButton aria-label="Edit" size="small" color="secondary" onClick={() => navigateTo(`/eventbus-messages/${message.requestId}`)} title="Edit">
                                         <Edit />
                                     </IconButton>
@@ -165,6 +192,8 @@ const EventBusMessageTable = ({ gridSize, showQueue, showFilter, currentQueueId 
                     <AppPagination changePageData={changePageData} rowsFounded={rowsFounded} />
                 </TableContainer>
             </Grid>}
+            {selectedMessage !== null && selectedMessage != '' && <EventBusMessageProcessAttemptModal requestId={selectedMessage}
+                showModal={showModal} updateList={getEventBusMessages} closeModal={closeStatusModal} />}
             <AppSnackBar response={snackbarResponse} />
         </>
     );

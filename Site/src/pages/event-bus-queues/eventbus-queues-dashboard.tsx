@@ -195,7 +195,7 @@ const EventBusQueuesDashboard = () => {
                         <TableRow>
                             <TableCell align="left">#</TableCell>
                             <TableCell align="left">Name</TableCell>
-                            <TableCell align="left">Processing Attempts</TableCell>
+                            <TableCell align="center">Processing Attempts</TableCell>
                             <TableCell align="left">Status</TableCell>
                             <TableCell align="left">Actions</TableCell>
                         </TableRow>
@@ -209,7 +209,7 @@ const EventBusQueuesDashboard = () => {
                         {queues && queues.map(item => <TableRow key={item.id}>
                             <TableCell align="left">{item.id}</TableCell>
                             <TableCell align="left">{item.name}</TableCell>
-                            <TableCell align="left">{item.processingAttempts}</TableCell>
+                            <TableCell align="center">{item.processingAttempts}</TableCell>
                             <TableCell align="left"><EventBusQueueStatus status={item.status} /></TableCell>
                             <TableCell align="left">
                                 <IconButton aria-label="Details" size="small" color="info" onClick={() => navigateTo(`/eventbus-queues/details/${item.id}`)} title="Details">
