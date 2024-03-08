@@ -1,8 +1,7 @@
 import { Avatar, Button, Chip, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, List, ListItem, ListItemAvatar, ListItemText, Snackbar } from "@mui/material";
-import { ApiResponse } from "../../interfaces/api-response"
 import AppSnackbarResponse from "../../interfaces/requests/app-snackbar-response";
 import { useEffect, useState } from "react";
-import { AssignmentInd, AssignmentLate, Close, Report, Route } from "@mui/icons-material";
+import { AssignmentLate, Close, Report, Route } from "@mui/icons-material";
 
 interface SnackbarProps {
     response: AppSnackbarResponse | undefined
