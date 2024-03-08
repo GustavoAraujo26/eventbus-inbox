@@ -8,8 +8,12 @@ import AppBreadcrumbItem from "../interfaces/app-breadcrumb-item";
 import { HomeOutlined } from "@mui/icons-material";
 import AppBreadcrumb from "../components/app-breadcrumb";
 import AppSnackbarResponse from "../interfaces/requests/app-snackbar-response";
+import { useDispatch } from "react-redux";
+import { showSnackbar } from "../state/slices/app-snackbar-slice";
+import { closeBackdrop, showBackdrop } from "../state/slices/app-backdrop-slice";
 
 const Home = () => {
+    const dispatch = useDispatch();
     const [queues, setQueues] = useState<GetEventbusQueueResponse[]>([]);
     const queueService = new EventBusQueueService();
     const listRequest: GetEventBusQueueListRequest = {
@@ -36,14 +40,14 @@ const Home = () => {
         setBreadcrumbItems(newList);
     }
 
-    const [isLoading, setLoading] = useState(true);
-    const [snackbarResponse, setSnackbarResponse] = useState<AppSnackbarResponse>();
-
     useEffect(() => {
         buildbreadcrumb();
 
+        dispatch(showBackdrop());
+
         queueService.ListQueues(listRequest).then(response => {
-            console.log(response);
+            dispatch(closeBackdrop());
+
             const apiResponse = response.data;
 
             if (apiResponse.isSuccess) {
@@ -60,13 +64,12 @@ const Home = () => {
                     statusCode: apiResponse.status
                 }
     
-                setSnackbarResponse(response);
+                dispatch(showSnackbar(response));
             }
-
-            setLoading(false);
         })
         .catch(error => {
-            console.log(error);
+            dispatch(closeBackdrop());
+            
             let response: AppSnackbarResponse = {
                 success: false,
                 message: error.toString().substring(0, 50)
@@ -79,15 +82,12 @@ const Home = () => {
                 response.statusCode = apiResponse.status;
             }
 
-            setSnackbarResponse(response);
+            dispatch(showSnackbar(response));
         });
     }, []);
 
     return (
         <>
-            <Backdrop open={isLoading}>
-                <CircularProgress color="inherit" />
-            </Backdrop>
             <AppBreadcrumb breadcrumbItems={breadcrumbItems} />
             <Grid container justifyContent='center' spacing={2}>
                 {queues && queues.map(queue => <Grid key={queue.id} item xs={6} md={4}>

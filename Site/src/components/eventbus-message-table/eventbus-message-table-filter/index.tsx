@@ -11,6 +11,9 @@ import { EventBusQueueService } from "../../../services/eventbus-queue-service";
 import AppPeriodForm from "../../app-period-form";
 import AppSnackBar from "../../app-snackbar";
 import EventBusMessageStatusFilter from "../eventbus-message-status-filter";
+import { useDispatch } from "react-redux";
+import { showSnackbar } from "../../../state/slices/app-snackbar-slice";
+import { closeBackdrop, showBackdrop } from "../../../state/slices/app-backdrop-slice";
 
 interface TableFilterProps {
     executeFilter: (queueId: string | null, creationDateSearch: Period | null,
@@ -18,13 +21,12 @@ interface TableFilterProps {
 }
 
 const EventBusMessageTableFilter = ({ executeFilter }: TableFilterProps) => {
+    const dispatch = useDispatch();
     const queueService = new EventBusQueueService();
     const enumService = new EnumsService();
 
     const [queueList, setQueueList] = useState<GetEventbusQueueResponse[]>([]);
     const [statusList, setStatusList] = useState<EnumData[]>([]);
-    const [snackbarResponse, setSnackbarResponse] = useState<AppSnackbarResponse>();
-    const [isLoading, setLoading] = useState(true);
     const [queueId, setQueueId] = useState<string>('');
     const [creationStartDateSearch, setCreationStartDateSearch] = useState<Date | null>(null);
     const [creationEndDateSearch, setCreationEndDateSearch] = useState<Date | null>(null);
@@ -36,7 +38,7 @@ const EventBusMessageTableFilter = ({ executeFilter }: TableFilterProps) => {
     const [updateDateToogle, setUpdateDateToogle] = useState<boolean>(false);
 
     const loadQueueList = () => {
-        setLoading(true);
+        dispatch(showBackdrop());
 
         const request: GetEventBusQueueListRequest = {
             nameMatch: null,
@@ -48,7 +50,7 @@ const EventBusMessageTableFilter = ({ executeFilter }: TableFilterProps) => {
         }
 
         queueService.ListQueues(request).then(response => {
-            setLoading(false);
+            dispatch(closeBackdrop());
 
             const apiResponse = response.data;
 
@@ -63,10 +65,10 @@ const EventBusMessageTableFilter = ({ executeFilter }: TableFilterProps) => {
                     statusCode: apiResponse.status
                 }
 
-                setSnackbarResponse(response);
+                dispatch(showSnackbar(response));
             }
         }).catch(error => {
-            setLoading(false);
+            dispatch(closeBackdrop());
             console.log(error);
             let response: AppSnackbarResponse = {
                 success: false,
@@ -80,15 +82,15 @@ const EventBusMessageTableFilter = ({ executeFilter }: TableFilterProps) => {
                 response.statusCode = apiResponse.status;
             }
 
-            setSnackbarResponse(response);
+            dispatch(showSnackbar(response));
         });
     }
 
     const loadStatusList = () => {
-        setLoading(true);
+        dispatch(showBackdrop());
 
         enumService.ListMessageStatus().then(response => {
-            setLoading(false);
+            dispatch(closeBackdrop());
             const apiResponse = response.data;
 
             if (apiResponse.isSuccess) {
@@ -102,10 +104,10 @@ const EventBusMessageTableFilter = ({ executeFilter }: TableFilterProps) => {
                     statusCode: apiResponse.status
                 }
 
-                setSnackbarResponse(response);
+                dispatch(showSnackbar(response));
             }
         }).catch(error => {
-            setLoading(false);
+            dispatch(closeBackdrop());
             console.log(error);
             let response: AppSnackbarResponse = {
                 success: false,
@@ -119,7 +121,7 @@ const EventBusMessageTableFilter = ({ executeFilter }: TableFilterProps) => {
                 response.statusCode = apiResponse.status;
             }
 
-            setSnackbarResponse(response);
+            dispatch(showSnackbar(response));
         });
     }
 
@@ -182,9 +184,6 @@ const EventBusMessageTableFilter = ({ executeFilter }: TableFilterProps) => {
 
     return (
         <>
-            <Backdrop open={isLoading}>
-                <CircularProgress color="inherit" />
-            </Backdrop>
             <Grid justifyContent="center" container spacing={2}>
                 <Grid item md={12}>
                     <Card sx={{ marginBottom: 3 }}>
@@ -272,7 +271,6 @@ const EventBusMessageTableFilter = ({ executeFilter }: TableFilterProps) => {
                     </Card>
                 </Grid>
             </Grid>
-            <AppSnackBar response={snackbarResponse} />
         </>
     );
 }

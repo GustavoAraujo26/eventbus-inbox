@@ -2,22 +2,21 @@ import { useNavigate, useParams } from "react-router-dom";
 import { EventBusMessageService } from "../../services/eventbus-message-service";
 import { useEffect, useState } from "react";
 import AppSnackbarResponse from "../../interfaces/requests/app-snackbar-response";
-import { HomeOutlined, Apps, AssignmentInd, Code, Today, Queue, GridOn, Task, ArrowBack, Edit } from "@mui/icons-material";
+import { HomeOutlined, Apps, ArrowBack, Edit } from "@mui/icons-material";
 import AppBreadcrumbItem from "../../interfaces/app-breadcrumb-item";
 import GetEventbusMessageResponse from "../../interfaces/responses/eventbus-received-message/get-eventbus-message-response";
-import { Avatar, Backdrop, Box, Card, CardContent, CardHeader, Chip, CircularProgress, Divider, Grid, List, ListItem, ListItemAvatar, ListItemText, Paper, SpeedDial, SpeedDialAction, SpeedDialIcon, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip, Typography } from "@mui/material";
+import { Backdrop, Box, Card, CardContent, CardHeader, Chip, CircularProgress, Divider, Grid, SpeedDial, SpeedDialAction, SpeedDialIcon, Table, TableBody, TableCell, TableHead, TableRow } from "@mui/material";
 import AppBreadcrumb from "../../components/app-breadcrumb";
-import AppSnackBar from "../../components/app-snackbar";
 import EventBusMessageCard from "./eventbus-message-card";
+import { useDispatch } from "react-redux";
+import { showSnackbar } from "../../state/slices/app-snackbar-slice";
+import { closeBackdrop, showBackdrop } from "../../state/slices/app-backdrop-slice";
 
 const EventBusMessageDetails = () => {
+    const dispatch = useDispatch();
     const messageService = new EventBusMessageService();
     const parameters = useParams();
     const navigateTo = useNavigate();
-
-    const [isLoading, setLoading] = useState(false);
-
-    const [snackbarResponse, setSnackbarResponse] = useState<AppSnackbarResponse>();
 
     const [eventbusMessage, setEventBusMessage] = useState<GetEventbusMessageResponse>();
 
@@ -55,10 +54,10 @@ const EventBusMessageDetails = () => {
     }
 
     const getEventBusMessage = (parameterId: string) => {
-        setLoading(true);
+        dispatch(showBackdrop());
 
         messageService.GetMessage(parameterId).then(response => {
-            setLoading(false);
+            dispatch(closeBackdrop());
             const apiResponse = response.data;
             if (apiResponse.isSuccess) {
                 setEventBusMessage(apiResponse.object);
@@ -72,10 +71,10 @@ const EventBusMessageDetails = () => {
                     statusCode: apiResponse.status
                 }
 
-                setSnackbarResponse(response);
+                dispatch(showSnackbar(response));
             }
         }).catch(error => {
-            setLoading(false);
+            dispatch(closeBackdrop());
             console.log(error);
             let response: AppSnackbarResponse = {
                 success: false,
@@ -89,7 +88,7 @@ const EventBusMessageDetails = () => {
                 response.statusCode = apiResponse.status;
             }
 
-            setSnackbarResponse(response);
+            dispatch(showSnackbar(response));
         });
     }
 
@@ -103,9 +102,6 @@ const EventBusMessageDetails = () => {
 
     return (
         <>
-            <Backdrop open={isLoading}>
-                <CircularProgress color="inherit" />
-            </Backdrop>
             <AppBreadcrumb breadcrumbItems={breadcrumbItems} />
             {eventbusMessage && <>
                 <Grid justifyContent="center" spacing={2} container>
@@ -162,7 +158,6 @@ const EventBusMessageDetails = () => {
                     <SpeedDialAction icon={<Edit />} tooltipTitle="Edit" onClick={() => navigateTo(`/eventbus-messages/${eventbusMessage.requestId}`)} />
                 </SpeedDial>
             </>}
-            <AppSnackBar response={snackbarResponse} />
         </>
     );
 }

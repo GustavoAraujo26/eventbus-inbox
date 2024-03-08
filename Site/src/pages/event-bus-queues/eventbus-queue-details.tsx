@@ -11,15 +11,16 @@ import AppSnackBar from "../../components/app-snackbar";
 import GetEventbusQueueResponse from "../../interfaces/responses/eventbus-queue/get-eventbus-queue-response";
 import EventBusQueueCard from "./eventbus-queue-card";
 import EventBusMessageTable from "../../components/eventbus-message-table";
+import { useDispatch } from "react-redux";
+import { showSnackbar } from "../../state/slices/app-snackbar-slice";
+import { closeBackdrop, showBackdrop } from "../../state/slices/app-backdrop-slice";
 
 const EventBusQueueDetails = () => {
+    const dispatch = useDispatch();
     const queueService = new EventBusQueueService();
     const parameters = useParams();
     const navigateTo = useNavigate();
 
-    const [isLoading, setLoading] = useState(false);
-
-    const [snackbarResponse, setSnackbarResponse] = useState<AppSnackbarResponse>();
     const [currentQueue, setCurrentQueue] = useState<GetEventbusQueueResponse>();
 
     const [breadcrumbItems, setBreadcrumbItems] = useState<AppBreadcrumbItem[]>([]);
@@ -55,7 +56,7 @@ const EventBusQueueDetails = () => {
 
     useEffect(() => {
         if (parameters.id) {
-            setLoading(true);
+            dispatch(showBackdrop());
             getEventBusQueue(parameters.id);
         }
 
@@ -69,7 +70,7 @@ const EventBusQueueDetails = () => {
         }
 
         queueService.GetQueue(request).then(response => {
-            setLoading(false);
+            dispatch(closeBackdrop());
 
             const apiResponse = response.data;
 
@@ -84,10 +85,10 @@ const EventBusQueueDetails = () => {
                     statusCode: apiResponse.status
                 }
 
-                setSnackbarResponse(response);
+                dispatch(showSnackbar(response));
             }
         }).catch(error => {
-            setLoading(false);
+            dispatch(closeBackdrop());
             console.log(error);
             let response: AppSnackbarResponse = {
                 success: false,
@@ -101,15 +102,12 @@ const EventBusQueueDetails = () => {
                 response.statusCode = apiResponse.status;
             }
 
-            setSnackbarResponse(response);
+            dispatch(showSnackbar(response));
         });
     }
 
     return (
         <>
-            <Backdrop open={isLoading}>
-                <CircularProgress color="inherit" />
-            </Backdrop>
             <AppBreadcrumb breadcrumbItems={breadcrumbItems} />
             <Grid container justifyContent="center" spacing={2}>
                 {currentQueue && <>
@@ -119,7 +117,6 @@ const EventBusQueueDetails = () => {
                     <EventBusMessageTable gridSize={8} showQueue={false} showFilter={false} currentQueueId={currentQueue!.id} showActions={false} />
                 </>}
             </Grid>
-            <AppSnackBar response={snackbarResponse} />
         </>
     );
 }

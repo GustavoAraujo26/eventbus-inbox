@@ -1,15 +1,17 @@
-import { Backdrop, Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, List } from "@mui/material";
+import { Backdrop, Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import { AppActionType } from "../../../enums/app-action-type";
 import GetEventbusMessageListResponse from "../../../interfaces/responses/eventbus-received-message/get-eventbus-message-list-response";
 import { EventBusMessageService } from "../../../services/eventbus-message-service";
 import { useEffect, useState } from "react";
 import AppSnackbarResponse from "../../../interfaces/requests/app-snackbar-response";
-import AppSnackBar from "../../../components/app-snackbar";
 import EventBusMessageCard from "../eventbus-message-card";
 import { Save, Close, RestartAlt } from "@mui/icons-material";
 import { AxiosResponse } from "axios";
 import { ApiResponse } from "../../../interfaces/api-response";
 import AppTaskResponse from "../../../interfaces/app-task-response";
+import { useDispatch } from "react-redux";
+import { showSnackbar } from "../../../state/slices/app-snackbar-slice";
+import { closeBackdrop, showBackdrop } from "../../../state/slices/app-backdrop-slice";
 
 interface ActionModalProps {
     selectedMessage: GetEventbusMessageListResponse,
@@ -20,10 +22,9 @@ interface ActionModalProps {
 }
 
 const EventBusMessageActionModal = ({ selectedMessage, onClose, updateList, showModal, actionType }: ActionModalProps) => {
+    const dispatch = useDispatch();
     const messageService = new EventBusMessageService();
 
-    const [snackbarResponse, setSnackbarResponse] = useState<AppSnackbarResponse>();
-    const [isLoading, setLoading] = useState(false);
     const [title, setTitle] = useState('');
 
     useEffect(() => {
@@ -36,7 +37,7 @@ const EventBusMessageActionModal = ({ selectedMessage, onClose, updateList, show
     }, [actionType]);
 
     const executeAction = () => {
-        setLoading(true);
+        dispatch(showBackdrop());
 
         let serverCall: Promise<AxiosResponse<ApiResponse<AppTaskResponse>, any>> | null = null;
         if (actionType === AppActionType.Update){
@@ -46,12 +47,12 @@ const EventBusMessageActionModal = ({ selectedMessage, onClose, updateList, show
             serverCall = messageService.DeleteMessage(selectedMessage.requestId);
         }
         else{
-            setLoading(false);
+            dispatch(closeBackdrop());
         }
 
         if (serverCall !== null){
             serverCall.then(response => {
-                setLoading(false);
+                dispatch(closeBackdrop());
 
                 const apiResponse = response.data;
                 if (apiResponse.isSuccess){
@@ -66,10 +67,10 @@ const EventBusMessageActionModal = ({ selectedMessage, onClose, updateList, show
                         statusCode: apiResponse.status
                     }
     
-                    setSnackbarResponse(response);
+                    dispatch(showSnackbar(response));
                 }
             }).catch(error => {
-                setLoading(false);
+                dispatch(closeBackdrop());
     
                 console.log(error);
                 let response: AppSnackbarResponse = {
@@ -84,16 +85,13 @@ const EventBusMessageActionModal = ({ selectedMessage, onClose, updateList, show
                     response.statusCode = apiResponse.status;
                 }
     
-                setSnackbarResponse(response);
+                dispatch(showSnackbar(response));
             });
         }
     }
 
     return (
         <>
-            <Backdrop open={isLoading}>
-                <CircularProgress color="inherit" />
-            </Backdrop>
             <Dialog open={showModal}>
                 <DialogTitle sx={{textAlign: 'center'}}>{title}</DialogTitle>
                 <DialogContent>
@@ -118,7 +116,6 @@ const EventBusMessageActionModal = ({ selectedMessage, onClose, updateList, show
                     </Button>
                 </DialogActions>
             </Dialog>
-            <AppSnackBar response={snackbarResponse} />
         </>
     );
 }

@@ -8,6 +8,9 @@ import { EventBusQueueService } from "../../../services/eventbus-queue-service";
 import UpdateEventbusQueueStatusRequest from "../../../interfaces/requests/eventbus-queue/update-eventbus-queue-status-request";
 import AppSnackbarResponse from "../../../interfaces/requests/app-snackbar-response";
 import AppSnackBar from "../../../components/app-snackbar";
+import { useDispatch } from "react-redux";
+import { showSnackbar } from "../../../state/slices/app-snackbar-slice";
+import { closeBackdrop, showBackdrop } from "../../../state/slices/app-backdrop-slice";
 
 interface StatusModalProps {
     queue: GetEventbusQueueResponse | undefined,
@@ -18,13 +21,10 @@ interface StatusModalProps {
 }
 
 const EventBusQueueModal = ({ queue, showModal, closeModal, updateList, action }: StatusModalProps) => {
+    const dispatch = useDispatch();
     const queueService = new EventBusQueueService();
 
     const [title, setTitle] = useState('');
-
-    const [snackbarResponse, setSnackbarResponse] = useState<AppSnackbarResponse>();
-
-    const [isLoading, setLoading] = useState(false);
 
     useEffect(() => {
         if (action === AppActionType.Update) {
@@ -36,7 +36,7 @@ const EventBusQueueModal = ({ queue, showModal, closeModal, updateList, action }
     }, [action]);
 
     const updateStatus = () => {
-        setLoading(true);
+        dispatch(showBackdrop());
         
         let newStatus: number = 1;
         if (queue!.status.intKey === 1) {
@@ -49,7 +49,7 @@ const EventBusQueueModal = ({ queue, showModal, closeModal, updateList, action }
         };
 
         queueService.UpdateStatus(request).then(response => {
-            setLoading(false);
+            dispatch(closeBackdrop());
 
             const apiResponse = response.data;
 
@@ -65,10 +65,10 @@ const EventBusQueueModal = ({ queue, showModal, closeModal, updateList, action }
                     statusCode: apiResponse.status
                 }
     
-                setSnackbarResponse(response);
+                dispatch(showSnackbar(response));
             }
         }).catch(error => {
-            setLoading(false);
+            dispatch(closeBackdrop());
 
             console.log(error);
             let response: AppSnackbarResponse = {
@@ -83,15 +83,15 @@ const EventBusQueueModal = ({ queue, showModal, closeModal, updateList, action }
                 response.statusCode = apiResponse.status;
             }
 
-            setSnackbarResponse(response);
+            dispatch(showSnackbar(response));
         });
     }
 
     const deleteQueue = () => {
-        setLoading(true);
+        dispatch(showBackdrop());
 
         queueService.DeleteQueue(queue!.id).then(response => {
-            setLoading(false);
+            dispatch(closeBackdrop());
             
             const apiResponse = response.data;
 
@@ -107,10 +107,10 @@ const EventBusQueueModal = ({ queue, showModal, closeModal, updateList, action }
                     statusCode: apiResponse.status
                 }
     
-                setSnackbarResponse(response);
+                dispatch(showSnackbar(response));
             }
         }).catch(error => {
-            setLoading(false);
+            dispatch(closeBackdrop());
 
             console.log(error);
             let response: AppSnackbarResponse = {
@@ -125,15 +125,12 @@ const EventBusQueueModal = ({ queue, showModal, closeModal, updateList, action }
                 response.statusCode = apiResponse.status;
             }
 
-            setSnackbarResponse(response);
+            dispatch(showSnackbar(response));
         });
     }
 
     return (
         <>
-            <Backdrop open={isLoading}>
-                <CircularProgress color="inherit" />
-            </Backdrop>
             {queue && <Dialog open={showModal}>
                 <DialogTitle>{title}</DialogTitle>
                 <DialogContent>
@@ -154,7 +151,6 @@ const EventBusQueueModal = ({ queue, showModal, closeModal, updateList, action }
                     </Button>
                 </DialogActions>
             </Dialog>}
-            <AppSnackBar response={snackbarResponse} />
         </>
     );
 }

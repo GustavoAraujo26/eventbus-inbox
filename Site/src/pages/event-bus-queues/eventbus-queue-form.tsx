@@ -10,20 +10,21 @@ import { EventBusQueueService } from "../../services/eventbus-queue-service";
 import GetEventBusQueueRequest from "../../interfaces/requests/eventbus-queue/get-eventbus-queue-request";
 import AppSnackBar from "../../components/app-snackbar";
 import AppSnackbarResponse from "../../interfaces/requests/app-snackbar-response";
+import { useDispatch } from "react-redux";
+import { showSnackbar } from "../../state/slices/app-snackbar-slice";
+import { closeBackdrop, showBackdrop } from "../../state/slices/app-backdrop-slice";
 
 const EventBusQueueForm = () => {
+    const dispatch = useDispatch();
     const queueService = new EventBusQueueService();
     const parameters = useParams();
     const navigateTo = useNavigate();
 
-    const [isLoading, setLoading] = useState(false);
     const [id, setId] = useState('');
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
     const [status, setStatus] = useState(1);
     const [processingAttempts, setProcessingAttempts] = useState(0);
-
-    const [snackbarResponse, setSnackbarResponse] = useState<AppSnackbarResponse>();
 
     const [breadcrumbItems, setBreadcrumbItems] = useState<AppBreadcrumbItem[]>([]);
     const buildbreadcrumb = () => {
@@ -77,6 +78,7 @@ const EventBusQueueForm = () => {
 
     const onSubmitForm = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
+        dispatch(showBackdrop());
 
         const request: SaveEventbusQueueRequest = {
             id: id,
@@ -87,6 +89,7 @@ const EventBusQueueForm = () => {
         };
 
         queueService.SaveQueue(request).then(response => {
+            dispatch(closeBackdrop());
             var apiResponse = response.data;
 
             if (apiResponse.isSuccess){
@@ -100,10 +103,11 @@ const EventBusQueueForm = () => {
                     statusCode: apiResponse.status
                 }
     
-                setSnackbarResponse(response);
+                dispatch(showSnackbar(response));
             }
         }).catch(error => {
-            console.log(error);
+            dispatch(closeBackdrop());
+
             let response: AppSnackbarResponse = {
                 success: false,
                 message: error.toString().substring(0, 50)
@@ -116,17 +120,21 @@ const EventBusQueueForm = () => {
                 response.statusCode = apiResponse.status;
             }
 
-            setSnackbarResponse(response);
+            dispatch(showSnackbar(response));
         });
     }
 
     const getEventBusQueue = (parameterId: string) => {
+        dispatch(showBackdrop());
+        
         const request: GetEventBusQueueRequest = {
             id: parameterId,
             summarizeMessages: false
         }
 
         queueService.GetQueue(request).then(response => {
+            dispatch(closeBackdrop());
+
             const apiResponse = response.data;
 
             if (apiResponse.isSuccess){
@@ -143,11 +151,11 @@ const EventBusQueueForm = () => {
                     statusCode: apiResponse.status
                 }
     
-                setSnackbarResponse(response);
+                dispatch(showSnackbar(response));
             }
         })
         .catch(error => {
-            console.log(error);
+            dispatch(closeBackdrop());
             let response: AppSnackbarResponse = {
                 success: false,
                 message: error.toString().substring(0, 50)
@@ -160,7 +168,7 @@ const EventBusQueueForm = () => {
                 response.statusCode = apiResponse.status;
             }
 
-            setSnackbarResponse(response);
+            dispatch(showSnackbar(response));
         });
     }
 
@@ -173,9 +181,6 @@ const EventBusQueueForm = () => {
 
     return (
         <>
-            <Backdrop open={isLoading}>
-                <CircularProgress color="inherit" />
-            </Backdrop>
             <AppBreadcrumb breadcrumbItems={breadcrumbItems} />
             <Grid container justifyContent="center" spacing={2}>
                 <Grid item md={8}>
@@ -215,7 +220,6 @@ const EventBusQueueForm = () => {
                     </Card>
                 </Grid>
             </Grid>
-            <AppSnackBar response={snackbarResponse} />
         </>
     );
 }

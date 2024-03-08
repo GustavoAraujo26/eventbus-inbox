@@ -13,16 +13,18 @@ import GetEventBusQueueListRequest from "../../interfaces/requests/eventbus-queu
 import { EventBusQueueService } from "../../services/eventbus-queue-service";
 import SendEventbusMessageRequest from "../../interfaces/requests/eventbus-sender/send-eventbus-message-request";
 import SaveEventbusMessageRequest from "../../interfaces/requests/eventbus-received-message/save-eventbus-message-request";
+import { useDispatch } from "react-redux";
+import { showSnackbar } from "../../state/slices/app-snackbar-slice";
+import { closeBackdrop, showBackdrop } from "../../state/slices/app-backdrop-slice";
 
 const EventBusMessageForm = () => {
+    const dispatch = useDispatch();
     const queueService = new EventBusQueueService();
     const messageService = new EventBusMessageService();
     const parameters = useParams();
     const navigateTo = useNavigate();
 
-    const [snackbarResponse, setSnackbarResponse] = useState<AppSnackbarResponse>();
     const [breadcrumbItems, setBreadcrumbItems] = useState<AppBreadcrumbItem[]>([]);
-    const [isLoading, setLoading] = useState(false);
     const [eventbusMessage, setEventBusMessage] = useState<GetEventbusMessageResponse>();
     const [queueList, setQueueList] = useState<GetEventbusQueueResponse[]>([]);
 
@@ -61,10 +63,10 @@ const EventBusMessageForm = () => {
     }
 
     const getEventBusMessage = (parameterId: string) => {
-        setLoading(true);
+        dispatch(showBackdrop());
 
         messageService.GetMessage(parameterId).then(response => {
-            setLoading(false);
+            dispatch(closeBackdrop());
             const apiResponse = response.data;
             if (apiResponse.isSuccess) {
                 setEventBusMessage(apiResponse.object);
@@ -80,10 +82,10 @@ const EventBusMessageForm = () => {
                     statusCode: apiResponse.status
                 }
 
-                setSnackbarResponse(response);
+                dispatch(showSnackbar(response));
             }
         }).catch(error => {
-            setLoading(false);
+            dispatch(closeBackdrop());
             console.log(error);
             let response: AppSnackbarResponse = {
                 success: false,
@@ -97,12 +99,12 @@ const EventBusMessageForm = () => {
                 response.statusCode = apiResponse.status;
             }
 
-            setSnackbarResponse(response);
+            dispatch(showSnackbar(response));
         });
     }
 
     const loadQueueList = () => {
-        setLoading(true);
+        dispatch(showBackdrop());
         const request: GetEventBusQueueListRequest = {
             nameMatch: null,
             descriptionMatch: null,
@@ -113,7 +115,7 @@ const EventBusMessageForm = () => {
         }
 
         queueService.ListQueues(request).then(response => {
-            setLoading(false);
+            dispatch(closeBackdrop());
 
             const apiResponse = response.data;
 
@@ -128,10 +130,10 @@ const EventBusMessageForm = () => {
                     statusCode: apiResponse.status
                 }
 
-                setSnackbarResponse(response);
+                dispatch(showSnackbar(response));
             }
         }).catch(error => {
-            setLoading(false);
+            dispatch(closeBackdrop());
             console.log(error);
             let response: AppSnackbarResponse = {
                 success: false,
@@ -145,13 +147,13 @@ const EventBusMessageForm = () => {
                 response.statusCode = apiResponse.status;
             }
 
-            setSnackbarResponse(response);
+            dispatch(showSnackbar(response));
         });
     }
 
     const onSubmitMessage = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        setLoading(true);
+        dispatch(showBackdrop());
 
         const request: SaveEventbusMessageRequest = {
             requestId: eventbusMessage!.requestId,
@@ -162,7 +164,7 @@ const EventBusMessageForm = () => {
         };
 
         messageService.SaveMessage(request).then(response => {
-            setLoading(false);
+            dispatch(closeBackdrop());
 
             const apiResponse = response.data;
             if (apiResponse.isSuccess) {
@@ -176,10 +178,10 @@ const EventBusMessageForm = () => {
                     statusCode: apiResponse.status
                 }
 
-                setSnackbarResponse(response);
+                dispatch(showSnackbar(response));
             }
         }).catch(error => {
-            setLoading(false);
+            dispatch(closeBackdrop());
             console.log(error);
             let response: AppSnackbarResponse = {
                 success: false,
@@ -193,7 +195,7 @@ const EventBusMessageForm = () => {
                 response.statusCode = apiResponse.status;
             }
 
-            setSnackbarResponse(response);
+            dispatch(showSnackbar(response));
         });
     }
 
@@ -208,9 +210,6 @@ const EventBusMessageForm = () => {
 
     return (
         <>
-            <Backdrop open={isLoading}>
-                <CircularProgress color="inherit" />
-            </Backdrop>
             <AppBreadcrumb breadcrumbItems={breadcrumbItems} />
             {eventbusMessage && <Grid container justifyContent="center" spacing={2}>
                 <Grid item md={8}>
@@ -251,7 +250,6 @@ const EventBusMessageForm = () => {
                     </Card>
                 </Grid>
             </Grid>}
-            <AppSnackBar response={snackbarResponse} />
         </>
     );
 }

@@ -14,6 +14,9 @@ import EventBusMessageStatus from "../../pages/event-bus-messages/eventbus-messa
 import { EventBusMessageService } from "../../services/eventbus-message-service";
 import AppPagination from "../app-pagination";
 import AppSnackBar from "../app-snackbar";
+import { useDispatch } from "react-redux";
+import { showSnackbar } from "../../state/slices/app-snackbar-slice";
+import { closeBackdrop, showBackdrop } from "../../state/slices/app-backdrop-slice";
 
 interface MessageTableProps {
     gridSize: number,
@@ -24,10 +27,9 @@ interface MessageTableProps {
 }
 
 const EventBusMessageTable = ({ gridSize, showQueue, showFilter, currentQueueId, showActions }: MessageTableProps) => {
+    const dispatch = useDispatch();
     const navigateTo = useNavigate();
     const messageService = new EventBusMessageService();
-    const [isLoading, setLoading] = useState(false);
-    const [snackbarResponse, setSnackbarResponse] = useState<AppSnackbarResponse>();
     const [queueMessages, setQueueMessages] = useState<GetEventbusMessageListResponse[]>([]);
 
     const [currentPage, setCurrentPage] = useState(1);
@@ -47,7 +49,7 @@ const EventBusMessageTable = ({ gridSize, showQueue, showFilter, currentQueueId,
     const [selectedActionType, setActionType] = useState<AppActionType | null>(null);
 
     const getEventBusMessages = () => {
-        setLoading(true);
+        dispatch(showBackdrop());
         const request: GetEventbusMessageListRequest = {
             queueId: currentQueueId ? currentQueueId : queueId,
             creationDateSearch: creationDateSearch,
@@ -59,7 +61,7 @@ const EventBusMessageTable = ({ gridSize, showQueue, showFilter, currentQueueId,
         };
 
         messageService.ListMessage(request).then(response => {
-            setLoading(false);
+            dispatch(closeBackdrop());
             const apiResponse = response.data;
             if (apiResponse.isSuccess) {
                 setQueueMessages(apiResponse.data);
@@ -73,10 +75,10 @@ const EventBusMessageTable = ({ gridSize, showQueue, showFilter, currentQueueId,
                     statusCode: apiResponse.status
                 }
 
-                setSnackbarResponse(response);
+                dispatch(showSnackbar(response));
             }
         }).catch(error => {
-            setLoading(false);
+            dispatch(closeBackdrop());
             console.log(error);
             let response: AppSnackbarResponse = {
                 success: false,
@@ -90,7 +92,7 @@ const EventBusMessageTable = ({ gridSize, showQueue, showFilter, currentQueueId,
                 response.statusCode = apiResponse.status;
             }
 
-            setSnackbarResponse(response);
+            dispatch(showSnackbar(response));
         });
     }
 
@@ -161,9 +163,6 @@ const EventBusMessageTable = ({ gridSize, showQueue, showFilter, currentQueueId,
 
     return (
         <>
-            <Backdrop open={isLoading}>
-                <CircularProgress color="inherit" />
-            </Backdrop>
             {queueMessages && <Grid item md={gridSize}>
                 {showFilter && <EventBusMessageTableFilter executeFilter={executeFilter} />}
                 <TableContainer component={Paper}>
@@ -223,7 +222,6 @@ const EventBusMessageTable = ({ gridSize, showQueue, showFilter, currentQueueId,
                 showModal={showStatusModal} updateList={getEventBusMessages} closeModal={closeStatusModal} />}
             {selectedActionMessage !== null && <EventBusMessageActionModal selectedMessage={selectedActionMessage} onClose={closeActionModal}
                 updateList={getEventBusMessages} showModal={showActionModal} actionType={selectedActionType!} />}
-            <AppSnackBar response={snackbarResponse} />
         </>
     );
 }

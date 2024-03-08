@@ -12,13 +12,16 @@ import { useNavigate } from "react-router-dom";
 import EventBusQueueModal from "./eventbus-queue-modal";
 import { AppActionType } from "../../enums/app-action-type";
 import AppSnackbarResponse from "../../interfaces/requests/app-snackbar-response";
-import AppSnackBar from "../../components/app-snackbar";
 import EventBusQueueSearchCard from "./event-bus-queue-search-card";
 import EnumData from "../../interfaces/enum-data";
 import { EnumsService } from "../../services/enums-service";
+import { useDispatch } from "react-redux";
+import { showSnackbar } from "../../state/slices/app-snackbar-slice";
+import { closeBackdrop, showBackdrop } from "../../state/slices/app-backdrop-slice";
 
 const EventBusQueuesDashboard = () => {
     const navigateTo = useNavigate();
+    const dispatch = useDispatch();
     const [queues, setQueues] = useState<GetEventbusQueueResponse[]>([]);
     const [statusList, setStatusList] = useState<EnumData[]>([]);
     const queueService = new EventBusQueueService();
@@ -34,8 +37,6 @@ const EventBusQueuesDashboard = () => {
     const [selectedQueue, setSelectedQueue] = useState<GetEventbusQueueResponse>();
     const [showModal, setShowModal] = useState(false);
     const [modalAction, setModalAction] = useState<AppActionType>(AppActionType.View);
-
-    const [snackbarResponse, setSnackbarResponse] = useState<AppSnackbarResponse>();
 
     const [breadcrumbItems, setBreadcrumbItems] = useState<AppBreadcrumbItem[]>([]);
     const buildbreadcrumb = () => {
@@ -60,9 +61,9 @@ const EventBusQueuesDashboard = () => {
         setBreadcrumbItems(newList);
     }
 
-    const [isLoading, setLoading] = useState(true);
-
     const getPaginatedList = () => {
+        dispatch(showBackdrop());
+
         const listRequest: GetEventBusQueueListRequest = {
             nameMatch: nameMatch,
             descriptionMatch: descriptionMatch,
@@ -73,6 +74,8 @@ const EventBusQueuesDashboard = () => {
         }
 
         queueService.ListQueues(listRequest).then(response => {
+            dispatch(closeBackdrop());
+
             const apiResponse = response.data;
 
             if (apiResponse.isSuccess) {
@@ -87,13 +90,12 @@ const EventBusQueuesDashboard = () => {
                     stackTrace: apiResponse.stackTrace,
                     statusCode: apiResponse.status
                 }
-    
-                setSnackbarResponse(response);
+                
+                dispatch(showSnackbar(response));
             }
-
-            setLoading(false);
         }).catch(error => {
-            console.log(error);
+            dispatch(closeBackdrop());
+
             let response: AppSnackbarResponse = {
                 success: false,
                 message: error.toString().substring(0, 50)
@@ -106,12 +108,16 @@ const EventBusQueuesDashboard = () => {
                 response.statusCode = apiResponse.status;
             }
 
-            setSnackbarResponse(response);
+            dispatch(showSnackbar(response));
         });
     }
 
     const getStatusList = () => {
+        dispatch(showBackdrop());
+
         enumService.ListQueueStatus().then(response => {
+            dispatch(closeBackdrop());
+            
             const apiResponse = response.data;
 
             if (apiResponse.isSuccess) {
@@ -126,10 +132,11 @@ const EventBusQueuesDashboard = () => {
                     statusCode: apiResponse.status
                 }
     
-                setSnackbarResponse(response);
+                dispatch(showSnackbar(response));
             }
         }).catch(error => {
-            console.log(error);
+            dispatch(closeBackdrop());
+
             let response: AppSnackbarResponse = {
                 success: false,
                 message: error.toString().substring(0, 50)
@@ -142,7 +149,7 @@ const EventBusQueuesDashboard = () => {
                 response.statusCode = apiResponse.status;
             }
 
-            setSnackbarResponse(response);
+            dispatch(showSnackbar(response));
         });
     }
 
@@ -153,7 +160,6 @@ const EventBusQueuesDashboard = () => {
     }, []);
 
     useEffect(() => {
-        setLoading(true);
         getPaginatedList();
     }, [currentPage, currentPageSize])
 
@@ -184,9 +190,6 @@ const EventBusQueuesDashboard = () => {
 
     return (
         <>
-            <Backdrop open={isLoading}>
-                <CircularProgress color="inherit" />
-            </Backdrop>
             <AppBreadcrumb breadcrumbItems={breadcrumbItems} />
             <EventBusQueueSearchCard statusList={statusList} searchQueues={searchQueues}/>
             <TableContainer component={Paper}>
@@ -233,7 +236,6 @@ const EventBusQueuesDashboard = () => {
             <Fab color="info" sx={{ margin: 0, top: 'auto', right: 20, bottom: 20, left: 'auto', position: 'fixed' }} onClick={() => navigateTo("/eventbus-queues/new")}>
                 <Add />
             </Fab>
-            <AppSnackBar response={snackbarResponse} />
             <EventBusQueueModal queue={selectedQueue} showModal={showModal} closeModal={closeStatusModal} action={modalAction} updateList={getPaginatedList} />
         </>
     );

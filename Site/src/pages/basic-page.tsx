@@ -22,6 +22,8 @@ import { Outlet } from 'react-router-dom';
 import InboxTheme from '../themes';
 import { Add, Apps, ExpandLess, ExpandMore, Home, Send } from '@mui/icons-material';
 import { Link as RouterLink } from "react-router-dom";
+import AppSnackBar from '../components/app-snackbar';
+import AppBackdrop from '../components/app-backdrop';
 
 const drawerWidth = 240;
 
@@ -201,6 +203,8 @@ const BasicPage = () => {
                         <Container>
                             <Outlet></Outlet>
                         </Container>
+                        <AppBackdrop/>
+                        <AppSnackBar/>
                     </Main>
                 </Box>
             </ThemeProvider>

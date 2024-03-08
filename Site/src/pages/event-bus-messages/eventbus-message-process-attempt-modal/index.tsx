@@ -1,13 +1,14 @@
-import { ReactNode, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import AppSnackbarResponse from "../../../interfaces/requests/app-snackbar-response";
 import { EnumsService } from "../../../services/enums-service";
 import { EventBusMessageService } from "../../../services/eventbus-message-service";
-import { useNavigate } from "react-router-dom";
 import UpdateEventbusMessageStatusRequest from "../../../interfaces/requests/eventbus-received-message/update-eventbus-message-status-request";
-import { Autocomplete, AutocompleteRenderInputParams, Backdrop, Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from "@mui/material";
-import AppSnackBar from "../../../components/app-snackbar";
+import { Autocomplete, Backdrop, Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from "@mui/material";
 import { Close, Save } from "@mui/icons-material";
 import EnumData from "../../../interfaces/enum-data";
+import { useDispatch } from "react-redux";
+import { showSnackbar } from "../../../state/slices/app-snackbar-slice";
+import { closeBackdrop, showBackdrop } from "../../../state/slices/app-backdrop-slice";
 
 interface ProcessAttemptModalProps {
     requestId: string,
@@ -17,22 +18,20 @@ interface ProcessAttemptModalProps {
 }
 
 const EventBusMessageProcessAttemptModal = ({ requestId, showModal, closeModal, updateList }: ProcessAttemptModalProps) => {
+    const dispatch = useDispatch();
     const enumService = new EnumsService();
     const messageService = new EventBusMessageService();
 
     const [statusList, setStatusList] = useState<EnumData[]>([]);
 
-    const [snackbarResponse, setSnackbarResponse] = useState<AppSnackbarResponse>();
-    const [isLoading, setLoading] = useState(false);
-
     const [processStatus, setProcessStatus] = useState<number>(0);
     const [resultMessage, setResultMessage] = useState<string>('');
 
     const loadingStatus = () => {
-        setLoading(true);
+        dispatch(showBackdrop());
 
         enumService.ListHttpStatusCode().then(response => {
-            setLoading(false);
+            dispatch(closeBackdrop());
 
             const apiResponse = response.data;
 
@@ -52,10 +51,10 @@ const EventBusMessageProcessAttemptModal = ({ requestId, showModal, closeModal, 
                     statusCode: apiResponse.status
                 }
 
-                setSnackbarResponse(response);
+                dispatch(showSnackbar(response));
             }
         }).catch(error => {
-            setLoading(false);
+            dispatch(closeBackdrop());
 
             console.log(error);
             let response: AppSnackbarResponse = {
@@ -70,12 +69,12 @@ const EventBusMessageProcessAttemptModal = ({ requestId, showModal, closeModal, 
                 response.statusCode = apiResponse.status;
             }
 
-            setSnackbarResponse(response);
+            dispatch(showSnackbar(response));
         });
     }
 
     const updateStatus = () => {
-        setLoading(true);
+        dispatch(showBackdrop());
 
         const request: UpdateEventbusMessageStatusRequest = {
             requestId: requestId,
@@ -84,7 +83,7 @@ const EventBusMessageProcessAttemptModal = ({ requestId, showModal, closeModal, 
         };
 
         messageService.UpdateMessageStatus(request).then(response => {
-            setLoading(false);
+            dispatch(closeBackdrop());
 
             const apiResponse = response.data;
 
@@ -100,10 +99,10 @@ const EventBusMessageProcessAttemptModal = ({ requestId, showModal, closeModal, 
                     statusCode: apiResponse.status
                 }
 
-                setSnackbarResponse(response);
+                dispatch(showSnackbar(response));
             }
         }).catch(error => {
-            setLoading(false);
+            dispatch(closeBackdrop());
 
             console.log(error);
             let response: AppSnackbarResponse = {
@@ -118,7 +117,7 @@ const EventBusMessageProcessAttemptModal = ({ requestId, showModal, closeModal, 
                 response.statusCode = apiResponse.status;
             }
 
-            setSnackbarResponse(response);
+            dispatch(showSnackbar(response));
         });
     }
 
@@ -137,9 +136,6 @@ const EventBusMessageProcessAttemptModal = ({ requestId, showModal, closeModal, 
 
     return (
         <>
-            <Backdrop open={isLoading}>
-                <CircularProgress color="inherit" />
-            </Backdrop>
             <Dialog open={showModal} maxWidth="md">
                 <DialogTitle>Register processing attempt</DialogTitle>
                 <DialogContent sx={{ minWidth: '800px' }}>
@@ -168,7 +164,6 @@ const EventBusMessageProcessAttemptModal = ({ requestId, showModal, closeModal, 
                     </Button>
                 </DialogActions>
             </Dialog>
-            <AppSnackBar response={snackbarResponse} />
         </>
     );
 }

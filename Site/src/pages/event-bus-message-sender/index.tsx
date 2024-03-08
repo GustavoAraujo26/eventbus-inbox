@@ -12,17 +12,19 @@ import { useNavigate } from "react-router-dom";
 import SendEventbusMessageRequest from "../../interfaces/requests/eventbus-sender/send-eventbus-message-request";
 import { v4 as uuidv4 } from 'uuid';
 import { EventBusSenderService } from "../../services/event-bus-sender-service";
+import { useDispatch } from "react-redux";
+import { showSnackbar } from "../../state/slices/app-snackbar-slice";
+import { closeBackdrop, showBackdrop } from "../../state/slices/app-backdrop-slice";
 
 const EventBusMessageSender = () => {
+    const dispatch = useDispatch();
     const navigateTo = useNavigate();
 
     const queueService = new EventBusQueueService();
     const senderService = new EventBusSenderService();
 
     const [queueList, setQueueList] = useState<GetEventbusQueueResponse[]>([]);
-    const [snackbarResponse, setSnackbarResponse] = useState<AppSnackbarResponse>();
     const [breadcrumbItems, setBreadcrumbItems] = useState<AppBreadcrumbItem[]>([]);
-    const [isLoading, setLoading] = useState(true);
 
     const [queueId, setQueueId] = useState('');
     const [messageType, setMessageType] = useState('');
@@ -61,7 +63,7 @@ const EventBusMessageSender = () => {
         }
 
         queueService.ListQueues(request).then(response => {
-            setLoading(false);
+            dispatch(closeBackdrop());
 
             const apiResponse = response.data;
 
@@ -76,10 +78,10 @@ const EventBusMessageSender = () => {
                     statusCode: apiResponse.status
                 }
 
-                setSnackbarResponse(response);
+                dispatch(showSnackbar(response));
             }
         }).catch(error => {
-            setLoading(false);
+            dispatch(closeBackdrop());
             console.log(error);
             let response: AppSnackbarResponse = {
                 success: false,
@@ -93,7 +95,7 @@ const EventBusMessageSender = () => {
                 response.statusCode = apiResponse.status;
             }
 
-            setSnackbarResponse(response);
+            dispatch(showSnackbar(response));
         });
     }
 
@@ -104,7 +106,7 @@ const EventBusMessageSender = () => {
 
     const onSubmitMessage = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        setLoading(true);
+        dispatch(showBackdrop());
 
         const request: SendEventbusMessageRequest = {
             requestId: uuidv4(),
@@ -115,7 +117,7 @@ const EventBusMessageSender = () => {
         };
 
         senderService.SendMessage(request).then(response => {
-            setLoading(false);
+            dispatch(closeBackdrop());
 
             const apiResponse = response.data;
             if (apiResponse.isSuccess){
@@ -129,10 +131,10 @@ const EventBusMessageSender = () => {
                     statusCode: apiResponse.status
                 }
 
-                setSnackbarResponse(response);
+                dispatch(showSnackbar(response));
             }
         }).catch(error => {
-            setLoading(false);
+            dispatch(closeBackdrop());
             console.log(error);
             let response: AppSnackbarResponse = {
                 success: false,
@@ -146,15 +148,12 @@ const EventBusMessageSender = () => {
                 response.statusCode = apiResponse.status;
             }
 
-            setSnackbarResponse(response);
+            dispatch(showSnackbar(response));
         });
     }
 
     return (
         <>
-            <Backdrop open={isLoading}>
-                <CircularProgress color="inherit" />
-            </Backdrop>
             <AppBreadcrumb breadcrumbItems={breadcrumbItems} />
             <Grid justifyContent="center" container spacing={2}>
                 <Grid item md={8}>
@@ -195,7 +194,6 @@ const EventBusMessageSender = () => {
                     </Card>
                 </Grid>
             </Grid>
-            <AppSnackBar response={snackbarResponse} />
         </>
     );
 }
