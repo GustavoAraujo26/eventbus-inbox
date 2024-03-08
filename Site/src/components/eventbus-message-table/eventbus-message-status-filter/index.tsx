@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import EnumData from "../../../interfaces/enum-data";
 import { Checkbox, FormControlLabel, Paper } from "@mui/material";
 import { CheckBox, Label } from "@mui/icons-material";
+import EnumData from "../../../interfaces/enum-data";
 
 interface StatusFilterProps {
     statusList: EnumData[],

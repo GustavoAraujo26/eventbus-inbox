@@ -1,28 +1,29 @@
 import { useEffect, useState } from "react";
-import Period from "../../../interfaces/period";
-import AppSnackbarResponse from "../../../interfaces/requests/app-snackbar-response";
-import GetEventbusMessageListRequest from "../../../interfaces/requests/eventbus-received-message/get-eventbus-message-list-request";
-import { EventBusMessageService } from "../../../services/eventbus-message-service";
-import GetEventbusMessageListResponse from "../../../interfaces/responses/eventbus-received-message/get-eventbus-message-list-response";
 import { Backdrop, CircularProgress, Grid, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
-import AppSnackBar from "../../../components/app-snackbar";
-import EventBusMessageStatus from "../eventbus-message-status";
-import AppPagination from "../../../components/app-pagination";
-import EventBusMessageTableFilter from "../eventbus-message-table-filter";
+import EventBusMessageTableFilter from "./eventbus-message-table-filter";
 import { Delete, DomainVerification, Edit, Info, RestartAlt } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
-import EventBusMessageProcessAttemptModal from "../eventbus-message-process-attempt-modal";
-import { AppActionType } from "../../../enums/app-action-type";
-import EventBusMessageActionModal from "../eventbus-message-action-modal";
+import { AppActionType } from "../../enums/app-action-type";
+import Period from "../../interfaces/period";
+import AppSnackbarResponse from "../../interfaces/requests/app-snackbar-response";
+import GetEventbusMessageListRequest from "../../interfaces/requests/eventbus-received-message/get-eventbus-message-list-request";
+import GetEventbusMessageListResponse from "../../interfaces/responses/eventbus-received-message/get-eventbus-message-list-response";
+import EventBusMessageActionModal from "../../pages/event-bus-messages/eventbus-message-action-modal";
+import EventBusMessageProcessAttemptModal from "../../pages/event-bus-messages/eventbus-message-process-attempt-modal";
+import EventBusMessageStatus from "../../pages/event-bus-messages/eventbus-message-status";
+import { EventBusMessageService } from "../../services/eventbus-message-service";
+import AppPagination from "../app-pagination";
+import AppSnackBar from "../app-snackbar";
 
 interface MessageTableProps {
     gridSize: number,
     showQueue: boolean,
     showFilter: boolean,
-    currentQueueId: string | null
+    currentQueueId: string | null,
+    showActions: boolean
 }
 
-const EventBusMessageTable = ({ gridSize, showQueue, showFilter, currentQueueId }: MessageTableProps) => {
+const EventBusMessageTable = ({ gridSize, showQueue, showFilter, currentQueueId, showActions }: MessageTableProps) => {
     const navigateTo = useNavigate();
     const messageService = new EventBusMessageService();
     const [isLoading, setLoading] = useState(false);
@@ -175,7 +176,7 @@ const EventBusMessageTable = ({ gridSize, showQueue, showFilter, currentQueueId 
                                 <TableCell align="left">Type</TableCell>
                                 <TableCell align="left">Status</TableCell>
                                 <TableCell align="center">Attempts</TableCell>
-                                <TableCell align="left">Actions</TableCell>
+                                {showActions && <TableCell align="left">Actions</TableCell>}
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -193,7 +194,7 @@ const EventBusMessageTable = ({ gridSize, showQueue, showFilter, currentQueueId 
                                     <EventBusMessageStatus status={message.status} />
                                 </TableCell>
                                 <TableCell align="center">{message.processingAttempts}</TableCell>
-                                <TableCell>
+                                {showActions && <TableCell>
                                     <IconButton aria-label="Details" size="small" color="info" onClick={() => navigateTo(`/eventbus-messages/details/${message.requestId}`)} title="Details">
                                         <Info />
                                     </IconButton>
@@ -211,7 +212,7 @@ const EventBusMessageTable = ({ gridSize, showQueue, showFilter, currentQueueId 
                                     <IconButton aria-label="Delete" size="small" color="error" title="Delete" onClick={() => selectActionMessage(message, AppActionType.Delete)}>
                                         <Delete />
                                     </IconButton>
-                                </TableCell>
+                                </TableCell>}
                             </TableRow>)}
                         </TableBody>
                     </Table>
@@ -220,8 +221,8 @@ const EventBusMessageTable = ({ gridSize, showQueue, showFilter, currentQueueId 
             </Grid>}
             {selectedStatusMessage !== null && <EventBusMessageProcessAttemptModal requestId={selectedStatusMessage.requestId}
                 showModal={showStatusModal} updateList={getEventBusMessages} closeModal={closeStatusModal} />}
-            {selectedActionMessage !== null && <EventBusMessageActionModal selectedMessage={selectedActionMessage} onClose={closeActionModal} 
-                updateList={getEventBusMessages} showModal={showActionModal} actionType={selectedActionType!}/>}
+            {selectedActionMessage !== null && <EventBusMessageActionModal selectedMessage={selectedActionMessage} onClose={closeActionModal}
+                updateList={getEventBusMessages} showModal={showActionModal} actionType={selectedActionType!} />}
             <AppSnackBar response={snackbarResponse} />
         </>
     );

@@ -1,16 +1,16 @@
 import { Backdrop, Box, Button, Card, CardContent, CircularProgress, Divider, FormControl, FormControlLabel, Grid, InputLabel, MenuItem, Paper, Select, Switch, TextField, Typography } from "@mui/material";
-import { EventBusQueueService } from "../../../services/eventbus-queue-service";
-import GetEventbusQueueResponse from "../../../interfaces/responses/eventbus-queue/get-eventbus-queue-response";
 import { useEffect, useState } from "react";
-import GetEventBusQueueListRequest from "../../../interfaces/requests/eventbus-queue/get-eventbus-queue-list-request";
-import AppSnackbarResponse from "../../../interfaces/requests/app-snackbar-response";
-import AppSnackBar from "../../../components/app-snackbar";
-import { EnumsService } from "../../../services/enums-service";
+import { CleaningServices, Search } from "@mui/icons-material";
 import EnumData from "../../../interfaces/enum-data";
 import Period from "../../../interfaces/period";
-import { CleaningServices, Search } from "@mui/icons-material";
+import AppSnackbarResponse from "../../../interfaces/requests/app-snackbar-response";
+import GetEventBusQueueListRequest from "../../../interfaces/requests/eventbus-queue/get-eventbus-queue-list-request";
+import GetEventbusQueueResponse from "../../../interfaces/responses/eventbus-queue/get-eventbus-queue-response";
+import { EnumsService } from "../../../services/enums-service";
+import { EventBusQueueService } from "../../../services/eventbus-queue-service";
+import AppPeriodForm from "../../app-period-form";
+import AppSnackBar from "../../app-snackbar";
 import EventBusMessageStatusFilter from "../eventbus-message-status-filter";
-import AppPeriodForm from "../../../components/app-period-form";
 
 interface TableFilterProps {
     executeFilter: (queueId: string | null, creationDateSearch: Period | null,
@@ -264,7 +264,7 @@ const EventBusMessageTableFilter = ({ executeFilter }: TableFilterProps) => {
                                 <Button variant="contained" color="primary" sx={{ marginTop: 3 }} type="submit">
                                     <Search /> Search
                                 </Button>
-                                <Button variant="contained" color="secondary" sx={{ marginTop: 3, marginLeft: 2 }} type="button" onClick={cleanForm}>
+                                <Button variant="contained" color="warning" sx={{ marginTop: 3, marginLeft: 2 }} type="button" onClick={cleanForm}>
                                     <CleaningServices /> Clean
                                 </Button>
                             </Box>

@@ -6,7 +6,7 @@ import { Add, Apps, HomeOutlined } from "@mui/icons-material";
 import { Backdrop, CircularProgress, Fab } from "@mui/material";
 import AppBreadcrumb from "../../components/app-breadcrumb";
 import AppSnackBar from "../../components/app-snackbar";
-import EventBusMessageTable from "./eventbus-message-table";
+import EventBusMessageTable from "../../components/eventbus-message-table";
 
 const EventBusMessagesDashboard = () => {
     const navigateTo = useNavigate();
@@ -47,7 +47,7 @@ const EventBusMessagesDashboard = () => {
                 <CircularProgress color="inherit" />
             </Backdrop>
             <AppBreadcrumb breadcrumbItems={breadcrumbItems} />
-            <EventBusMessageTable gridSize={12} showQueue={true} showFilter={true} currentQueueId={null} />
+            <EventBusMessageTable gridSize={12} showQueue={true} showFilter={true} currentQueueId={null} showActions={true} />
             <AppSnackBar response={snackbarResponse} />
         </>
     );
