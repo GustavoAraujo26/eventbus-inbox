@@ -1,186 +1,64 @@
-import { Backdrop, Box, Button, Card, CardContent, CircularProgress, Divider, FormControl, FormControlLabel, Grid, InputLabel, MenuItem, Paper, Select, Switch, TextField, Typography } from "@mui/material";
+import { Box, Button, Card, CardContent, Divider, FormControl, FormControlLabel, Grid, InputLabel, MenuItem, Select, Switch, TextField, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { CleaningServices, Search } from "@mui/icons-material";
-import EnumData from "../../../interfaces/enum-data";
 import Period from "../../../interfaces/period";
-import AppSnackbarResponse from "../../../interfaces/requests/app-snackbar-response";
-import GetEventBusQueueListRequest from "../../../interfaces/requests/eventbus-queue/get-eventbus-queue-list-request";
 import GetEventbusQueueResponse from "../../../interfaces/responses/eventbus-queue/get-eventbus-queue-response";
-import { EnumsService } from "../../../services/enums-service";
-import { EventBusQueueService } from "../../../services/eventbus-queue-service";
 import AppPeriodForm from "../../app-period-form";
-import AppSnackBar from "../../app-snackbar";
 import EventBusMessageStatusFilter from "../eventbus-message-status-filter";
-import { useDispatch } from "react-redux";
-import { showSnackbar } from "../../../state/slices/app-snackbar-slice";
-import { closeBackdrop, showBackdrop } from "../../../state/slices/app-backdrop-slice";
+import { useAppDispatch, useAppSelector } from "../../../state/hooks/app-hooks";
+import { RootState } from "../../../state/app-store";
+import { fetchEventBusQueueList } from "../../../state/slices/eventbus-queue/eventbus-queue-list-slice";
+import { setCleanEventBusListRequest, setEventBusMessageListCreatedAtSearch, setEventBusMessageListQueue, setEventBusMessageListTypeMatch, setEventBusMessageListUpdatedAtSearch } from "../../../state/slices/eventbus-message/eventbus-message-list-request-slice";
+import { fetchEventBusMessageList } from "../../../state/slices/eventbus-message/eventbus-message-list-slice";
 
-interface TableFilterProps {
-    executeFilter: (queueId: string | null, creationDateSearch: Period | null,
-        updateDateSearch: Period | null, typeMatch: string | null, status: number[] | null) => void
-}
+const EventBusMessageTableFilter = () => {
+    const dispatch = useAppDispatch();
 
-const EventBusMessageTableFilter = ({ executeFilter }: TableFilterProps) => {
-    const dispatch = useDispatch();
-    const queueService = new EventBusQueueService();
-    const enumService = new EnumsService();
+    const queueListContainer = useAppSelector((state: RootState) => state.eventbusQueueList);
+    const request = useAppSelector((state: RootState) => state.eventbusMessageListRequest);
 
     const [queueList, setQueueList] = useState<GetEventbusQueueResponse[]>([]);
-    const [statusList, setStatusList] = useState<EnumData[]>([]);
-    const [queueId, setQueueId] = useState<string>('');
-    const [creationStartDateSearch, setCreationStartDateSearch] = useState<Date | null>(null);
-    const [creationEndDateSearch, setCreationEndDateSearch] = useState<Date | null>(null);
-    const [updateStartDateSearch, setUpdateStartDateSearch] = useState<Date | null>(null);
-    const [updateEndDateSearch, setUpdateEndDateSearch] = useState<Date | null>(null);
-    const [typeMatch, setTypeMatch] = useState<string>('');
-    const [statusToSearch, setStatusToSearch] = useState<number[] | null>(null);
     const [creationDateToogle, setCreationDateToogle] = useState<boolean>(true);
     const [updateDateToogle, setUpdateDateToogle] = useState<boolean>(false);
-
-    const loadQueueList = () => {
-        dispatch(showBackdrop());
-
-        const request: GetEventBusQueueListRequest = {
-            nameMatch: null,
-            descriptionMatch: null,
-            status: null,
-            page: 1,
-            pageSize: 1000000,
-            summarizeMessages: false
-        }
-
-        queueService.ListQueues(request).then(response => {
-            dispatch(closeBackdrop());
-
-            const apiResponse = response.data;
-
-            if (apiResponse.isSuccess) {
-                setQueueList(apiResponse.data);
-            }
-            else {
-                const response: AppSnackbarResponse = {
-                    success: false,
-                    message: apiResponse.message,
-                    stackTrace: apiResponse.stackTrace,
-                    statusCode: apiResponse.status
-                }
-
-                dispatch(showSnackbar(response));
-            }
-        }).catch(error => {
-            dispatch(closeBackdrop());
-            console.log(error);
-            let response: AppSnackbarResponse = {
-                success: false,
-                message: error.toString().substring(0, 50)
-            }
-
-            const apiResponse = error.response.data;
-            if (typeof apiResponse !== 'undefined') {
-                response.message = apiResponse.message;
-                response.stackTrace = apiResponse.stackTrace;
-                response.statusCode = apiResponse.status;
-            }
-
-            dispatch(showSnackbar(response));
-        });
-    }
-
-    const loadStatusList = () => {
-        dispatch(showBackdrop());
-
-        enumService.ListMessageStatus().then(response => {
-            dispatch(closeBackdrop());
-            const apiResponse = response.data;
-
-            if (apiResponse.isSuccess) {
-                setStatusList(apiResponse.data);
-            }
-            else {
-                const response: AppSnackbarResponse = {
-                    success: false,
-                    message: apiResponse.message,
-                    stackTrace: apiResponse.stackTrace,
-                    statusCode: apiResponse.status
-                }
-
-                dispatch(showSnackbar(response));
-            }
-        }).catch(error => {
-            dispatch(closeBackdrop());
-            console.log(error);
-            let response: AppSnackbarResponse = {
-                success: false,
-                message: error.toString().substring(0, 50)
-            }
-
-            const apiResponse = error.response.data;
-            if (typeof apiResponse !== 'undefined') {
-                response.message = apiResponse.message;
-                response.stackTrace = apiResponse.stackTrace;
-                response.statusCode = apiResponse.status;
-            }
-
-            dispatch(showSnackbar(response));
-        });
-    }
-
-    useEffect(() => {
-        loadQueueList();
-        loadStatusList();
-    }, []);
 
     const filterTable = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
-        let selectedQueue: string | null = null;
-        let creationDateSearch: Period | null = null;
-        let updateDateSearch: Period | null = null;
-        let typeToMatch: string | null = null;
-        let statusSearchList: number[] | null = null;
-
-        if (queueId && queueId !== '') {
-            selectedQueue = queueId;
-        }
-
-        if (creationStartDateSearch && creationEndDateSearch) {
-            creationDateSearch = {
-                start: creationStartDateSearch,
-                end: creationEndDateSearch
-            };
-        }
-
-        if (updateStartDateSearch && updateEndDateSearch) {
-            updateDateSearch = {
-                start: updateStartDateSearch,
-                end: updateEndDateSearch
-            }
-        }
-
-        if (typeMatch && typeMatch !== '') {
-            typeToMatch = typeMatch;
-        }
-
-        if (statusToSearch && statusToSearch.length > 0) {
-            statusSearchList = statusToSearch;
-        }
-
-        executeFilter(selectedQueue, creationDateSearch, updateDateSearch, typeToMatch, statusSearchList);
+        dispatch(fetchEventBusMessageList(request));
     }
 
-    const cleanForm = () => {
-        setQueueId('');
-        cleanDates();
-        setTypeMatch('');
-        setStatusToSearch(null);
+    const setCreationPeriod = (startDate: Date, endDate: Date) => {
+        if (startDate && endDate) {
+            let creationDateSearch: Period = {
+                start: startDate,
+                end: endDate
+            };
+            dispatch(setEventBusMessageListCreatedAtSearch(creationDateSearch));
+        }
+    }
+
+    const setUpdatePeriod = (startDate: Date, endDate: Date) => {
+        if (startDate && endDate) {
+            let updateDateSearch = {
+                start: startDate,
+                end: endDate
+            }
+            dispatch(setEventBusMessageListUpdatedAtSearch(updateDateSearch));
+        }
     }
 
     const cleanDates = () => {
-        setCreationStartDateSearch(null);
-        setCreationEndDateSearch(null);
-        setUpdateStartDateSearch(null);
-        setUpdateEndDateSearch(null);
+        dispatch(setEventBusMessageListCreatedAtSearch(null));
+        dispatch(setEventBusMessageListUpdatedAtSearch(null));
     }
+
+    useEffect(() => {
+        dispatch(fetchEventBusQueueList(null));
+    }, []);
+
+    useEffect(() => {
+        setQueueList(queueListContainer.data);
+    }, [queueListContainer]);
 
     return (
         <>
@@ -189,13 +67,13 @@ const EventBusMessageTableFilter = ({ executeFilter }: TableFilterProps) => {
                     <Card sx={{ marginBottom: 3 }}>
                         <CardContent>
                             <Box component="form" onSubmit={filterTable}>
-                                <Typography component="h3" sx={{fontWeight: 'bold'}}>Filters</Typography>
-                                <Divider/>
+                                <Typography component="h3" sx={{ fontWeight: 'bold' }}>Filters</Typography>
+                                <Divider />
                                 <Grid container justifyContent="left" spacing={2}>
                                     {queueList && <Grid item md={6}>
                                         <FormControl variant="standard" fullWidth>
                                             <InputLabel variant="standard" htmlFor="queue-select">Select the Queue</InputLabel>
-                                            <Select id="queue-select" value={queueId} onChange={event => setQueueId(event.target.value)} fullWidth>
+                                            <Select id="queue-select" value={request.queueId} onChange={event => dispatch(setEventBusMessageListQueue(event.target.value))} fullWidth>
                                                 <MenuItem value="">Select an option</MenuItem>
                                                 {queueList.map(option => <MenuItem key={option.id} value={option.id}>
                                                     {option.name}
@@ -204,14 +82,14 @@ const EventBusMessageTableFilter = ({ executeFilter }: TableFilterProps) => {
                                         </FormControl>
                                     </Grid>}
                                     <Grid item md={6}>
-                                        <TextField value={typeMatch}
+                                        <TextField value={request.typeMatch}
                                             label="Type to search"
                                             variant="standard"
                                             fullWidth
-                                            onChange={event => setTypeMatch(event.target.value)} />
+                                            onChange={event => dispatch(setEventBusMessageListTypeMatch(event.target.value))} />
                                     </Grid>
                                 </Grid>
-                                <br/>
+                                <br />
                                 <Grid justifyContent="center" container spacing={2}>
                                     <Grid item md={6}>
                                         <Typography>Search By</Typography>
@@ -241,29 +119,28 @@ const EventBusMessageTableFilter = ({ executeFilter }: TableFilterProps) => {
                                             }
                                         }} />} />
 
-                                        {creationDateToogle && <AppPeriodForm currentStart={creationStartDateSearch} currentEnd={creationEndDateSearch} 
-                                            cleanForm={(creationStartDateSearch === null && creationEndDateSearch === null)}
-                                            onUpdatePeriod={function (selectedStart: Date, selectedEnd: Date): void {
-                                            setCreationStartDateSearch(selectedStart);
-                                            setCreationEndDateSearch(selectedEnd);
-                                        }} />}
+                                        {creationDateToogle && <AppPeriodForm
+                                            currentStart={request.creationDateSearch === null ? null : request.creationDateSearch.start}
+                                            currentEnd={request.creationDateSearch === null ? null : request.creationDateSearch.end}
+                                            cleanForm={request.creationDateSearch === null || (request.creationDateSearch.start === null && request.creationDateSearch.end === null)}
+                                            onUpdatePeriod={(selectedStart: Date, selectedEnd: Date) => setCreationPeriod(selectedStart, selectedEnd)} />}
 
-                                        {updateDateToogle && <AppPeriodForm currentStart={updateStartDateSearch} currentEnd={updateEndDateSearch} 
-                                            cleanForm={(updateStartDateSearch === null && updateEndDateSearch === null)}
-                                            onUpdatePeriod={function (selectedStart: Date, selectedEnd: Date): void {
-                                            setUpdateStartDateSearch(selectedStart);
-                                            setUpdateEndDateSearch(selectedEnd);
-                                        }} />}
+                                        {updateDateToogle && <AppPeriodForm
+                                            currentStart={request.updateDateSearch === null ? null : request.updateDateSearch.start}
+                                            currentEnd={request.updateDateSearch === null ? null : request.updateDateSearch.end}
+                                            cleanForm={request.updateDateSearch === null || (request.updateDateSearch.start === null && request.updateDateSearch.end === null)}
+                                            onUpdatePeriod={(selectedStart: Date, selectedEnd: Date) => setUpdatePeriod(selectedStart, selectedEnd)} />}
+
 
                                     </Grid>
-                                    {statusList && <Grid item md={6}>
-                                        <EventBusMessageStatusFilter statusList={statusList} updateStatusFilter={obj => setStatusToSearch(obj)} cleanList={statusToSearch === null} />
-                                    </Grid>}
+                                    <Grid item md={6}>
+                                        <EventBusMessageStatusFilter />
+                                    </Grid>
                                 </Grid>
                                 <Button variant="contained" color="primary" sx={{ marginTop: 3 }} type="submit">
                                     <Search /> Search
                                 </Button>
-                                <Button variant="contained" color="warning" sx={{ marginTop: 3, marginLeft: 2 }} type="button" onClick={cleanForm}>
+                                <Button variant="contained" color="warning" sx={{ marginTop: 3, marginLeft: 2 }} type="button" onClick={() => dispatch(setCleanEventBusListRequest())}>
                                     <CleaningServices /> Clean
                                 </Button>
                             </Box>

@@ -1,6 +1,5 @@
-import { Grid, TextField } from "@mui/material";
+import { Grid } from "@mui/material";
 import { useEffect, useState } from "react";
-import Period from "../../interfaces/period";
 import { DatePicker } from "@mui/x-date-pickers";
 
 interface PeriodFormProps {

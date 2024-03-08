@@ -17,6 +17,10 @@ import AppSnackBar from "../app-snackbar";
 import { useDispatch } from "react-redux";
 import { showSnackbar } from "../../state/slices/app-snackbar-slice";
 import { closeBackdrop, showBackdrop } from "../../state/slices/app-backdrop-slice";
+import { useAppDispatch, useAppSelector } from "../../state/hooks/app-hooks";
+import { RootState } from "../../state/app-store";
+import { changeEventBusMessagePagination } from "../../state/slices/eventbus-message/eventbus-message-list-request-slice";
+import { fetchEventBusMessageList } from "../../state/slices/eventbus-message/eventbus-message-list-slice";
 
 interface MessageTableProps {
     gridSize: number,
@@ -27,20 +31,16 @@ interface MessageTableProps {
 }
 
 const EventBusMessageTable = ({ gridSize, showQueue, showFilter, currentQueueId, showActions }: MessageTableProps) => {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const navigateTo = useNavigate();
     const messageService = new EventBusMessageService();
+
+    const queueMessagesContainer = useAppSelector((state: RootState) => state.eventbusMessageList);
+    const request = useAppSelector((state: RootState) => state.eventbusMessageListRequest);
+
     const [queueMessages, setQueueMessages] = useState<GetEventbusMessageListResponse[]>([]);
 
-    const [currentPage, setCurrentPage] = useState(1);
-    const [currentPageSize, setCurrentPageSize] = useState(10);
-    const [rowsFounded, setRowsFounded] = useState(true);
-
-    const [queueId, setQueueId] = useState<string | null>(null);
-    const [creationDateSearch, setCreationDateSearch] = useState<Period | null>(null);
-    const [updateDateSearch, setUpdateDateSearch] = useState<Period | null>(null);
-    const [typeMatch, setTypeMatch] = useState<string | null>(null);
-    const [statusToSearch, setStatusToSearch] = useState<number[] | null>(null);
+    const [enableNextPage, setNextPageEnabled] = useState(true);
 
     const [showStatusModal, setShowStatusModal] = useState(false);
     const [showActionModal, setShowActionModal] = useState(false);
@@ -48,67 +48,8 @@ const EventBusMessageTable = ({ gridSize, showQueue, showFilter, currentQueueId,
     const [selectedActionMessage, setSelectedActionMessage] = useState<GetEventbusMessageListResponse | null>(null);
     const [selectedActionType, setActionType] = useState<AppActionType | null>(null);
 
-    const getEventBusMessages = () => {
-        dispatch(showBackdrop());
-        const request: GetEventbusMessageListRequest = {
-            queueId: currentQueueId ? currentQueueId : queueId,
-            creationDateSearch: creationDateSearch,
-            updateDateSearch: updateDateSearch,
-            typeMatch: typeMatch,
-            statusToSearch: statusToSearch,
-            page: currentPage,
-            pageSize: currentPageSize
-        };
-
-        messageService.ListMessage(request).then(response => {
-            dispatch(closeBackdrop());
-            const apiResponse = response.data;
-            if (apiResponse.isSuccess) {
-                setQueueMessages(apiResponse.data);
-                setRowsFounded((apiResponse.data.length > 0 && apiResponse.data.length >= currentPageSize));
-            }
-            else {
-                const response: AppSnackbarResponse = {
-                    success: false,
-                    message: apiResponse.message,
-                    stackTrace: apiResponse.stackTrace,
-                    statusCode: apiResponse.status
-                }
-
-                dispatch(showSnackbar(response));
-            }
-        }).catch(error => {
-            dispatch(closeBackdrop());
-            console.log(error);
-            let response: AppSnackbarResponse = {
-                success: false,
-                message: error.toString().substring(0, 50)
-            }
-
-            const apiResponse = error.response.data;
-            if (typeof apiResponse !== 'undefined') {
-                response.message = apiResponse.message;
-                response.stackTrace = apiResponse.stackTrace;
-                response.statusCode = apiResponse.status;
-            }
-
-            dispatch(showSnackbar(response));
-        });
-    }
-
     const changePageData = (selectedPage: number, selectedPageSize: number) => {
-        setCurrentPage(selectedPage);
-        setCurrentPageSize(selectedPageSize);
-    }
-
-    const executeFilter = (selectedQueue: string | null, selectedCreationDateSearch: Period | null,
-        selectedUpdateDateSearch: Period | null, selectedTypeMatch: string | null, selectedStatus: number[] | null) => {
-        setQueueId(selectedQueue);
-        setCreationDateSearch(selectedCreationDateSearch);
-        setUpdateDateSearch(selectedUpdateDateSearch);
-        setTypeMatch(selectedTypeMatch);
-        setStatusToSearch(selectedStatus);
-        setCurrentPage(1);
+        dispatch(changeEventBusMessagePagination({ page: selectedPage, pageSize: selectedPageSize }));
     }
 
     const closeStatusModal = () => {
@@ -132,16 +73,8 @@ const EventBusMessageTable = ({ gridSize, showQueue, showFilter, currentQueueId,
     }
 
     useEffect(() => {
-        getEventBusMessages();
+        dispatch(fetchEventBusMessageList(request));
     }, []);
-
-    useEffect(() => {
-        getEventBusMessages();
-    }, [currentPage, currentPageSize]);
-
-    useEffect(() => {
-        getEventBusMessages();
-    }, [queueId, creationDateSearch, updateDateSearch, typeMatch, statusToSearch]);
 
     useEffect(() => {
         if (selectedStatusMessage === null) {
@@ -161,10 +94,15 @@ const EventBusMessageTable = ({ gridSize, showQueue, showFilter, currentQueueId,
         }
     }, [selectedActionMessage]);
 
+    useEffect(() => {
+        setQueueMessages(queueMessagesContainer.data);
+        setNextPageEnabled(queueMessagesContainer.data.length >= 10);
+    }, [queueMessagesContainer]);
+
     return (
         <>
             {queueMessages && <Grid item md={gridSize}>
-                {showFilter && <EventBusMessageTableFilter executeFilter={executeFilter} />}
+                {showFilter && <EventBusMessageTableFilter />}
                 <TableContainer component={Paper}>
                     <Table>
                         <TableHead>
@@ -215,13 +153,13 @@ const EventBusMessageTable = ({ gridSize, showQueue, showFilter, currentQueueId,
                             </TableRow>)}
                         </TableBody>
                     </Table>
-                    <AppPagination changePageData={changePageData} rowsFounded={rowsFounded} />
+                    <AppPagination changePageData={changePageData} enableNextPage={enableNextPage} loadData={() => dispatch(fetchEventBusMessageList(request))} />
                 </TableContainer>
             </Grid>}
             {selectedStatusMessage !== null && <EventBusMessageProcessAttemptModal requestId={selectedStatusMessage.requestId}
-                showModal={showStatusModal} updateList={getEventBusMessages} closeModal={closeStatusModal} />}
+                showModal={showStatusModal} updateList={() => dispatch(fetchEventBusMessageList(request))} closeModal={closeStatusModal} />}
             {selectedActionMessage !== null && <EventBusMessageActionModal selectedMessage={selectedActionMessage} onClose={closeActionModal}
-                updateList={getEventBusMessages} showModal={showActionModal} actionType={selectedActionType!} />}
+                updateList={() => dispatch(fetchEventBusMessageList(request))} showModal={showActionModal} actionType={selectedActionType!} />}
         </>
     );
 }

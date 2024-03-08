@@ -1,43 +1,57 @@
 import { useEffect, useState } from "react";
 import { Checkbox, FormControlLabel, Paper } from "@mui/material";
-import { CheckBox, Label } from "@mui/icons-material";
 import EnumData from "../../../interfaces/enum-data";
+import { useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../../state/app-store";
+import { useDispatch } from "react-redux";
+import { fetchEventBusMessageStatusList } from "../../../state/slices/enums/eventbus-message-status-list-slice";
+import { useAppDispatch, useAppSelector } from "../../../state/hooks/app-hooks";
+import { shallowEqual } from "react-redux";
+import { addStatusToEventBusMessageListSearch, removeStatusFromEventBusMessageListSearch } from "../../../state/slices/eventbus-message/eventbus-message-list-request-slice";
 
-interface StatusFilterProps {
-    statusList: EnumData[],
-    updateStatusFilter: (selectedStatus: number[]) => void,
-    cleanList: boolean
-}
+const EventBusMessageStatusFilter = () => {
 
-const EventBusMessageStatusFilter = ({ statusList, updateStatusFilter, cleanList }: StatusFilterProps) => {
+    const dispatch = useAppDispatch();
 
-    const [selectedStatus, setSelectedStatus] = useState<number[]>([]);
+    const statusListContainer = useAppSelector((state: RootState) => state.eventBusMessageStatusList, shallowEqual);
+    const request = useSelector((state: RootState) => state.eventbusMessageListRequest, shallowEqual);
+
+    const [statusList, setStatusList] = useState<EnumData[]>([]);
 
     const onCheckStatus = (statusId: number, event: React.ChangeEvent<HTMLInputElement>) => {
         const checked: boolean = event.target.checked;
 
-        setSelectedStatus(selectedStatus.filter(x => x !== statusId));
         if (checked){
-            setSelectedStatus(oldList => [...oldList, statusId]);
+            dispatch(addStatusToEventBusMessageListSearch(statusId));
+        }
+        else{
+            dispatch(removeStatusFromEventBusMessageListSearch(statusId));
         }
     }
 
-    useEffect(() => {
-        updateStatusFilter(selectedStatus);
-    }, [selectedStatus]);
+    const isChecked = (item: EnumData): boolean => {
+        if (request.statusToSearch === null || request.statusToSearch.length === 0) {
+            return false;
+        }
+
+        return request.statusToSearch.indexOf(item.intKey) !== -1;
+    }
 
     useEffect(() => {
-        setSelectedStatus([]);
-    }, [cleanList]);
+        dispatch(fetchEventBusMessageStatusList());
+    }, []);
+
+    useEffect(() => {
+        setStatusList(statusListContainer.data);
+    }, [statusListContainer]);
 
     return (
         <>
-            
             {statusList && statusList.length > 0 && <>
                 <p>Select the status to search</p>
                 <Paper sx={{ maxHeight: '300px', overflow: 'auto' }}>
                     {statusList.map(item => <FormControlLabel key={item.intKey} control={
-                        <Checkbox checked={selectedStatus.indexOf(item.intKey) !== -1} onChange={event => onCheckStatus(item.intKey, event)} name={item.stringKey} />} label={item.description}/>)}
+                        <Checkbox checked={isChecked(item)} onChange={event => onCheckStatus(item.intKey, event)} name={item.stringKey} />} label={item.description} />)}
                 </Paper>
             </>}
         </>

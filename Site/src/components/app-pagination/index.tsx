@@ -3,11 +3,12 @@ import { Box, Button, ButtonGroup, FormControl, Grid, InputLabel, MenuItem, Sele
 import { useEffect, useState } from "react";
 
 interface PaginationProps {
-    rowsFounded: boolean,
-    changePageData: (page: number, pageSize: number) => void
+    enableNextPage: boolean,
+    changePageData: (page: number, pageSize: number) => void,
+    loadData: () => void
 }
 
-const AppPagination = ({ rowsFounded, changePageData }: PaginationProps) => {
+const AppPagination = ({ enableNextPage, changePageData, loadData }: PaginationProps) => {
     const rowsPerPage = [10, 25, 50, 100];
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [currentPageSize, setCurrentPageSize] = useState<number>(10);
@@ -15,24 +16,28 @@ const AppPagination = ({ rowsFounded, changePageData }: PaginationProps) => {
     const gotToNextPage = () => {
         const nextPage = currentPage + 1;
         setCurrentPage(nextPage);
+        changePageData(nextPage, currentPageSize);
     }
 
     const goToPreviousPage = () => {
         const previousPage = currentPage - 1;
         setCurrentPage(previousPage);
+        changePageData(previousPage, currentPageSize);
     }
 
     const changePageSize = (selectedPageSize: string | number) => {
         if (typeof selectedPageSize === 'number') {
+            changePageData(currentPage, selectedPageSize);
             setCurrentPageSize(selectedPageSize);
         }
         else {
+            changePageData(currentPage, +selectedPageSize);
             setCurrentPageSize(+selectedPageSize);
         }
     }
 
     useEffect(() => {
-        changePageData(currentPage, currentPageSize);
+        loadData();
     }, [currentPage, currentPageSize]);
 
     return (
@@ -56,7 +61,7 @@ const AppPagination = ({ rowsFounded, changePageData }: PaginationProps) => {
                                 Previous
                             </Button>
                             <Button disabled={true}>{currentPage}</Button>
-                            <Button onClick={gotToNextPage} disabled={!rowsFounded}>
+                            <Button onClick={gotToNextPage} disabled={!enableNextPage}>
                                 <ArrowForwardIos />
                                 Next
                             </Button>
