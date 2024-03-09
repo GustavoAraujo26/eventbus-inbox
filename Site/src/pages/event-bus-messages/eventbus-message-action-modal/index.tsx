@@ -1,4 +1,4 @@
-import { Backdrop, Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import { AppActionType } from "../../../enums/app-action-type";
 import GetEventbusMessageListResponse from "../../../interfaces/responses/eventbus-received-message/get-eventbus-message-list-response";
 import { EventBusMessageService } from "../../../services/eventbus-message-service";
@@ -6,117 +6,101 @@ import { useEffect, useState } from "react";
 import AppSnackbarResponse from "../../../interfaces/requests/app-snackbar-response";
 import EventBusMessageCard from "../eventbus-message-card";
 import { Save, Close, RestartAlt } from "@mui/icons-material";
-import { AxiosResponse } from "axios";
 import { ApiResponse } from "../../../interfaces/api-response";
 import AppTaskResponse from "../../../interfaces/app-task-response";
-import { useDispatch } from "react-redux";
 import { showSnackbar } from "../../../state/slices/app-snackbar-slice";
 import { closeBackdrop, showBackdrop } from "../../../state/slices/app-backdrop-slice";
-import { useAppDispatch } from "../../../state/hooks/app-hooks";
+import { useAppDispatch, useAppSelector } from "../../../state/hooks/app-hooks";
+import { RootState } from "../../../state/app-store";
+import { closeEventBusMessageActionModal } from "../../../state/slices/eventbus-message/eventbus-message-action-modal-slice";
+import { fetchEventBusMessageList } from "../../../state/slices/eventbus-message/eventbus-message-list-slice";
 
-interface ActionModalProps {
-    selectedMessage: GetEventbusMessageListResponse,
-    onClose: () => void,
-    updateList: () => void,
-    showModal: boolean,
-    actionType: AppActionType
-}
-
-const EventBusMessageActionModal = ({ selectedMessage, onClose, updateList, showModal, actionType }: ActionModalProps) => {
+const EventBusMessageActionModal = () => {
     const dispatch = useAppDispatch();
     const messageService = new EventBusMessageService();
 
+    const modalDataContainer = useAppSelector((state: RootState) => state.eventbusMessageActionModal);
+    const tableFilterRequest = useAppSelector((state: RootState) => state.eventbusMessageListRequest);
+
+    const [selectedMessage, setSelectedMessage] = useState<GetEventbusMessageListResponse | null>();
     const [title, setTitle] = useState('');
 
     useEffect(() => {
-        if (actionType === AppActionType.Update) {
+        if (modalDataContainer.action === null) {
+            return;
+        }
+
+        if (modalDataContainer.action === AppActionType.Update) {
             setTitle("Reactivating event bus message");
         }
         else {
             setTitle("Deleting event bus message");
         }
-    }, [actionType]);
+    }, [modalDataContainer.action]);
 
-    const executeAction = () => {
+    useEffect(() => {
+        setSelectedMessage(modalDataContainer.data);
+    }, [modalDataContainer]);
+
+    const executeAction = async () => {
         dispatch(showBackdrop());
 
-        let serverCall: Promise<AxiosResponse<ApiResponse<AppTaskResponse>, any>> | null = null;
-        if (actionType === AppActionType.Update){
-            serverCall = messageService.ReactivateMessage(selectedMessage.requestId);
+        let apiResponse: ApiResponse<AppTaskResponse> | null = null;
+        if (modalDataContainer.action === AppActionType.Update) {
+            apiResponse = await messageService.ReactivateMessage(selectedMessage!.requestId);
         }
-        else if (actionType === AppActionType.Delete){
-            serverCall = messageService.DeleteMessage(selectedMessage.requestId);
-        }
-        else{
-            dispatch(closeBackdrop());
+        else if (modalDataContainer.action === AppActionType.Delete) {
+            apiResponse = await messageService.DeleteMessage(selectedMessage!.requestId);
         }
 
-        if (serverCall !== null){
-            serverCall.then(response => {
-                dispatch(closeBackdrop());
+        dispatch(closeBackdrop());
 
-                const apiResponse = response.data;
-                if (apiResponse.isSuccess){
-                    updateList();
-                    onClose();
-                }
-                else{
-                    const response: AppSnackbarResponse = {
-                        success: false,
-                        message: apiResponse.message,
-                        stackTrace: apiResponse.stackTrace,
-                        statusCode: apiResponse.status
-                    }
-    
-                    dispatch(showSnackbar(response));
-                }
-            }).catch(error => {
-                dispatch(closeBackdrop());
-    
-                console.log(error);
-                let response: AppSnackbarResponse = {
-                    success: false,
-                    message: error.toString().substring(0, 50)
-                }
-    
-                const apiResponse = error.response.data;
-                if (typeof apiResponse !== 'undefined') {
-                    response.message = apiResponse.message;
-                    response.stackTrace = apiResponse.stackTrace;
-                    response.statusCode = apiResponse.status;
-                }
-    
-                dispatch(showSnackbar(response));
-            });
+        if (apiResponse === null) {
+            return;
+        }
+
+        if (apiResponse.isSuccess) {
+            dispatch(fetchEventBusMessageList(tableFilterRequest));
+            dispatch(closeEventBusMessageActionModal());
+        }
+        else {
+            const response: AppSnackbarResponse = {
+                success: false,
+                message: apiResponse.message,
+                stackTrace: apiResponse.stackTrace,
+                statusCode: apiResponse.status
+            }
+
+            dispatch(showSnackbar(response));
         }
     }
 
     return (
         <>
-            <Dialog open={showModal}>
-                <DialogTitle sx={{textAlign: 'center'}}>{title}</DialogTitle>
+            {selectedMessage && <Dialog open={modalDataContainer.show}>
+                <DialogTitle sx={{ textAlign: 'center' }}>{title}</DialogTitle>
                 <DialogContent>
                     <EventBusMessageCard requestId={selectedMessage.requestId} type={selectedMessage.type}
                         creationDate={selectedMessage.createdAt} processingAttempts={selectedMessage.processingAttempts}
                         status={selectedMessage.status} queueName={selectedMessage.queue.name}
-                        queueProcessingAttempts={selectedMessage.queue.processingAttempts} />
+                        queueProcessingAttempts={selectedMessage!.queue.processingAttempts} />
                 </DialogContent>
                 <DialogActions>
-                    {actionType === AppActionType.Update && <Button color="success" onClick={() => executeAction()}>
+                    {modalDataContainer.action === AppActionType.Update && <Button color="success" onClick={() => executeAction()}>
                         <RestartAlt />
                         Reactivate
                     </Button>}
-                    {actionType === AppActionType.Delete && <Button color="error" onClick={() => executeAction()}>
+                    {modalDataContainer.action === AppActionType.Delete && <Button color="error" onClick={() => executeAction()}>
                         <Save />
                         Delete
                     </Button>}
 
-                    <Button color="secondary" onClick={() => onClose()}>
+                    <Button color="secondary" onClick={() => dispatch(closeEventBusMessageActionModal())}>
                         <Close />
                         Close
                     </Button>
                 </DialogActions>
-            </Dialog>
+            </Dialog>}
         </>
     );
 }

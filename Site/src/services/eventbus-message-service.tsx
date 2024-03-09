@@ -9,8 +9,24 @@ import GetEventbusMessageResponse from "../interfaces/responses/eventbus-receive
 import { HttpService } from "./http-service";
 
 export class EventBusMessageService extends HttpService {
-    DeleteMessage(id: string) {
-        return this.delete<ApiResponse<AppTaskResponse>>(`/v1/event-bus/received-messages?RequestId=${id}`);
+    async DeleteMessage(id: string) {
+        let response: AxiosResponse<ApiResponse<AppTaskResponse>, any> | null = null;
+        let apiResponse: ApiResponse<AppTaskResponse> | null = null;
+        
+        try{
+            response = await this.delete<ApiResponse<AppTaskResponse>>(`/v1/event-bus/received-messages?RequestId=${id}`);
+            apiResponse = response.data;
+        }
+        catch(error){
+            console.log(error);
+
+            if (axios.isAxiosError(error)){
+                const axiosError = error as AxiosError<ApiResponse<AppTaskResponse>, any>;
+                apiResponse = axiosError.response!.data
+            }
+        }
+        
+        return apiResponse;
     }
 
     GetMessage(id: string) {
@@ -45,7 +61,23 @@ export class EventBusMessageService extends HttpService {
         return apiResponse;
     }
 
-    ReactivateMessage(id: string) {
-        return this.get<ApiResponse<AppTaskResponse>>(`/v1/event-bus/received-messages/reactivate?RequestId=${id}`);
+    async ReactivateMessage(id: string) {
+        let response: AxiosResponse<ApiResponse<AppTaskResponse>, any> | null = null;
+        let apiResponse: ApiResponse<AppTaskResponse> | null = null;
+        
+        try{
+            response = await this.get<ApiResponse<AppTaskResponse>>(`/v1/event-bus/received-messages/reactivate?RequestId=${id}`);
+            apiResponse = response.data;
+        }
+        catch(error){
+            console.log(error);
+
+            if (axios.isAxiosError(error)){
+                const axiosError = error as AxiosError<ApiResponse<AppTaskResponse>, any>;
+                apiResponse = axiosError.response!.data
+            }
+        }
+        
+        return apiResponse;
     }
 }

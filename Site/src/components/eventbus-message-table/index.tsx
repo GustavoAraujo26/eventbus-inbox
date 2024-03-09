@@ -14,6 +14,7 @@ import { RootState } from "../../state/app-store";
 import { changeEventBusMessagePagination } from "../../state/slices/eventbus-message/eventbus-message-list-request-slice";
 import { fetchEventBusMessageList } from "../../state/slices/eventbus-message/eventbus-message-list-slice";
 import { openEventBusMessageStatusModal } from "../../state/slices/eventbus-message/eventbus-message-status-modal-slice";
+import { openEventBusMessageActionModal } from "../../state/slices/eventbus-message/eventbus-message-action-modal-slice";
 
 interface MessageTableProps {
     gridSize: number,
@@ -34,33 +35,9 @@ const EventBusMessageTable = ({ gridSize, showQueue, showFilter, currentQueueId,
 
     const [enableNextPage, setNextPageEnabled] = useState(true);
 
-    const [showActionModal, setShowActionModal] = useState(false);
-    const [selectedActionMessage, setSelectedActionMessage] = useState<GetEventbusMessageListResponse | null>(null);
-    const [selectedActionType, setActionType] = useState<AppActionType | null>(null);
-
     const changePageData = (selectedPage: number, selectedPageSize: number) => {
         dispatch(changeEventBusMessagePagination({ page: selectedPage, pageSize: selectedPageSize }));
     }
-
-    const closeActionModal = () => {
-        setShowActionModal(false);
-        setSelectedActionMessage(null);
-        setActionType(null);
-    }
-
-    const selectActionMessage = (currentMessage: GetEventbusMessageListResponse, selectedAction: AppActionType) => {
-        setSelectedActionMessage(currentMessage);
-        setActionType(selectedAction);
-    }
-
-    useEffect(() => {
-        if (selectedActionMessage === null) {
-            setShowActionModal(false);
-        }
-        else {
-            setShowActionModal(true);
-        }
-    }, [selectedActionMessage]);
 
     useEffect(() => {
         setQueueMessages(queueMessagesContainer.data);
@@ -111,14 +88,20 @@ const EventBusMessageTable = ({ gridSize, showQueue, showFilter, currentQueueId,
                                         size="small" color="warning" title="Processing Attempt" onClick={() => dispatch(openEventBusMessageStatusModal(message.requestId))}>
                                         <DomainVerification />
                                     </IconButton>}
-                                    {(message.status.intKey === 2 || message.status.intKey === 4) && <IconButton aria-label="Reactivate" onClick={() => selectActionMessage(message, AppActionType.Update)}
+                                    {(message.status.intKey === 2 || message.status.intKey === 4) && <IconButton aria-label="Reactivate" onClick={() => dispatch(openEventBusMessageActionModal({
+                                        action: AppActionType.Update,
+                                        data: message
+                                    }))}
                                         size="small" color="success" title="Reactivate">
                                         <RestartAlt />
                                     </IconButton>}
                                     <IconButton aria-label="Edit" size="small" color="secondary" onClick={() => navigateTo(`/eventbus-messages/${message.requestId}`)} title="Edit">
                                         <Edit />
                                     </IconButton>
-                                    <IconButton aria-label="Delete" size="small" color="error" title="Delete" onClick={() => selectActionMessage(message, AppActionType.Delete)}>
+                                    <IconButton aria-label="Delete" size="small" color="error" title="Delete" onClick={() => dispatch(openEventBusMessageActionModal({
+                                        action: AppActionType.Delete,
+                                        data: message
+                                    }))}>
                                         <Delete />
                                     </IconButton>
                                 </TableCell>}
@@ -131,8 +114,7 @@ const EventBusMessageTable = ({ gridSize, showQueue, showFilter, currentQueueId,
                 </TableContainer>
             </Grid>}
             <EventBusMessageProcessAttemptModal />
-            {selectedActionMessage !== null && <EventBusMessageActionModal selectedMessage={selectedActionMessage} onClose={closeActionModal}
-                updateList={() => dispatch(fetchEventBusMessageList(request))} showModal={showActionModal} actionType={selectedActionType!} />}
+            <EventBusMessageActionModal />
         </>
     );
 }

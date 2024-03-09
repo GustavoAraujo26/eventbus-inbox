@@ -1,6 +1,6 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit"
 
-export interface StatusModalProps {
+interface StatusModalProps {
     show: boolean,
     requestId: string
 }
