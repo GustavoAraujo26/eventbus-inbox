@@ -73,7 +73,7 @@ const EventBusMessageTableFilter = () => {
                                     {queueList && <Grid item md={6}>
                                         <FormControl variant="standard" fullWidth>
                                             <InputLabel variant="standard" htmlFor="queue-select">Select the Queue</InputLabel>
-                                            <Select id="queue-select" value={request.queueId} onChange={event => dispatch(setEventBusMessageListQueue(event.target.value))} fullWidth>
+                                            <Select id="queue-select" value={(request.queueId === null) ? '' : request.queueId} onChange={event => dispatch(setEventBusMessageListQueue(event.target.value))} fullWidth>
                                                 <MenuItem value="">Select an option</MenuItem>
                                                 {queueList.map(option => <MenuItem key={option.id} value={option.id}>
                                                     {option.name}
@@ -82,7 +82,7 @@ const EventBusMessageTableFilter = () => {
                                         </FormControl>
                                     </Grid>}
                                     <Grid item md={6}>
-                                        <TextField value={request.typeMatch}
+                                        <TextField value={(request.typeMatch === null) ? '': request.typeMatch}
                                             label="Type to search"
                                             variant="standard"
                                             fullWidth

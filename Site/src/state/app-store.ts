@@ -20,7 +20,10 @@ const appStore = configureStore({
         eventBusMessageStatusList: eventBusMessageStatusListSlice,
         eventBusQueueStatusList: eventBusQueueStatusListSlice,
         httpStatusCodeList: httpStatusCodeListSlice
-    }
+    },
+    middleware: (getDefaultMiddleware) => getDefaultMiddleware({
+        serializableCheck: false
+    })
 });
 
 export default appStore;

@@ -1,6 +1,7 @@
 import { Grid } from "@mui/material";
 import { useEffect, useState } from "react";
 import { DatePicker } from "@mui/x-date-pickers";
+import dayjs, { Dayjs } from "dayjs";
 
 interface PeriodFormProps {
     currentStart: Date | null,
@@ -10,13 +11,13 @@ interface PeriodFormProps {
 }
 
 const AppPeriodForm = ({ currentStart, currentEnd, onUpdatePeriod, cleanForm }: PeriodFormProps) => {
-    const [startDate, setStartDate] = useState<Date | null>();
-    const [endDate, setEndDate] = useState<Date | null>();
+    const [startDate, setStartDate] = useState<Dayjs | null>();
+    const [endDate, setEndDate] = useState<Dayjs | null>();
 
     useEffect(() => {
         if (currentStart && currentEnd) {
-            setStartDate(currentStart);
-            setEndDate(currentEnd);
+            setStartDate(dayjs(currentStart.toLocaleDateString()));
+            setEndDate(dayjs(currentEnd.toLocaleDateString()));
         }
         else{
             setStartDate(null);
@@ -26,7 +27,7 @@ const AppPeriodForm = ({ currentStart, currentEnd, onUpdatePeriod, cleanForm }: 
 
     useEffect(() => {
         if (startDate && endDate) {
-            onUpdatePeriod(startDate, endDate);
+            onUpdatePeriod(startDate.toDate(), endDate.toDate());
         }
     }, [startDate, endDate]);
 
@@ -40,10 +41,10 @@ const AppPeriodForm = ({ currentStart, currentEnd, onUpdatePeriod, cleanForm }: 
     return (
         <Grid justifyContent="center" container spacing={0}>
             <Grid item md={6}>
-                <DatePicker label="Start date to search" value={startDate} onChange={obj => setStartDate(obj)} />
+                <DatePicker label="Start date to search" defaultValue={startDate} onChange={obj => setStartDate(obj)} />
             </Grid>
             <Grid item md={6}>
-                <DatePicker label="End date to search" value={endDate} onChange={obj => setEndDate(obj)} />
+                <DatePicker label="End date to search" defaultValue={endDate} onChange={obj => setEndDate(obj)} />
             </Grid>
         </Grid>
     );
