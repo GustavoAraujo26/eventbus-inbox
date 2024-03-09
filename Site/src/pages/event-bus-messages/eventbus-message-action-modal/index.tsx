@@ -12,6 +12,7 @@ import AppTaskResponse from "../../../interfaces/app-task-response";
 import { useDispatch } from "react-redux";
 import { showSnackbar } from "../../../state/slices/app-snackbar-slice";
 import { closeBackdrop, showBackdrop } from "../../../state/slices/app-backdrop-slice";
+import { useAppDispatch } from "../../../state/hooks/app-hooks";
 
 interface ActionModalProps {
     selectedMessage: GetEventbusMessageListResponse,
@@ -22,7 +23,7 @@ interface ActionModalProps {
 }
 
 const EventBusMessageActionModal = ({ selectedMessage, onClose, updateList, showModal, actionType }: ActionModalProps) => {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const messageService = new EventBusMessageService();
 
     const [title, setTitle] = useState('');

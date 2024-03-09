@@ -1,10 +1,10 @@
 import { Backdrop, CircularProgress } from "@mui/material";
-import { useSelector } from "react-redux";
 import { RootState } from "../../state/app-store";
+import { useAppSelector } from "../../state/hooks/app-hooks";
 
 const AppBackdrop = () => {
     
-    const isLoading = useSelector((state: RootState) => state.appBackdrop);
+    const isLoading = useAppSelector((state: RootState) => state.appBackdrop);
     
     return (
         <Backdrop open={isLoading}>

@@ -13,9 +13,10 @@ import AppSnackbarResponse from "../../interfaces/requests/app-snackbar-response
 import { useDispatch } from "react-redux";
 import { showSnackbar } from "../../state/slices/app-snackbar-slice";
 import { closeBackdrop, showBackdrop } from "../../state/slices/app-backdrop-slice";
+import { useAppDispatch } from "../../state/hooks/app-hooks";
 
 const EventBusQueueForm = () => {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const queueService = new EventBusQueueService();
     const parameters = useParams();
     const navigateTo = useNavigate();

@@ -16,9 +16,10 @@ import SaveEventbusMessageRequest from "../../interfaces/requests/eventbus-recei
 import { useDispatch } from "react-redux";
 import { showSnackbar } from "../../state/slices/app-snackbar-slice";
 import { closeBackdrop, showBackdrop } from "../../state/slices/app-backdrop-slice";
+import { useAppDispatch } from "../../state/hooks/app-hooks";
 
 const EventBusMessageForm = () => {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const queueService = new EventBusQueueService();
     const messageService = new EventBusMessageService();
     const parameters = useParams();

@@ -6,11 +6,12 @@ import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { closeSnackbar } from "../../state/slices/app-snackbar-slice";
 import { RootState } from "../../state/app-store";
+import { useAppDispatch, useAppSelector } from "../../state/hooks/app-hooks";
 
 const AppSnackBar = () => {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
-    const snackbarControl = useSelector((state: RootState) => state.appSnackbar);
+    const snackbarControl = useAppSelector((state: RootState) => state.appSnackbar);
 
     const [showModal, setShowModal] = useState(false);
     const [response, setResponse] = useState<AppSnackbarResponse | null>(null);

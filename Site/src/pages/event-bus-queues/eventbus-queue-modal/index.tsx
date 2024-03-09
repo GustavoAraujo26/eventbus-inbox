@@ -11,6 +11,7 @@ import AppSnackBar from "../../../components/app-snackbar";
 import { useDispatch } from "react-redux";
 import { showSnackbar } from "../../../state/slices/app-snackbar-slice";
 import { closeBackdrop, showBackdrop } from "../../../state/slices/app-backdrop-slice";
+import { useAppDispatch } from "../../../state/hooks/app-hooks";
 
 interface StatusModalProps {
     queue: GetEventbusQueueResponse | undefined,
@@ -21,7 +22,7 @@ interface StatusModalProps {
 }
 
 const EventBusQueueModal = ({ queue, showModal, closeModal, updateList, action }: StatusModalProps) => {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const queueService = new EventBusQueueService();
 
     const [title, setTitle] = useState('');

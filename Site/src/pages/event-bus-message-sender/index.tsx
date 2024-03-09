@@ -15,9 +15,10 @@ import { EventBusSenderService } from "../../services/event-bus-sender-service";
 import { useDispatch } from "react-redux";
 import { showSnackbar } from "../../state/slices/app-snackbar-slice";
 import { closeBackdrop, showBackdrop } from "../../state/slices/app-backdrop-slice";
+import { useAppDispatch } from "../../state/hooks/app-hooks";
 
 const EventBusMessageSender = () => {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const navigateTo = useNavigate();
 
     const queueService = new EventBusQueueService();

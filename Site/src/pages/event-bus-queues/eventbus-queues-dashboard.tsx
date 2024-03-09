@@ -18,10 +18,11 @@ import { EnumsService } from "../../services/enums-service";
 import { useDispatch } from "react-redux";
 import { showSnackbar } from "../../state/slices/app-snackbar-slice";
 import { closeBackdrop, showBackdrop } from "../../state/slices/app-backdrop-slice";
+import { useAppDispatch } from "../../state/hooks/app-hooks";
 
 const EventBusQueuesDashboard = () => {
     const navigateTo = useNavigate();
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const [queues, setQueues] = useState<GetEventbusQueueResponse[]>([]);
     const [statusList, setStatusList] = useState<EnumData[]>([]);
     const queueService = new EventBusQueueService();

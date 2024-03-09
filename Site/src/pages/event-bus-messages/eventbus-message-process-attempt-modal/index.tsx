@@ -9,6 +9,7 @@ import EnumData from "../../../interfaces/enum-data";
 import { useDispatch } from "react-redux";
 import { showSnackbar } from "../../../state/slices/app-snackbar-slice";
 import { closeBackdrop, showBackdrop } from "../../../state/slices/app-backdrop-slice";
+import { useAppDispatch } from "../../../state/hooks/app-hooks";
 
 interface ProcessAttemptModalProps {
     requestId: string,
@@ -18,7 +19,7 @@ interface ProcessAttemptModalProps {
 }
 
 const EventBusMessageProcessAttemptModal = ({ requestId, showModal, closeModal, updateList }: ProcessAttemptModalProps) => {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const enumService = new EnumsService();
     const messageService = new EventBusMessageService();
 
