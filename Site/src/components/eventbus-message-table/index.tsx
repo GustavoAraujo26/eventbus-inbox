@@ -8,12 +8,12 @@ import GetEventbusMessageListResponse from "../../interfaces/responses/eventbus-
 import EventBusMessageActionModal from "../../pages/event-bus-messages/eventbus-message-action-modal";
 import EventBusMessageProcessAttemptModal from "../../pages/event-bus-messages/eventbus-message-process-attempt-modal";
 import EventBusMessageStatus from "../../pages/event-bus-messages/eventbus-message-status";
-import { EventBusMessageService } from "../../services/eventbus-message-service";
 import AppPagination from "../app-pagination";
 import { useAppDispatch, useAppSelector } from "../../state/hooks/app-hooks";
 import { RootState } from "../../state/app-store";
 import { changeEventBusMessagePagination } from "../../state/slices/eventbus-message/eventbus-message-list-request-slice";
 import { fetchEventBusMessageList } from "../../state/slices/eventbus-message/eventbus-message-list-slice";
+import { openEventBusMessageStatusModal } from "../../state/slices/eventbus-message/eventbus-message-status-modal-slice";
 
 interface MessageTableProps {
     gridSize: number,
@@ -26,7 +26,6 @@ interface MessageTableProps {
 const EventBusMessageTable = ({ gridSize, showQueue, showFilter, currentQueueId, showActions }: MessageTableProps) => {
     const dispatch = useAppDispatch();
     const navigateTo = useNavigate();
-    const messageService = new EventBusMessageService();
 
     const queueMessagesContainer = useAppSelector((state: RootState) => state.eventbusMessageList);
     const request = useAppSelector((state: RootState) => state.eventbusMessageListRequest);
@@ -133,7 +132,7 @@ const EventBusMessageTable = ({ gridSize, showQueue, showFilter, currentQueueId,
                                         <Info />
                                     </IconButton>
                                     {message.status.intKey != 2 && message.status.intKey != 4 && <IconButton aria-label="Processing Attempt"
-                                        size="small" color="warning" title="Processing Attempt" onClick={() => selectStatusMessage(message)}>
+                                        size="small" color="warning" title="Processing Attempt" onClick={() => dispatch(openEventBusMessageStatusModal(message.requestId))}>
                                         <DomainVerification />
                                     </IconButton>}
                                     {(message.status.intKey === 2 || message.status.intKey === 4) && <IconButton aria-label="Reactivate" onClick={() => selectActionMessage(message, AppActionType.Update)}
@@ -155,8 +154,7 @@ const EventBusMessageTable = ({ gridSize, showQueue, showFilter, currentQueueId,
                         pageData={{currentPage: request.page, currentPageSize: request.pageSize}} />
                 </TableContainer>
             </Grid>}
-            {selectedStatusMessage !== null && <EventBusMessageProcessAttemptModal requestId={selectedStatusMessage.requestId}
-                showModal={showStatusModal} updateList={() => dispatch(fetchEventBusMessageList(request))} closeModal={closeStatusModal} />}
+            <EventBusMessageProcessAttemptModal />
             {selectedActionMessage !== null && <EventBusMessageActionModal selectedMessage={selectedActionMessage} onClose={closeActionModal}
                 updateList={() => dispatch(fetchEventBusMessageList(request))} showModal={showActionModal} actionType={selectedActionType!} />}
         </>

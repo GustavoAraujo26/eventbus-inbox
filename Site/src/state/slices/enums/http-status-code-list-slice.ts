@@ -22,7 +22,12 @@ export const fetchHttpStatusCodeList = createAsyncThunk(
         dispatch(closeBackdrop());
 
         if (apiResponse.isSuccess){
-            return apiResponse.data;
+            const filteredList = apiResponse.data.filter((value, index, self) => 
+                    index === self.findIndex((t) => (
+                        t.intKey === value.intKey && t.stringKey === value.stringKey && t.description === value.description
+                    ))
+                );
+            return filteredList;
         }
         else{
             const snackbarResponse: AppSnackbarResponse = {
