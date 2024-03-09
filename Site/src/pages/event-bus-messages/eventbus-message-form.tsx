@@ -2,28 +2,28 @@ import { useNavigate, useParams } from "react-router-dom";
 import { EventBusMessageService } from "../../services/eventbus-message-service";
 import { useEffect, useState } from "react";
 import AppSnackbarResponse from "../../interfaces/requests/app-snackbar-response";
-import { HomeOutlined, Apps, Edit, Add, ArrowBack, Send, Save } from "@mui/icons-material";
+import { HomeOutlined, Apps, Edit, ArrowBack, Save } from "@mui/icons-material";
 import AppBreadcrumbItem from "../../interfaces/app-breadcrumb-item";
 import GetEventbusMessageResponse from "../../interfaces/responses/eventbus-received-message/get-eventbus-message-response";
-import { Backdrop, Box, Button, Card, CardContent, CircularProgress, FormControl, Grid, InputLabel, MenuItem, Select, TextField } from "@mui/material";
+import { Box, Button, Card, CardContent, FormControl, Grid, InputLabel, MenuItem, Select, TextField } from "@mui/material";
 import AppBreadcrumb from "../../components/app-breadcrumb";
-import AppSnackBar from "../../components/app-snackbar";
 import GetEventbusQueueResponse from "../../interfaces/responses/eventbus-queue/get-eventbus-queue-response";
-import GetEventBusQueueListRequest from "../../interfaces/requests/eventbus-queue/get-eventbus-queue-list-request";
-import { EventBusQueueService } from "../../services/eventbus-queue-service";
-import SendEventbusMessageRequest from "../../interfaces/requests/eventbus-sender/send-eventbus-message-request";
 import SaveEventbusMessageRequest from "../../interfaces/requests/eventbus-received-message/save-eventbus-message-request";
-import { useDispatch } from "react-redux";
 import { showSnackbar } from "../../state/slices/app-snackbar-slice";
 import { closeBackdrop, showBackdrop } from "../../state/slices/app-backdrop-slice";
-import { useAppDispatch } from "../../state/hooks/app-hooks";
+import { useAppDispatch, useAppSelector } from "../../state/hooks/app-hooks";
+import { RootState } from "../../state/app-store";
+import { fetchEventBusMessage } from "../../state/slices/eventbus-message/eventbus-message-slice";
+import { fetchEventBusQueueList } from "../../state/slices/eventbus-queue/eventbus-queue-list-slice";
 
 const EventBusMessageForm = () => {
     const dispatch = useAppDispatch();
-    const queueService = new EventBusQueueService();
     const messageService = new EventBusMessageService();
     const parameters = useParams();
     const navigateTo = useNavigate();
+
+    const messageContainer = useAppSelector((state: RootState) => state.eventbusMessage);
+    const queueListContainer = useAppSelector((state: RootState) => state.eventbusQueueList);
 
     const [breadcrumbItems, setBreadcrumbItems] = useState<AppBreadcrumbItem[]>([]);
     const [eventbusMessage, setEventBusMessage] = useState<GetEventbusMessageResponse>();
@@ -63,96 +63,7 @@ const EventBusMessageForm = () => {
         setBreadcrumbItems(newList);
     }
 
-    const getEventBusMessage = (parameterId: string) => {
-        dispatch(showBackdrop());
-
-        messageService.GetMessage(parameterId).then(response => {
-            dispatch(closeBackdrop());
-            const apiResponse = response.data;
-            if (apiResponse.isSuccess) {
-                setEventBusMessage(apiResponse.object);
-                setQueueId(apiResponse.object.queue.id);
-                setMessageType(apiResponse.object.type);
-                setMessageContent(JSON.stringify(apiResponse.object.content, null, 2));
-            }
-            else {
-                const response: AppSnackbarResponse = {
-                    success: false,
-                    message: apiResponse.message,
-                    stackTrace: apiResponse.stackTrace,
-                    statusCode: apiResponse.status
-                }
-
-                dispatch(showSnackbar(response));
-            }
-        }).catch(error => {
-            dispatch(closeBackdrop());
-            console.log(error);
-            let response: AppSnackbarResponse = {
-                success: false,
-                message: error.toString().substring(0, 50)
-            }
-
-            const apiResponse = error.response.data;
-            if (typeof apiResponse !== 'undefined') {
-                response.message = apiResponse.message;
-                response.stackTrace = apiResponse.stackTrace;
-                response.statusCode = apiResponse.status;
-            }
-
-            dispatch(showSnackbar(response));
-        });
-    }
-
-    const loadQueueList = () => {
-        dispatch(showBackdrop());
-        const request: GetEventBusQueueListRequest = {
-            nameMatch: null,
-            descriptionMatch: null,
-            status: null,
-            page: 1,
-            pageSize: 1000000,
-            summarizeMessages: false
-        }
-
-        queueService.ListQueues(request).then(response => {
-            dispatch(closeBackdrop());
-
-            const apiResponse = response.data;
-
-            if (apiResponse.isSuccess) {
-                setQueueList(apiResponse.data);
-            }
-            else {
-                const response: AppSnackbarResponse = {
-                    success: false,
-                    message: apiResponse.message,
-                    stackTrace: apiResponse.stackTrace,
-                    statusCode: apiResponse.status
-                }
-
-                dispatch(showSnackbar(response));
-            }
-        }).catch(error => {
-            dispatch(closeBackdrop());
-            console.log(error);
-            let response: AppSnackbarResponse = {
-                success: false,
-                message: error.toString().substring(0, 50)
-            }
-
-            const apiResponse = error.response.data;
-            if (typeof apiResponse !== 'undefined') {
-                response.message = apiResponse.message;
-                response.stackTrace = apiResponse.stackTrace;
-                response.statusCode = apiResponse.status;
-            }
-
-            dispatch(showSnackbar(response));
-        });
-    }
-
-    const onSubmitMessage = (event: React.FormEvent<HTMLFormElement>) => {
+    const onSubmitMessage = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         dispatch(showBackdrop());
 
@@ -164,50 +75,52 @@ const EventBusMessageForm = () => {
             queueId: queueId
         };
 
-        messageService.SaveMessage(request).then(response => {
-            dispatch(closeBackdrop());
+        const apiResponse = await messageService.SaveMessage(request);
 
-            const apiResponse = response.data;
-            if (apiResponse.isSuccess) {
-                navigateTo(-1);
-            }
-            else {
-                const response: AppSnackbarResponse = {
-                    success: false,
-                    message: apiResponse.message,
-                    stackTrace: apiResponse.stackTrace,
-                    statusCode: apiResponse.status
-                }
+        dispatch(closeBackdrop());
 
-                dispatch(showSnackbar(response));
-            }
-        }).catch(error => {
-            dispatch(closeBackdrop());
-            console.log(error);
-            let response: AppSnackbarResponse = {
+        if (apiResponse === null){
+            return;
+        }
+
+        if (apiResponse.isSuccess){
+            navigateTo(-1);
+        }
+        else{
+            const response: AppSnackbarResponse = {
                 success: false,
-                message: error.toString().substring(0, 50)
-            }
-
-            const apiResponse = error.response.data;
-            if (typeof apiResponse !== 'undefined') {
-                response.message = apiResponse.message;
-                response.stackTrace = apiResponse.stackTrace;
-                response.statusCode = apiResponse.status;
+                message: apiResponse.message,
+                stackTrace: apiResponse.stackTrace,
+                statusCode: apiResponse.status
             }
 
             dispatch(showSnackbar(response));
-        });
+        }
     }
 
     useEffect(() => {
         if (parameters.id) {
-            loadQueueList();
-            getEventBusMessage(parameters.id);
+            dispatch(fetchEventBusQueueList(null));
+            dispatch(fetchEventBusMessage(parameters.id));
         }
 
         buildbreadcrumb();
     }, [parameters]);
+
+    useEffect(() => {
+        if (messageContainer.data) {
+            setEventBusMessage(messageContainer.data);
+            setQueueId(messageContainer.data.queue.id);
+            setMessageType(messageContainer.data.type);
+            setMessageContent(JSON.stringify(messageContainer.data.content, null, 2));
+        }
+    }, [messageContainer]);
+
+    useEffect(() => {
+        if (queueListContainer.data){
+            setQueueList(queueListContainer.data);
+        }
+    }, [queueListContainer]);
 
     return (
         <>

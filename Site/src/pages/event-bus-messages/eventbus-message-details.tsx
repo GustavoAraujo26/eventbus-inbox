@@ -1,29 +1,25 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { EventBusMessageService } from "../../services/eventbus-message-service";
 import { useEffect, useState } from "react";
-import AppSnackbarResponse from "../../interfaces/requests/app-snackbar-response";
 import { HomeOutlined, Apps, ArrowBack, Edit } from "@mui/icons-material";
 import AppBreadcrumbItem from "../../interfaces/app-breadcrumb-item";
 import GetEventbusMessageResponse from "../../interfaces/responses/eventbus-received-message/get-eventbus-message-response";
-import { Backdrop, Box, Card, CardContent, CardHeader, Chip, CircularProgress, Divider, Grid, SpeedDial, SpeedDialAction, SpeedDialIcon, Table, TableBody, TableCell, TableHead, TableRow } from "@mui/material";
+import { Box, Card, CardContent, CardHeader, Chip, Divider, Grid, SpeedDial, SpeedDialAction, SpeedDialIcon, Table, TableBody, TableCell, TableHead, TableRow } from "@mui/material";
 import AppBreadcrumb from "../../components/app-breadcrumb";
 import EventBusMessageCard from "./eventbus-message-card";
-import { useDispatch } from "react-redux";
-import { showSnackbar } from "../../state/slices/app-snackbar-slice";
-import { closeBackdrop, showBackdrop } from "../../state/slices/app-backdrop-slice";
-import { useAppDispatch } from "../../state/hooks/app-hooks";
+import { useAppDispatch, useAppSelector } from "../../state/hooks/app-hooks";
+import { RootState } from "../../state/app-store";
+import { fetchEventBusMessage } from "../../state/slices/eventbus-message/eventbus-message-slice";
 
 const EventBusMessageDetails = () => {
     const dispatch = useAppDispatch();
-    const messageService = new EventBusMessageService();
     const parameters = useParams();
     const navigateTo = useNavigate();
 
+    const messageContaienr = useAppSelector((state: RootState) => state.eventbusMessage);
+
     const [eventbusMessage, setEventBusMessage] = useState<GetEventbusMessageResponse>();
-
-    const [processingAttempts, setProcessingAttempts] = useState('');
-
     const [breadcrumbItems, setBreadcrumbItems] = useState<AppBreadcrumbItem[]>([]);
+
     const buildbreadcrumb = () => {
         const home: AppBreadcrumbItem = {
             id: 1,
@@ -54,52 +50,19 @@ const EventBusMessageDetails = () => {
         setBreadcrumbItems(newList);
     }
 
-    const getEventBusMessage = (parameterId: string) => {
-        dispatch(showBackdrop());
-
-        messageService.GetMessage(parameterId).then(response => {
-            dispatch(closeBackdrop());
-            const apiResponse = response.data;
-            if (apiResponse.isSuccess) {
-                setEventBusMessage(apiResponse.object);
-                setProcessingAttempts(`${apiResponse.object.processingAttempts}/${apiResponse.object.queue.processingAttempts}`);
-            }
-            else {
-                const response: AppSnackbarResponse = {
-                    success: false,
-                    message: apiResponse.message,
-                    stackTrace: apiResponse.stackTrace,
-                    statusCode: apiResponse.status
-                }
-
-                dispatch(showSnackbar(response));
-            }
-        }).catch(error => {
-            dispatch(closeBackdrop());
-            console.log(error);
-            let response: AppSnackbarResponse = {
-                success: false,
-                message: error.toString().substring(0, 50)
-            }
-
-            const apiResponse = error.response.data;
-            if (typeof apiResponse !== 'undefined') {
-                response.message = apiResponse.message;
-                response.stackTrace = apiResponse.stackTrace;
-                response.statusCode = apiResponse.status;
-            }
-
-            dispatch(showSnackbar(response));
-        });
-    }
-
     useEffect(() => {
         if (parameters.id) {
-            getEventBusMessage(parameters.id);
+            dispatch(fetchEventBusMessage(parameters.id));
         }
 
         buildbreadcrumb();
     }, [parameters]);
+
+    useEffect(() => {
+        if (messageContaienr.data){
+            setEventBusMessage(messageContaienr.data);
+        }
+    }, [messageContaienr]);
 
     return (
         <>
@@ -154,7 +117,7 @@ const EventBusMessageDetails = () => {
                         </Card>
                     </Grid>}
                 </Grid>
-                <SpeedDial ariaLabel="Event bus message navigation" sx={{ position: 'absolute', bottom: 16, right: 16 }} icon={<SpeedDialIcon />}>
+                <SpeedDial ariaLabel="Event bus message navigation" sx={{ position: 'fixed', bottom: 16, right: 16 }} icon={<SpeedDialIcon />}>
                     <SpeedDialAction icon={<ArrowBack />} tooltipTitle="Go Back" onClick={() => navigateTo(-1)} />
                     <SpeedDialAction icon={<Edit />} tooltipTitle="Edit" onClick={() => navigateTo(`/eventbus-messages/${eventbusMessage.requestId}`)} />
                 </SpeedDial>

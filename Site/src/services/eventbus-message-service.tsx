@@ -29,16 +29,64 @@ export class EventBusMessageService extends HttpService {
         return apiResponse;
     }
 
-    GetMessage(id: string) {
-        return this.get<ApiResponse<GetEventbusMessageResponse>>(`/v1/event-bus/received-messages?RequestId=${id}`);
+    async GetMessage(id: string) {
+        let response: AxiosResponse<ApiResponse<GetEventbusMessageResponse>, any> | null = null;
+        let apiResponse: ApiResponse<GetEventbusMessageResponse> | null = null;
+        
+        try{
+            response = await this.get<ApiResponse<GetEventbusMessageResponse>>(`/v1/event-bus/received-messages?RequestId=${id}`);
+            apiResponse = response.data;
+        }
+        catch(error){
+            console.log(error);
+
+            if (axios.isAxiosError(error)){
+                const axiosError = error as AxiosError<ApiResponse<GetEventbusMessageResponse>, any>;
+                apiResponse = axiosError.response!.data
+            }
+        }
+        
+        return apiResponse;
     }
 
-    SaveMessage(request: SaveEventbusMessageRequest) {
-        return this.post<ApiResponse<AppTaskResponse>>('/v1/event-bus/received-messages', request);
+    async SaveMessage(request: SaveEventbusMessageRequest) {
+        let response: AxiosResponse<ApiResponse<AppTaskResponse>, any> | null = null;
+        let apiResponse: ApiResponse<AppTaskResponse> | null = null;
+        
+        try{
+            response = await this.post<ApiResponse<AppTaskResponse>>('/v1/event-bus/received-messages', request);
+            apiResponse = response.data;
+        }
+        catch(error){
+            console.log(error);
+
+            if (axios.isAxiosError(error)){
+                const axiosError = error as AxiosError<ApiResponse<AppTaskResponse>, any>;
+                apiResponse = axiosError.response!.data
+            }
+        }
+        
+        return apiResponse;
     }
 
-    UpdateMessageStatus(request: UpdateEventbusMessageStatusRequest) {
-        return this.put<ApiResponse<AppTaskResponse>>('/v1/event-bus/received-messages', request);
+    async UpdateMessageStatus(request: UpdateEventbusMessageStatusRequest) {
+        let response: AxiosResponse<ApiResponse<AppTaskResponse>, any> | null = null;
+        let apiResponse: ApiResponse<AppTaskResponse> | null = null;
+        
+        try{
+            response = await this.put<ApiResponse<AppTaskResponse>>('/v1/event-bus/received-messages', request);
+            apiResponse = response.data;
+        }
+        catch(error){
+            console.log(error);
+
+            if (axios.isAxiosError(error)){
+                const axiosError = error as AxiosError<ApiResponse<AppTaskResponse>, any>;
+                apiResponse = axiosError.response!.data
+            }
+        }
+        
+        return apiResponse;
     }
 
     async ListMessage(request: GetEventbusMessageListRequest) {

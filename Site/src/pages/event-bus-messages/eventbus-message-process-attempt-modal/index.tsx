@@ -34,10 +34,13 @@ const EventBusMessageProcessAttemptModal = () => {
             resultMessage: resultMessage
         };
 
-        const response = await messageService.UpdateMessageStatus(request);
-        const apiResponse = response.data;
+        const apiResponse = await messageService.UpdateMessageStatus(request);
 
         dispatch(closeBackdrop());
+
+        if (apiResponse === null){
+            return;
+        }
 
         if (apiResponse.isSuccess) {
             dispatch(fetchEventBusMessageList(tableFilterRequest));
