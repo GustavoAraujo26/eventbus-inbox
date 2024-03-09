@@ -63,12 +63,18 @@ const initialState: QueueContainer = {
 const eventBusQueueSlice = createSlice({
     name: 'eventbusQueue',
     initialState,
-    reducers: {},
+    reducers: {
+        clearEventBusQueue: (state) => {
+            state.data = null;
+        }
+    },
     extraReducers: (builder) => {
         builder.addCase(fetchEventBusQueue.fulfilled, (state, action) => {
             state.data = action.payload;
         })
     }
 });
+
+export const { clearEventBusQueue } = eventBusQueueSlice.actions;
 
 export default eventBusQueueSlice.reducer;

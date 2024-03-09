@@ -12,7 +12,7 @@ import { showSnackbar } from "../../state/slices/app-snackbar-slice";
 import { showBackdrop } from "../../state/slices/app-backdrop-slice";
 import { useAppDispatch, useAppSelector } from "../../state/hooks/app-hooks";
 import { RootState } from "../../state/app-store";
-import { fetchEventBusQueue } from "../../state/slices/eventbus-queue/eventbus-queue-slice";
+import { clearEventBusQueue, fetchEventBusQueue } from "../../state/slices/eventbus-queue/eventbus-queue-slice";
 
 const EventBusQueueForm = () => {
     const dispatch = useAppDispatch();
@@ -64,6 +64,7 @@ const EventBusQueueForm = () => {
     }, []);
 
     useEffect(() => {
+        dispatch(clearEventBusQueue());
         if (parameters.id) {
             setId(parameters.id);
             dispatch(fetchEventBusQueue({
@@ -77,7 +78,7 @@ const EventBusQueueForm = () => {
     }, [parameters]);
 
     useEffect(() => {
-        if (queueContainer.data) {
+        if (queueContainer.data && parameters.id) {
             setName(queueContainer.data.name);
             setDescription(queueContainer.data.description);
             setStatus(queueContainer.data.status.intKey);
