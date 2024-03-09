@@ -3,15 +3,13 @@ import { EventBusQueueService } from "../../services/eventbus-queue-service";
 import { useEffect, useState } from "react";
 import AppSnackbarResponse from "../../interfaces/requests/app-snackbar-response";
 import AppBreadcrumbItem from "../../interfaces/app-breadcrumb-item";
-import { HomeOutlined, Apps, Info } from "@mui/icons-material";
-import { Backdrop, CircularProgress, Grid } from "@mui/material";
+import { HomeOutlined, Apps, Info, ArrowBack, Edit } from "@mui/icons-material";
+import { Card, CardContent, CardHeader, Divider, Grid, SpeedDial, SpeedDialAction, SpeedDialIcon } from "@mui/material";
 import AppBreadcrumb from "../../components/app-breadcrumb";
 import GetEventBusQueueRequest from "../../interfaces/requests/eventbus-queue/get-eventbus-queue-request";
-import AppSnackBar from "../../components/app-snackbar";
 import GetEventbusQueueResponse from "../../interfaces/responses/eventbus-queue/get-eventbus-queue-response";
 import EventBusQueueCard from "./eventbus-queue-card";
 import EventBusMessageTable from "../../components/eventbus-message-table";
-import { useDispatch } from "react-redux";
 import { showSnackbar } from "../../state/slices/app-snackbar-slice";
 import { closeBackdrop, showBackdrop } from "../../state/slices/app-backdrop-slice";
 import { useAppDispatch } from "../../state/hooks/app-hooks";
@@ -115,9 +113,21 @@ const EventBusQueueDetails = () => {
                     <Grid item md={4}>
                         <EventBusQueueCard queue={currentQueue!} showDescription={true} showSummarization={true} showNavigation={false} />
                     </Grid>
-                    <EventBusMessageTable gridSize={8} showQueue={false} showFilter={false} currentQueueId={currentQueue!.id} showActions={false} />
+                    <Grid item md={8}>
+                        <Card>
+                            <CardHeader title="Queue Messages" sx={{ fontWeight: 'bold', textAlign: 'center' }} />
+                            <CardContent>
+                                <Divider />
+                                <EventBusMessageTable gridSize={12} showQueue={false} showFilter={false} currentQueueId={currentQueue!.id} showActions={false} />
+                            </CardContent>
+                        </Card>
+                    </Grid>
                 </>}
             </Grid>
+            <SpeedDial ariaLabel="Event bus message navigation" sx={{ position: 'fixed', bottom: 16, right: 16 }} icon={<SpeedDialIcon />}>
+                <SpeedDialAction icon={<ArrowBack />} tooltipTitle="Go Back" onClick={() => navigateTo(-1)} />
+                <SpeedDialAction icon={<Edit />} tooltipTitle="Edit" onClick={() => navigateTo(`/eventbus-queues/${currentQueue!.id}`)} />
+            </SpeedDial>
         </>
     );
 }

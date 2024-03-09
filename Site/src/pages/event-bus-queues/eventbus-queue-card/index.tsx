@@ -1,5 +1,5 @@
 import { AssignmentInd, Book, Description, GridOn, Inbox, Visibility } from "@mui/icons-material";
-import { Avatar, Button, Card, CardActions, CardContent, CardHeader, Chip, Divider, List, ListItem, ListItemAvatar, ListItemText, Typography } from "@mui/material";
+import { Avatar, Button, Card, CardActions, CardContent, CardHeader, Chip, Divider, List, ListItem, ListItemAvatar, ListItemText, Tooltip, Typography } from "@mui/material";
 import GetEventbusQueueResponse from "../../../interfaces/responses/eventbus-queue/get-eventbus-queue-response";
 import EventBusQueueStatus from "../eventbus-queue-status";
 import { useNavigate } from "react-router-dom";
@@ -22,9 +22,11 @@ const EventBusQueueCard = ({ queue, showDescription, showSummarization, showNavi
                 <List>
                     <ListItem>
                         <ListItemAvatar>
-                            <Avatar>
-                                <AssignmentInd />
-                            </Avatar>
+                            <Tooltip title="Id">
+                                <Avatar>
+                                    <AssignmentInd />
+                                </Avatar>
+                            </Tooltip>
                         </ListItemAvatar>
                         <ListItemText primary={queue.id} />
                     </ListItem>
@@ -33,39 +35,47 @@ const EventBusQueueCard = ({ queue, showDescription, showSummarization, showNavi
                 <List>
                     <ListItem>
                         <ListItemAvatar>
-                            <Avatar>
-                                <Book />
-                            </Avatar>
+                            <Tooltip title="Name">
+                                <Avatar>
+                                    <Book />
+                                </Avatar>
+                            </Tooltip>
                         </ListItemAvatar>
                         <ListItemText primary={queue.name} />
                     </ListItem>
                     <ListItem>
                         <ListItemAvatar>
-                            <Avatar>
-                                <GridOn />
-                            </Avatar>
+                            <Tooltip title="Status">
+                                <Avatar>
+                                    <GridOn />
+                                </Avatar>
+                            </Tooltip>
                         </ListItemAvatar>
                         <EventBusQueueStatus status={queue.status} />
                     </ListItem>
                     {showDescription === true ? <ListItem>
                         <ListItemAvatar>
-                            <Avatar>
+                            <Tooltip title="Description">
+                                <Avatar>
                                 <Description />
-                            </Avatar>
+                                </Avatar>
+                            </Tooltip>
                         </ListItemAvatar>
                         <ListItemText secondary={queue.description} />
                     </ListItem> : null}
                 </List>
                 <Divider />
-                {queue.messagesSummarization && showDescription === true ? <>
+                {queue.messagesSummarization && showSummarization === true ? <>
                     <List>
                         {queue.messagesSummarization && queue.messagesSummarization.map(itemSum => <ListItem key={itemSum.status.intKey} secondaryAction={
                             <Chip label={itemSum.messageCount} />
                         }>
                             <ListItemAvatar>
-                                <Avatar>
-                                    <Inbox />
-                                </Avatar>
+                                <Tooltip title="Status Name">
+                                    <Avatar>
+                                        <Inbox />
+                                    </Avatar>
+                                </Tooltip>
                             </ListItemAvatar>
                             <ListItemText primary={itemSum.status.description} />
                         </ListItem>)}
@@ -73,7 +83,7 @@ const EventBusQueueCard = ({ queue, showDescription, showSummarization, showNavi
                     <Divider />
                 </> : null}
             </CardContent>
-            {showNavigation && <CardActions>
+            {showNavigation && <CardActions sx={{ justifyContent: 'center' }}>
                 <Button onClick={() => navigateTo(`/eventbus-queues/details/${queue.id}`)}>
                     <Visibility />
                     <Typography>View</Typography>
