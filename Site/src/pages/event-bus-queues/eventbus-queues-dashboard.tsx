@@ -231,7 +231,8 @@ const EventBusQueuesDashboard = () => {
                         </TableRow>)}
                     </TableBody>
                 </Table>
-                <AppPagination changePageData={changePageData} enableNextPage={rowsFounded} loadData={() => getPaginatedList()} />
+                <AppPagination changePageData={changePageData} enableNextPage={rowsFounded} 
+                    pageData={{currentPage: currentPage, currentPageSize: currentPageSize}} />
             </TableContainer>
             <Fab color="info" sx={{ margin: 0, top: 'auto', right: 20, bottom: 20, left: 'auto', position: 'fixed' }} onClick={() => navigateTo("/eventbus-queues/new")}>
                 <Add />

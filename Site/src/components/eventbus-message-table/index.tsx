@@ -99,6 +99,10 @@ const EventBusMessageTable = ({ gridSize, showQueue, showFilter, currentQueueId,
         setNextPageEnabled(queueMessagesContainer.data.length >= 10);
     }, [queueMessagesContainer]);
 
+    useEffect(() => {
+        dispatch(fetchEventBusMessageList(request));
+    }, [request.page, request.pageSize]);
+
     return (
         <>
             {queueMessages && <Grid item md={gridSize}>
@@ -153,7 +157,9 @@ const EventBusMessageTable = ({ gridSize, showQueue, showFilter, currentQueueId,
                             </TableRow>)}
                         </TableBody>
                     </Table>
-                    <AppPagination changePageData={changePageData} enableNextPage={enableNextPage} loadData={() => dispatch(fetchEventBusMessageList(request))} />
+                    <AppPagination changePageData={changePageData} 
+                        enableNextPage={enableNextPage} 
+                        pageData={{currentPage: request.page, currentPageSize: request.pageSize}} />
                 </TableContainer>
             </Grid>}
             {selectedStatusMessage !== null && <EventBusMessageProcessAttemptModal requestId={selectedStatusMessage.requestId}
