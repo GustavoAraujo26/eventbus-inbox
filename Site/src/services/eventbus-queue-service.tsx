@@ -6,10 +6,11 @@ import UpdateEventbusQueueStatusRequest from "../interfaces/requests/eventbus-qu
 import GetEventbusQueueResponse from "../interfaces/responses/eventbus-queue/get-eventbus-queue-response";
 import { ApiResponse } from "../interfaces/api-response";
 import AppTaskResponse from "../interfaces/app-task-response";
+import axios, { AxiosError, AxiosResponse } from "axios";
 
 export class EventBusQueueService extends HttpService {
 
-    GetQueue(request: GetEventBusQueueRequest) {
+    async GetQueue(request: GetEventBusQueueRequest) {
         let propertyName = 'Name';
         let propertyValue = request.name;
         if (request.id) {
@@ -19,7 +20,23 @@ export class EventBusQueueService extends HttpService {
 
         const url = `/v1/event-bus/queue?${propertyName}=${propertyValue}&SummarizeMessages=${request.summarizeMessages}`;
 
-        return this.get<ApiResponse<GetEventbusQueueResponse>>(url);
+        let response: AxiosResponse<ApiResponse<GetEventbusQueueResponse>, any> | null = null;
+        let apiResponse: ApiResponse<GetEventbusQueueResponse> | null = null;
+        
+        try{
+            response = await this.get<ApiResponse<GetEventbusQueueResponse>>(url);
+            apiResponse = response.data;
+        }
+        catch(error){
+            console.log(error);
+
+            if (axios.isAxiosError(error)){
+                const axiosError = error as AxiosError<ApiResponse<GetEventbusQueueResponse>, any>;
+                apiResponse = axiosError.response!.data
+            }
+        }
+        
+        return apiResponse;
     }
 
     DeleteQueue(id: string) {
@@ -28,8 +45,24 @@ export class EventBusQueueService extends HttpService {
         return this.delete<ApiResponse<AppTaskResponse>>(url);
     }
 
-    SaveQueue(request: SaveEventbusQueueRequest) {
-        return this.post<ApiResponse<AppTaskResponse>>('/v1/event-bus/queue', request);
+    async SaveQueue(request: SaveEventbusQueueRequest) {
+        let response: AxiosResponse<ApiResponse<AppTaskResponse>, any> | null = null;
+        let apiResponse: ApiResponse<AppTaskResponse> | null = null;
+        
+        try{
+            response = await this.post<ApiResponse<AppTaskResponse>>('/v1/event-bus/queue', request);
+            apiResponse = response.data;
+        }
+        catch(error){
+            console.log(error);
+
+            if (axios.isAxiosError(error)){
+                const axiosError = error as AxiosError<ApiResponse<AppTaskResponse>, any>;
+                apiResponse = axiosError.response!.data
+            }
+        }
+        
+        return apiResponse;
     }
 
     ListQueues(request: GetEventBusQueueListRequest) {

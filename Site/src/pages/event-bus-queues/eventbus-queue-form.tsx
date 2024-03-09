@@ -2,18 +2,17 @@ import { HomeOutlined, Apps, Add, Edit, Save, ArrowBack } from "@mui/icons-mater
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import AppBreadcrumbItem from "../../interfaces/app-breadcrumb-item";
-import { Backdrop, Box, Button, Card, CardContent, CircularProgress, FormControlLabel, Grid, Switch, TextField } from "@mui/material";
+import { Box, Button, Card, CardContent, FormControlLabel, Grid, Switch, TextField } from "@mui/material";
 import AppBreadcrumb from "../../components/app-breadcrumb";
 import { v4 as uuidv4 } from 'uuid';
 import SaveEventbusQueueRequest from "../../interfaces/requests/eventbus-queue/save-eventbus-queue-request";
 import { EventBusQueueService } from "../../services/eventbus-queue-service";
-import GetEventBusQueueRequest from "../../interfaces/requests/eventbus-queue/get-eventbus-queue-request";
-import AppSnackBar from "../../components/app-snackbar";
 import AppSnackbarResponse from "../../interfaces/requests/app-snackbar-response";
-import { useDispatch } from "react-redux";
 import { showSnackbar } from "../../state/slices/app-snackbar-slice";
-import { closeBackdrop, showBackdrop } from "../../state/slices/app-backdrop-slice";
-import { useAppDispatch } from "../../state/hooks/app-hooks";
+import { showBackdrop } from "../../state/slices/app-backdrop-slice";
+import { useAppDispatch, useAppSelector } from "../../state/hooks/app-hooks";
+import { RootState } from "../../state/app-store";
+import { fetchEventBusQueue } from "../../state/slices/eventbus-queue/eventbus-queue-slice";
 
 const EventBusQueueForm = () => {
     const dispatch = useAppDispatch();
@@ -26,8 +25,10 @@ const EventBusQueueForm = () => {
     const [description, setDescription] = useState('');
     const [status, setStatus] = useState(1);
     const [processingAttempts, setProcessingAttempts] = useState(0);
-
     const [breadcrumbItems, setBreadcrumbItems] = useState<AppBreadcrumbItem[]>([]);
+
+    const queueContainer = useAppSelector((state: RootState) => state.eventbusQueue);
+
     const buildbreadcrumb = () => {
         const home: AppBreadcrumbItem = {
             id: 1,
@@ -63,21 +64,33 @@ const EventBusQueueForm = () => {
     }, []);
 
     useEffect(() => {
-        if (parameters.id){
+        if (parameters.id) {
             setId(parameters.id);
-            getEventBusQueue(parameters.id);
+            dispatch(fetchEventBusQueue({
+                id: parameters.id,
+                summarizeMessages: true
+            }));
         }
-        else{
+        else {
             setId(uuidv4());
         }
     }, [parameters]);
+
+    useEffect(() => {
+        if (queueContainer.data) {
+            setName(queueContainer.data.name);
+            setDescription(queueContainer.data.description);
+            setStatus(queueContainer.data.status.intKey);
+            setProcessingAttempts(queueContainer.data.processingAttempts);
+        }
+    }, [queueContainer]);
 
     const onSwitchChange = (event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
         const statusId = checked ? 1 : 2;
         setStatus(statusId);
     }
 
-    const onSubmitForm = (event: React.FormEvent<HTMLFormElement>) => {
+    const onSubmitForm = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         dispatch(showBackdrop());
 
@@ -89,88 +102,26 @@ const EventBusQueueForm = () => {
             processingAttempts: processingAttempts
         };
 
-        queueService.SaveQueue(request).then(response => {
-            dispatch(closeBackdrop());
-            var apiResponse = response.data;
-
-            if (apiResponse.isSuccess){
-                navigateTo('/eventbus-queues/dashboard');
-            }
-            else{
-                const response: AppSnackbarResponse = {
-                    success: false,
-                    message: apiResponse.message,
-                    stackTrace: apiResponse.stackTrace,
-                    statusCode: apiResponse.status
-                }
-    
-                dispatch(showSnackbar(response));
-            }
-        }).catch(error => {
-            dispatch(closeBackdrop());
-
-            let response: AppSnackbarResponse = {
-                success: false,
-                message: error.toString().substring(0, 50)
-            }
-
-            const apiResponse = error.response.data;
-            if (typeof apiResponse !== 'undefined'){
-                response.message = apiResponse.message;
-                response.stackTrace = apiResponse.stackTrace;
-                response.statusCode = apiResponse.status;
-            }
-
-            dispatch(showSnackbar(response));
-        });
-    }
-
-    const getEventBusQueue = (parameterId: string) => {
+        const apiResponse = await queueService.SaveQueue(request);
         dispatch(showBackdrop());
-        
-        const request: GetEventBusQueueRequest = {
-            id: parameterId,
-            summarizeMessages: false
+
+        if (apiResponse === null){
+            return;
         }
 
-        queueService.GetQueue(request).then(response => {
-            dispatch(closeBackdrop());
-
-            const apiResponse = response.data;
-
-            if (apiResponse.isSuccess){
-                setName(apiResponse.object.name);
-                setDescription(apiResponse.object.description);
-                setStatus(apiResponse.object.status.intKey);
-                setProcessingAttempts(apiResponse.object.processingAttempts);
-            }
-            else{
-                const response: AppSnackbarResponse = {
-                    success: false,
-                    message: apiResponse.message,
-                    stackTrace: apiResponse.stackTrace,
-                    statusCode: apiResponse.status
-                }
-    
-                dispatch(showSnackbar(response));
-            }
-        })
-        .catch(error => {
-            dispatch(closeBackdrop());
-            let response: AppSnackbarResponse = {
+        if (apiResponse.isSuccess){
+            navigateTo('/eventbus-queues/dashboard');
+        }
+        else{
+            const response: AppSnackbarResponse = {
                 success: false,
-                message: error.toString().substring(0, 50)
-            }
-
-            const apiResponse = error.response.data;
-            if (typeof apiResponse !== 'undefined'){
-                response.message = apiResponse.message;
-                response.stackTrace = apiResponse.stackTrace;
-                response.statusCode = apiResponse.status;
+                message: apiResponse.message,
+                stackTrace: apiResponse.stackTrace,
+                statusCode: apiResponse.status
             }
 
             dispatch(showSnackbar(response));
-        });
+        }
     }
 
     const cleanForm = () => {
@@ -188,33 +139,33 @@ const EventBusQueueForm = () => {
                     <Card>
                         <CardContent>
                             <Box component="form" onSubmit={onSubmitForm}>
-                                <TextField value={name} 
-                                    label="Name" 
-                                    variant="standard" 
-                                    fullWidth 
-                                    required 
-                                    onChange={event => setName(event.target.value)}/>
-                                <TextField value={description} 
-                                    label="Description" 
-                                    variant="standard" 
-                                    multiline 
-                                    rows={5} 
-                                    fullWidth 
-                                    onChange={event => setDescription(event.target.value)}/>
-                                <FormControlLabel control={<Switch value={status === 1} onChange={onSwitchChange} checked={status === 1} />} label="Habilitado?"/>
-                                <TextField value={processingAttempts} 
-                                    label="Processing Attempts" 
-                                    variant="standard" 
-                                    fullWidth 
-                                    required 
-                                    type="number" 
-                                    InputProps={{ inputProps: { min: 1 } }} 
-                                    onChange={event => setProcessingAttempts(+event.target.value)}/>
+                                <TextField value={name}
+                                    label="Name"
+                                    variant="standard"
+                                    fullWidth
+                                    required
+                                    onChange={event => setName(event.target.value)} />
+                                <TextField value={description}
+                                    label="Description"
+                                    variant="standard"
+                                    multiline
+                                    rows={5}
+                                    fullWidth
+                                    onChange={event => setDescription(event.target.value)} />
+                                <FormControlLabel control={<Switch value={status === 1} onChange={onSwitchChange} checked={status === 1} />} label="Habilitado?" />
+                                <TextField value={processingAttempts}
+                                    label="Processing Attempts"
+                                    variant="standard"
+                                    fullWidth
+                                    required
+                                    type="number"
+                                    InputProps={{ inputProps: { min: 1 } }}
+                                    onChange={event => setProcessingAttempts(+event.target.value)} />
                                 <Button variant="contained" color="primary" sx={{ marginTop: 3 }} type="submit">
-                                    <Save/> Save
+                                    <Save /> Save
                                 </Button>
                                 <Button variant="contained" color="secondary" sx={{ marginTop: 3, marginLeft: 1 }} type="button" onClick={() => navigateTo(-1)}>
-                                    <ArrowBack/> Go Back
+                                    <ArrowBack /> Go Back
                                 </Button>
                             </Box>
                         </CardContent>

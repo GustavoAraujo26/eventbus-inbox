@@ -1,6 +1,6 @@
 export default interface AppSnackbarResponse {
     success: boolean,
     message: string,
-    stackTrace?: string,
-    statusCode?: number
+    stackTrace?: string | null,
+    statusCode?: number | null
 }

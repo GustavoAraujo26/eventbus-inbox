@@ -1,28 +1,27 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { EventBusQueueService } from "../../services/eventbus-queue-service";
 import { useEffect, useState } from "react";
-import AppSnackbarResponse from "../../interfaces/requests/app-snackbar-response";
 import AppBreadcrumbItem from "../../interfaces/app-breadcrumb-item";
 import { HomeOutlined, Apps, Info, ArrowBack, Edit } from "@mui/icons-material";
 import { Card, CardContent, CardHeader, Divider, Grid, SpeedDial, SpeedDialAction, SpeedDialIcon } from "@mui/material";
 import AppBreadcrumb from "../../components/app-breadcrumb";
-import GetEventBusQueueRequest from "../../interfaces/requests/eventbus-queue/get-eventbus-queue-request";
 import GetEventbusQueueResponse from "../../interfaces/responses/eventbus-queue/get-eventbus-queue-response";
 import EventBusQueueCard from "./eventbus-queue-card";
 import EventBusMessageTable from "../../components/eventbus-message-table";
-import { showSnackbar } from "../../state/slices/app-snackbar-slice";
-import { closeBackdrop, showBackdrop } from "../../state/slices/app-backdrop-slice";
-import { useAppDispatch } from "../../state/hooks/app-hooks";
+import { showBackdrop } from "../../state/slices/app-backdrop-slice";
+import { useAppDispatch, useAppSelector } from "../../state/hooks/app-hooks";
+import { RootState } from "../../state/app-store";
+import { fetchEventBusQueue } from "../../state/slices/eventbus-queue/eventbus-queue-slice";
 
 const EventBusQueueDetails = () => {
     const dispatch = useAppDispatch();
-    const queueService = new EventBusQueueService();
     const parameters = useParams();
     const navigateTo = useNavigate();
 
-    const [currentQueue, setCurrentQueue] = useState<GetEventbusQueueResponse>();
+    const queueContainer = useAppSelector((state: RootState) => state.eventbusQueue);
 
+    const [currentQueue, setCurrentQueue] = useState<GetEventbusQueueResponse>();
     const [breadcrumbItems, setBreadcrumbItems] = useState<AppBreadcrumbItem[]>([]);
+
     const buildbreadcrumb = () => {
         const home: AppBreadcrumbItem = {
             id: 1,
@@ -56,54 +55,20 @@ const EventBusQueueDetails = () => {
     useEffect(() => {
         if (parameters.id) {
             dispatch(showBackdrop());
-            getEventBusQueue(parameters.id);
+            dispatch(fetchEventBusQueue({
+                id: parameters.id,
+                summarizeMessages: true
+            }));
         }
 
         buildbreadcrumb();
     }, [parameters]);
 
-    const getEventBusQueue = (parameterId: string) => {
-        const request: GetEventBusQueueRequest = {
-            id: parameterId,
-            summarizeMessages: true
+    useEffect(() => {
+        if (queueContainer.data){
+            setCurrentQueue(queueContainer.data);
         }
-
-        queueService.GetQueue(request).then(response => {
-            dispatch(closeBackdrop());
-
-            const apiResponse = response.data;
-
-            if (apiResponse.isSuccess) {
-                setCurrentQueue(apiResponse.object);
-            }
-            else {
-                const response: AppSnackbarResponse = {
-                    success: false,
-                    message: apiResponse.message,
-                    stackTrace: apiResponse.stackTrace,
-                    statusCode: apiResponse.status
-                }
-
-                dispatch(showSnackbar(response));
-            }
-        }).catch(error => {
-            dispatch(closeBackdrop());
-            console.log(error);
-            let response: AppSnackbarResponse = {
-                success: false,
-                message: error.toString().substring(0, 50)
-            }
-
-            const apiResponse = error.response.data;
-            if (typeof apiResponse !== 'undefined') {
-                response.message = apiResponse.message;
-                response.stackTrace = apiResponse.stackTrace;
-                response.statusCode = apiResponse.status;
-            }
-
-            dispatch(showSnackbar(response));
-        });
-    }
+    }, [queueContainer]);
 
     return (
         <>
