@@ -6,45 +6,55 @@ import dayjs, { Dayjs } from "dayjs";
 interface PeriodFormProps {
     currentStart: Date | null,
     currentEnd: Date | null,
-    onUpdatePeriod: (selectedStart: Date, selectedEnd: Date) => void,
+    onUpdatePeriod: (selectedStart: Date | null, selectedEnd: Date | null) => void,
     cleanForm: boolean
 }
 
 const AppPeriodForm = ({ currentStart, currentEnd, onUpdatePeriod, cleanForm }: PeriodFormProps) => {
-    const [startDate, setStartDate] = useState<Dayjs | null>();
-    const [endDate, setEndDate] = useState<Dayjs | null>();
+    const [startDate, setStartDate] = useState<Date | null>();
+    const [endDate, setEndDate] = useState<Date | null>();
 
     useEffect(() => {
-        if (currentStart && currentEnd) {
-            setStartDate(dayjs(currentStart.toLocaleDateString()));
-            setEndDate(dayjs(currentEnd.toLocaleDateString()));
-        }
-        else{
-            setStartDate(null);
-            setEndDate(null);
-        }
+        setStartDate(currentStart);
+        setEndDate(currentEnd);
     }, []);
 
     useEffect(() => {
-        if (startDate && endDate) {
-            onUpdatePeriod(startDate.toDate(), endDate.toDate());
+        let start: Date | null = null;
+        let end: Date | null = null;
+
+        if (startDate !== null && typeof startDate !== 'undefined'){
+            start = startDate;
         }
+
+        if (endDate !== null && typeof endDate !== 'undefined'){
+            end = endDate;
+        }
+        
+        onUpdatePeriod(start, end);
     }, [startDate, endDate]);
 
     useEffect(() => {
         if (cleanForm){
             setStartDate(null);
             setEndDate(null);
+            onUpdatePeriod(null, null);
         }
     }, [cleanForm]);
 
     return (
         <Grid justifyContent="center" container spacing={0}>
             <Grid item md={6}>
-                <DatePicker label="Start date to search" defaultValue={startDate} onChange={obj => setStartDate(obj)} />
+                <DatePicker label="Start date to search" value={currentStart} onChange={obj => {
+                    setStartDate(obj);
+
+                    // if (obj !== null && endDate === null){
+                    //     setEndDate(obj);
+                    // }
+                }} />
             </Grid>
             <Grid item md={6}>
-                <DatePicker label="End date to search" defaultValue={endDate} onChange={obj => setEndDate(obj)} />
+                <DatePicker label="End date to search" value={currentEnd} onChange={obj => setEndDate(obj)} />
             </Grid>
         </Grid>
     );

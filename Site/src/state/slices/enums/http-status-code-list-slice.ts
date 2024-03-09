@@ -16,10 +16,13 @@ export const fetchHttpStatusCodeList = createAsyncThunk(
 
         dispatch(showBackdrop());
 
-        const response = await enumService.ListHttpStatusCode();
-        const apiResponse = response.data;
+        const apiResponse = await enumService.ListHttpStatusCode();
 
         dispatch(closeBackdrop());
+
+        if (apiResponse === null){
+            return [];
+        }
 
         if (apiResponse.isSuccess){
             const filteredList = apiResponse.data.filter((value, index, self) => 

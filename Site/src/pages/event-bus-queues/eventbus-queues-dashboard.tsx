@@ -119,7 +119,10 @@ const EventBusQueuesDashboard = () => {
         enumService.ListQueueStatus().then(response => {
             dispatch(closeBackdrop());
             
-            const apiResponse = response.data;
+            const apiResponse = response;
+            if (apiResponse === null){
+                return;
+            }
 
             if (apiResponse.isSuccess) {
                 const queueStatusList = apiResponse.data;

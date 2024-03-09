@@ -22,10 +22,10 @@ const AppPagination = ({ enableNextPage, changePageData, pageData }: PaginationP
 
     const changePageSize = (selectedPageSize: string | number) => {
         if (typeof selectedPageSize === 'number') {
-            changePageData(pageData.currentPage, selectedPageSize);
+            changePageData(1, selectedPageSize);
         }
         else {
-            changePageData(pageData.currentPage, +selectedPageSize);
+            changePageData(1, +selectedPageSize);
         }
     }
 

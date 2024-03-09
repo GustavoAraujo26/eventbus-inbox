@@ -34,19 +34,12 @@ const EventBusMessageTable = ({ gridSize, showQueue, showFilter, currentQueueId,
 
     const [enableNextPage, setNextPageEnabled] = useState(true);
 
-    const [showStatusModal, setShowStatusModal] = useState(false);
     const [showActionModal, setShowActionModal] = useState(false);
-    const [selectedStatusMessage, setSelectedStatusMessage] = useState<GetEventbusMessageListResponse | null>(null);
     const [selectedActionMessage, setSelectedActionMessage] = useState<GetEventbusMessageListResponse | null>(null);
     const [selectedActionType, setActionType] = useState<AppActionType | null>(null);
 
     const changePageData = (selectedPage: number, selectedPageSize: number) => {
         dispatch(changeEventBusMessagePagination({ page: selectedPage, pageSize: selectedPageSize }));
-    }
-
-    const closeStatusModal = () => {
-        setShowStatusModal(false);
-        setSelectedStatusMessage(null);
     }
 
     const closeActionModal = () => {
@@ -55,27 +48,10 @@ const EventBusMessageTable = ({ gridSize, showQueue, showFilter, currentQueueId,
         setActionType(null);
     }
 
-    const selectStatusMessage = (currentMessage: GetEventbusMessageListResponse) => {
-        setSelectedStatusMessage(currentMessage);
-    }
-
     const selectActionMessage = (currentMessage: GetEventbusMessageListResponse, selectedAction: AppActionType) => {
         setSelectedActionMessage(currentMessage);
         setActionType(selectedAction);
     }
-
-    useEffect(() => {
-        dispatch(fetchEventBusMessageList(request));
-    }, []);
-
-    useEffect(() => {
-        if (selectedStatusMessage === null) {
-            setShowStatusModal(false);
-        }
-        else {
-            setShowStatusModal(true);
-        }
-    }, [selectedStatusMessage]);
 
     useEffect(() => {
         if (selectedActionMessage === null) {

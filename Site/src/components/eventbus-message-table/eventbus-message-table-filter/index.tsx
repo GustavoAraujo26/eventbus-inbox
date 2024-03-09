@@ -23,28 +23,34 @@ const EventBusMessageTableFilter = () => {
 
     const filterTable = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-
+        
         dispatch(fetchEventBusMessageList(request));
     }
 
-    const setCreationPeriod = (startDate: Date, endDate: Date) => {
-        if (startDate && endDate) {
-            let creationDateSearch: Period = {
-                start: startDate,
-                end: endDate
-            };
-            dispatch(setEventBusMessageListCreatedAtSearch(creationDateSearch));
+    const setCreationPeriod = (startDate: Date | null, endDate: Date | null) => {
+        if (startDate === null && endDate === null){
+            cleanDates();
+            return;
         }
+        
+        let creationDateSearch: Period = {
+            start: startDate,
+            end: endDate
+        };
+        dispatch(setEventBusMessageListCreatedAtSearch(creationDateSearch));
     }
 
-    const setUpdatePeriod = (startDate: Date, endDate: Date) => {
-        if (startDate && endDate) {
-            let updateDateSearch = {
-                start: startDate,
-                end: endDate
-            }
-            dispatch(setEventBusMessageListUpdatedAtSearch(updateDateSearch));
+    const setUpdatePeriod = (startDate: Date | null, endDate: Date | null) => {
+        if (startDate === null && endDate === null){
+            cleanDates();
+            return;
         }
+        
+        let updateDateSearch = {
+            start: startDate,
+            end: endDate
+        }
+        dispatch(setEventBusMessageListUpdatedAtSearch(updateDateSearch));
     }
 
     const cleanDates = () => {
@@ -82,7 +88,7 @@ const EventBusMessageTableFilter = () => {
                                         </FormControl>
                                     </Grid>}
                                     <Grid item md={6}>
-                                        <TextField value={(request.typeMatch === null) ? '': request.typeMatch}
+                                        <TextField value={(request.typeMatch === null) ? '' : request.typeMatch}
                                             label="Type to search"
                                             variant="standard"
                                             fullWidth
@@ -123,13 +129,13 @@ const EventBusMessageTableFilter = () => {
                                             currentStart={request.creationDateSearch === null ? null : request.creationDateSearch.start}
                                             currentEnd={request.creationDateSearch === null ? null : request.creationDateSearch.end}
                                             cleanForm={request.creationDateSearch === null || (request.creationDateSearch.start === null && request.creationDateSearch.end === null)}
-                                            onUpdatePeriod={(selectedStart: Date, selectedEnd: Date) => setCreationPeriod(selectedStart, selectedEnd)} />}
+                                            onUpdatePeriod={(selectedStart: Date | null, selectedEnd: Date | null) => setCreationPeriod(selectedStart, selectedEnd)} />}
 
                                         {updateDateToogle && <AppPeriodForm
                                             currentStart={request.updateDateSearch === null ? null : request.updateDateSearch.start}
                                             currentEnd={request.updateDateSearch === null ? null : request.updateDateSearch.end}
                                             cleanForm={request.updateDateSearch === null || (request.updateDateSearch.start === null && request.updateDateSearch.end === null)}
-                                            onUpdatePeriod={(selectedStart: Date, selectedEnd: Date) => setUpdatePeriod(selectedStart, selectedEnd)} />}
+                                            onUpdatePeriod={(selectedStart: Date | null, selectedEnd: Date | null) => setUpdatePeriod(selectedStart, selectedEnd)} />}
 
 
                                     </Grid>

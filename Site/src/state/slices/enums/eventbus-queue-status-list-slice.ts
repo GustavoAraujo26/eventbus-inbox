@@ -16,10 +16,13 @@ export const fetchEventBusQueueStatusList = createAsyncThunk(
 
         dispatch(showBackdrop());
 
-        const response = await enumService.ListQueueStatus();
-        const apiResponse = response.data;
-
+        const apiResponse = await enumService.ListQueueStatus();
+        
         dispatch(closeBackdrop());
+
+        if (apiResponse === null){
+            return [];
+        }
 
         if (apiResponse.isSuccess){
             return apiResponse.data;

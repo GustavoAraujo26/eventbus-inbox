@@ -1,3 +1,4 @@
+import axios, { AxiosError, AxiosResponse } from "axios";
 import { ApiResponse } from "../interfaces/api-response";
 import AppTaskResponse from "../interfaces/app-task-response";
 import GetEventbusMessageListRequest from "../interfaces/requests/eventbus-received-message/get-eventbus-message-list-request";
@@ -24,8 +25,24 @@ export class EventBusMessageService extends HttpService {
         return this.put<ApiResponse<AppTaskResponse>>('/v1/event-bus/received-messages', request);
     }
 
-    ListMessage(request: GetEventbusMessageListRequest) {
-        return this.post<ApiResponse<GetEventbusMessageListResponse>>('/v1/event-bus/received-messages/list', request);
+    async ListMessage(request: GetEventbusMessageListRequest) {
+        let response: AxiosResponse<ApiResponse<GetEventbusMessageListResponse>, any> | null = null;
+        let apiResponse: ApiResponse<GetEventbusMessageListResponse> | null = null;
+        
+        try{
+            response = await this.post<ApiResponse<GetEventbusMessageListResponse>>('/v1/event-bus/received-messages/list', request);
+            apiResponse = response.data;
+        }
+        catch(error){
+            console.log(error);
+
+            if (axios.isAxiosError(error)){
+                const axiosError = error as AxiosError<ApiResponse<GetEventbusMessageListResponse>, any>;
+                apiResponse = axiosError.response!.data
+            }
+        }
+        
+        return apiResponse;
     }
 
     ReactivateMessage(id: string) {
