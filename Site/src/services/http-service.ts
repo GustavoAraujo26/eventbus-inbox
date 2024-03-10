@@ -4,8 +4,9 @@ export class HttpService {
     http: AxiosInstance;
 
     constructor() {
+        console.log(process.env.REACT_APP_API_URL);
         this.http = axios.create({
-            baseURL: 'http://localhost:9000/api'
+            baseURL: process.env.REACT_APP_API_URL
             // baseURL: 'http://localhost:44356/api'
         });
     }
