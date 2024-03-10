@@ -32,6 +32,17 @@ services:
     depends_on:
       - mongodb
       - rabbitmq
+
+  frontend:
+    container_name: inbox-site
+    image: gustavoaraujo26/eventbus-inbox-site:latest
+    ports:
+      - 7500:7500
+    networks:
+      - eventbus-inbox
+    depends_on:
+      - backend
+
 networks:
   eventbus-inbox:
     external:
