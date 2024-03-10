@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { EventBusQueueService } from "../../services/eventbus-queue-service";
 import GetEventbusQueueResponse from "../../interfaces/responses/eventbus-queue/get-eventbus-queue-response";
 import AppSnackbarResponse from "../../interfaces/requests/app-snackbar-response";
 import AppBreadcrumbItem from "../../interfaces/app-breadcrumb-item";
@@ -20,7 +19,6 @@ const EventBusMessageSender = () => {
     const dispatch = useAppDispatch();
     const navigateTo = useNavigate();
 
-    const queueService = new EventBusQueueService();
     const senderService = new EventBusSenderService();
 
     const [queueList, setQueueList] = useState<GetEventbusQueueResponse[]>([]);
@@ -65,7 +63,7 @@ const EventBusMessageSender = () => {
         }
     }, [queueListContainer]);
 
-    const onSubmitMessage = (event: React.FormEvent<HTMLFormElement>) => {
+    const onSubmitMessage = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         dispatch(showBackdrop());
 
@@ -77,40 +75,27 @@ const EventBusMessageSender = () => {
             queueId: queueId
         };
 
-        senderService.SendMessage(request).then(response => {
-            dispatch(closeBackdrop());
+        const apiResponse = await senderService.SendMessage(request);
 
-            const apiResponse = response.data;
-            if (apiResponse.isSuccess){
-                navigateTo(-1);
-            }
-            else{
-                const response: AppSnackbarResponse = {
-                    success: false,
-                    message: apiResponse.message,
-                    stackTrace: apiResponse.stackTrace,
-                    statusCode: apiResponse.status
-                }
+        dispatch(closeBackdrop());
 
-                dispatch(showSnackbar(response));
-            }
-        }).catch(error => {
-            dispatch(closeBackdrop());
-            console.log(error);
-            let response: AppSnackbarResponse = {
+        if (apiResponse === null){
+            return;
+        }
+
+        if (apiResponse.isSuccess){
+            navigateTo(-1);
+        }
+        else{
+            const response: AppSnackbarResponse = {
                 success: false,
-                message: error.toString().substring(0, 50)
-            }
-
-            const apiResponse = error.response.data;
-            if (typeof apiResponse !== 'undefined') {
-                response.message = apiResponse.message;
-                response.stackTrace = apiResponse.stackTrace;
-                response.statusCode = apiResponse.status;
+                message: apiResponse.message,
+                stackTrace: apiResponse.stackTrace,
+                statusCode: apiResponse.status
             }
 
             dispatch(showSnackbar(response));
-        });
+        }
     }
 
     return (
