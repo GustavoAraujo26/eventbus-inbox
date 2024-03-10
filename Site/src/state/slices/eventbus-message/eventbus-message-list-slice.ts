@@ -5,7 +5,6 @@ import AppSnackbarResponse from "../../../interfaces/requests/app-snackbar-respo
 import { showBackdrop, closeBackdrop } from "../app-backdrop-slice";
 import { showSnackbar } from "../app-snackbar-slice";
 import { EventBusMessageService } from "../../../services/eventbus-message-service";
-import axios, { AxiosError, AxiosResponse } from "axios";
 import { ApiResponse } from "../../../interfaces/api-response";
 
 interface MessageContainer {
@@ -33,7 +32,7 @@ export const fetchEventBusMessageList = createAsyncThunk(
         }
         
         const apiResponse = await messageService.ListMessage(request);
-
+        
         dispatch(closeBackdrop());
 
         if (apiResponse === null){

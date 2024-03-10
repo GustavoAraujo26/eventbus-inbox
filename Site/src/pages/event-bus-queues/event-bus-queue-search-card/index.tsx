@@ -1,32 +1,42 @@
 import { CleaningServices, Search } from "@mui/icons-material";
 import { Box, Button, Card, CardContent, Divider, FormControl, Grid, InputLabel, MenuItem, Select, TextField, Typography } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import EnumData from "../../../interfaces/enum-data";
+import { useAppDispatch, useAppSelector } from "../../../state/hooks/app-hooks";
+import { RootState } from "../../../state/app-store";
+import { fetchEventBusQueueStatusList } from "../../../state/slices/enums/eventbus-queue-status-list-slice";
+import { cleanEventBusQueueListRequest, setEventBusQueueListDescriptionMatch, setEventBusQueueListNameMatch, setEventBusQueueListStatusMatch } from "../../../state/slices/eventbus-queue/eventbus-queue-list-request-slice";
+import { fetchEventBusQueueList } from "../../../state/slices/eventbus-queue/eventbus-queue-list-slice";
 
-interface SearchCardProps {
-    statusList: EnumData[],
-    searchQueues: (name: string, description: string, status: number) => void
-}
+const EventBusQueueSearchCard = () => {
+    const dispatch = useAppDispatch();
 
-const EventBusQueueSearchCard = ({ statusList, searchQueues }: SearchCardProps) => {
     const [nameMatch, setNameMatch] = useState('');
     const [descriptionMatch, setDescriptionMatch] = useState('');
     const [currentStatus, setStatus] = useState<number>(0);
+    const [statusList, setStatusList] = useState<EnumData[]>([]);
+
+    const statusListContainer = useAppSelector((state: RootState) => state.eventBusQueueStatusList);
+    const currentRequest = useAppSelector((state: RootState) => state.eventbusQueueListRequest);
 
     const changeStatus = (selectedStatus: string | number) => {
         if (selectedStatus) {
             if (typeof selectedStatus === 'number') {
                 setStatus(selectedStatus);
+                const requestStatus: number | null = (selectedStatus === 0 ? null : selectedStatus);
+                dispatch(setEventBusQueueListStatusMatch(requestStatus))
             }
             else {
                 setStatus(+selectedStatus);
+                const requestStatus: number | null = (+selectedStatus === 0 ? null : +selectedStatus);
+                dispatch(setEventBusQueueListStatusMatch(requestStatus))
             }
         }
     }
 
     const onSubmitSearch = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        searchQueues(nameMatch, descriptionMatch, currentStatus);
+        dispatch(fetchEventBusQueueList(currentRequest));
     }
 
     const cleanSearch = () => {
@@ -34,8 +44,26 @@ const EventBusQueueSearchCard = ({ statusList, searchQueues }: SearchCardProps) 
         setDescriptionMatch('');
         setStatus(0);
 
-        searchQueues('', '', 0);
+        dispatch(cleanEventBusQueueListRequest());
     }
+
+    useEffect(() => {
+        dispatch(fetchEventBusQueueStatusList());
+    }, []);
+
+    useEffect(() => {
+        if (statusListContainer.data){
+            setStatusList(statusListContainer.data);
+        }
+    }, [statusListContainer]);
+
+    useEffect(() => {
+        if (currentRequest !== null){
+            setNameMatch(currentRequest.nameMatch ?? '');
+            setDescriptionMatch(currentRequest.descriptionMatch ?? '');
+            setStatus(currentRequest.status ?? 0);
+        }
+    }, [currentRequest]);
 
     return (
         <>
@@ -53,14 +81,14 @@ const EventBusQueueSearchCard = ({ statusList, searchQueues }: SearchCardProps) 
                                             label="Name"
                                             variant="standard"
                                             fullWidth
-                                            onChange={event => setNameMatch(event.target.value)} />
+                                            onChange={event => dispatch(setEventBusQueueListNameMatch(event.target.value))} />
                                     </Grid>
                                     <Grid item md={4}>
                                         <TextField value={descriptionMatch}
                                             label="Description"
                                             variant="standard"
                                             fullWidth
-                                            onChange={event => setDescriptionMatch(event.target.value)} />
+                                            onChange={event => dispatch(setEventBusQueueListDescriptionMatch(event.target.value))} />
                                     </Grid>
                                     {statusList && <Grid item md={4}>
                                         <FormControl sx={{ minWidth: '150px' }}>

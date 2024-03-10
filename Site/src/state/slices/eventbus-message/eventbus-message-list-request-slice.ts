@@ -46,12 +46,18 @@ const eventbusMessageListRequestSlice = createSlice({
             state.statusToSearch = state.statusToSearch.filter(item => item !== payload);
         },
         setEventBusMessageListRequest: (state, { payload }: PayloadAction<GetEventbusMessageListRequest>) => {
-            state = payload;
+            state.queueId = payload.queueId;
+            state.creationDateSearch = payload.creationDateSearch;
+            state.updateDateSearch = payload.updateDateSearch;
+            state.statusToSearch = payload.statusToSearch;
+            state.typeMatch = payload.typeMatch;
+            state.page = payload.page;
+            state.pageSize = payload.pageSize;
         },
         setCleanEventBusListRequest: (state) => {
             state.queueId = null;
             state.creationDateSearch = null;
-            state.updateDateSearch = null,
+            state.updateDateSearch = null;
             state.statusToSearch = null;
             state.typeMatch = null;
             state.page = 1;

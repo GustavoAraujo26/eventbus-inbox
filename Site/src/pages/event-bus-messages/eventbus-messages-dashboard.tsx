@@ -1,15 +1,19 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import AppBreadcrumbItem from "../../interfaces/app-breadcrumb-item";
 import { Apps, HomeOutlined } from "@mui/icons-material";
-import { Backdrop, CircularProgress } from "@mui/material";
 import AppBreadcrumb from "../../components/app-breadcrumb";
 import EventBusMessageTable from "../../components/eventbus-message-table";
+import { useAppDispatch, useAppSelector } from "../../state/hooks/app-hooks";
+import { setEventBusMessageListRequest } from "../../state/slices/eventbus-message/eventbus-message-list-request-slice";
+import { RootState } from "../../state/app-store";
 
 const EventBusMessagesDashboard = () => {
-    const navigateTo = useNavigate();
-
+    const dispatch = useAppDispatch();
+    
     const [breadcrumbItems, setBreadcrumbItems] = useState<AppBreadcrumbItem[]>([]);
+    const [showTable, setShowTable] = useState<boolean>(false);
+
+    const messageRequest = useAppSelector((state: RootState) => state.eventbusMessageListRequest);
 
     const buildbreadcrumb = () => {
         const home: AppBreadcrumbItem = {
@@ -34,13 +38,26 @@ const EventBusMessagesDashboard = () => {
     }
 
     useEffect(() => {
+        dispatch(setEventBusMessageListRequest({
+            queueId: null,
+            page: 1,
+            pageSize: 10,
+            creationDateSearch: null,
+            updateDateSearch: null,
+            statusToSearch: null,
+            typeMatch: null
+        }));
         buildbreadcrumb();
     }, []);
+
+    useEffect(() => {
+        setShowTable(true);
+    }, [messageRequest]);
 
     return (
         <>
             <AppBreadcrumb breadcrumbItems={breadcrumbItems} />
-            <EventBusMessageTable gridSize={12} showQueue={true} showFilter={true} currentQueueId={null} showActions={true} />
+            {showTable && <EventBusMessageTable gridSize={12} showQueue={true} showFilter={true} showActions={true} />}
         </>
     );
 }

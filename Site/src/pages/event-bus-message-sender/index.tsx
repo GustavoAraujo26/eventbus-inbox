@@ -1,21 +1,20 @@
 import { useEffect, useState } from "react";
 import { EventBusQueueService } from "../../services/eventbus-queue-service";
 import GetEventbusQueueResponse from "../../interfaces/responses/eventbus-queue/get-eventbus-queue-response";
-import GetEventBusQueueListRequest from "../../interfaces/requests/eventbus-queue/get-eventbus-queue-list-request";
 import AppSnackbarResponse from "../../interfaces/requests/app-snackbar-response";
 import AppBreadcrumbItem from "../../interfaces/app-breadcrumb-item";
-import { Backdrop, Box, Button, Card, CardContent, CircularProgress, FormControl, Grid, InputLabel, MenuItem, Select, TextField } from "@mui/material";
+import { Box, Button, Card, CardContent, FormControl, Grid, InputLabel, MenuItem, Select, TextField } from "@mui/material";
 import AppBreadcrumb from "../../components/app-breadcrumb";
-import AppSnackBar from "../../components/app-snackbar";
-import { HomeOutlined, Apps, Send, ArrowBack, Save } from "@mui/icons-material";
+import { HomeOutlined, Send, ArrowBack } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import SendEventbusMessageRequest from "../../interfaces/requests/eventbus-sender/send-eventbus-message-request";
 import { v4 as uuidv4 } from 'uuid';
 import { EventBusSenderService } from "../../services/event-bus-sender-service";
-import { useDispatch } from "react-redux";
 import { showSnackbar } from "../../state/slices/app-snackbar-slice";
 import { closeBackdrop, showBackdrop } from "../../state/slices/app-backdrop-slice";
-import { useAppDispatch } from "../../state/hooks/app-hooks";
+import { useAppDispatch, useAppSelector } from "../../state/hooks/app-hooks";
+import { RootState } from "../../state/app-store";
+import { fetchEventBusQueueList } from "../../state/slices/eventbus-queue/eventbus-queue-list-slice";
 
 const EventBusMessageSender = () => {
     const dispatch = useAppDispatch();
@@ -30,6 +29,8 @@ const EventBusMessageSender = () => {
     const [queueId, setQueueId] = useState('');
     const [messageType, setMessageType] = useState('');
     const [messageContent, setMessageContent] = useState('');
+
+    const queueListContainer = useAppSelector((state: RootState) => state.eventbusQueueList);
 
     const buildbreadcrumb = () => {
         const home: AppBreadcrumbItem = {
@@ -53,57 +54,16 @@ const EventBusMessageSender = () => {
         setBreadcrumbItems(newList);
     }
 
-    const loadQueueList = () => {
-        const request: GetEventBusQueueListRequest = {
-            nameMatch: null,
-            descriptionMatch: null,
-            status: null,
-            page: 1,
-            pageSize: 1000000,
-            summarizeMessages: false
-        }
-
-        queueService.ListQueues(request).then(response => {
-            dispatch(closeBackdrop());
-
-            const apiResponse = response.data;
-
-            if (apiResponse.isSuccess) {
-                setQueueList(apiResponse.data);
-            }
-            else {
-                const response: AppSnackbarResponse = {
-                    success: false,
-                    message: apiResponse.message,
-                    stackTrace: apiResponse.stackTrace,
-                    statusCode: apiResponse.status
-                }
-
-                dispatch(showSnackbar(response));
-            }
-        }).catch(error => {
-            dispatch(closeBackdrop());
-            console.log(error);
-            let response: AppSnackbarResponse = {
-                success: false,
-                message: error.toString().substring(0, 50)
-            }
-
-            const apiResponse = error.response.data;
-            if (typeof apiResponse !== 'undefined') {
-                response.message = apiResponse.message;
-                response.stackTrace = apiResponse.stackTrace;
-                response.statusCode = apiResponse.status;
-            }
-
-            dispatch(showSnackbar(response));
-        });
-    }
-
     useEffect(() => {
         buildbreadcrumb();
-        loadQueueList();
+        dispatch(fetchEventBusQueueList(null));
     }, []);
+
+    useEffect(() => {
+        if (queueListContainer.data){
+            setQueueList(queueListContainer.data);
+        }
+    }, [queueListContainer]);
 
     const onSubmitMessage = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();

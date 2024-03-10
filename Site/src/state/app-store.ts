@@ -12,6 +12,7 @@ import eventbusMessageStatusModalSlice from "./slices/eventbus-message/eventbus-
 import eventbusMessageActionModalSlice from "./slices/eventbus-message/eventbus-message-action-modal-slice";
 import eventbusMessageSlice from "./slices/eventbus-message/eventbus-message-slice";
 import eventBusQueueSlice from "./slices/eventbus-queue/eventbus-queue-slice";
+import eventbusQueueModalSlice from "./slices/eventbus-queue/eventbus-queue-modal-slice";
 
 const appStore = configureStore({
     reducer: {
@@ -27,7 +28,8 @@ const appStore = configureStore({
         eventbusMessageStatusModal: eventbusMessageStatusModalSlice,
         eventbusMessageActionModal: eventbusMessageActionModalSlice,
         eventbusMessage: eventbusMessageSlice,
-        eventbusQueue: eventBusQueueSlice
+        eventbusQueue: eventBusQueueSlice,
+        eventbusQueueModal: eventbusQueueModalSlice
     },
     middleware: (getDefaultMiddleware) => getDefaultMiddleware({
         serializableCheck: false

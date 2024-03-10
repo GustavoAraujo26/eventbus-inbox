@@ -1,45 +1,32 @@
 import { useEffect, useState } from "react";
 import GetEventbusQueueResponse from "../../interfaces/responses/eventbus-queue/get-eventbus-queue-response";
-import { EventBusQueueService } from "../../services/eventbus-queue-service";
 import AppBreadcrumbItem from "../../interfaces/app-breadcrumb-item";
 import { Add, Apps, Delete, Edit, HomeOutlined, Info, Lock, LockOpen } from "@mui/icons-material";
-import { Backdrop, CircularProgress, Fab, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
+import { Fab, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
 import AppBreadcrumb from "../../components/app-breadcrumb";
-import GetEventBusQueueListRequest from "../../interfaces/requests/eventbus-queue/get-eventbus-queue-list-request";
 import EventBusQueueStatus from "./eventbus-queue-status";
 import AppPagination from "../../components/app-pagination";
 import { useNavigate } from "react-router-dom";
 import EventBusQueueModal from "./eventbus-queue-modal";
 import { AppActionType } from "../../enums/app-action-type";
-import AppSnackbarResponse from "../../interfaces/requests/app-snackbar-response";
 import EventBusQueueSearchCard from "./event-bus-queue-search-card";
-import EnumData from "../../interfaces/enum-data";
-import { EnumsService } from "../../services/enums-service";
-import { useDispatch } from "react-redux";
-import { showSnackbar } from "../../state/slices/app-snackbar-slice";
-import { closeBackdrop, showBackdrop } from "../../state/slices/app-backdrop-slice";
-import { useAppDispatch } from "../../state/hooks/app-hooks";
+import { useAppDispatch, useAppSelector } from "../../state/hooks/app-hooks";
+import { openEventBusQueueModal } from "../../state/slices/eventbus-queue/eventbus-queue-modal-slice";
+import { RootState } from "../../state/app-store";
+import { fetchEventBusQueueList } from "../../state/slices/eventbus-queue/eventbus-queue-list-slice";
+import { setEventBusQueueListPagination } from "../../state/slices/eventbus-queue/eventbus-queue-list-request-slice";
 
 const EventBusQueuesDashboard = () => {
     const navigateTo = useNavigate();
     const dispatch = useAppDispatch();
+
     const [queues, setQueues] = useState<GetEventbusQueueResponse[]>([]);
-    const [statusList, setStatusList] = useState<EnumData[]>([]);
-    const queueService = new EventBusQueueService();
-    const enumService = new EnumsService();
-
-    const [currentPage, setCurrentPage] = useState(1);
-    const [currentPageSize, setCurrentPageSize] = useState(10);
-    const [rowsFounded, setRowsFounded] = useState(true);
-    const [nameMatch, setNameMatch] = useState('');
-    const [descriptionMatch, setdescriptionMatch] = useState('');
-    const [status, setStatus] = useState<number | null>(null);
-
-    const [selectedQueue, setSelectedQueue] = useState<GetEventbusQueueResponse>();
-    const [showModal, setShowModal] = useState(false);
-    const [modalAction, setModalAction] = useState<AppActionType>(AppActionType.View);
-
+    const [enableNextPage, setNextPageEnabled] = useState(true);
     const [breadcrumbItems, setBreadcrumbItems] = useState<AppBreadcrumbItem[]>([]);
+
+    const currentRequest = useAppSelector((state: RootState) => state.eventbusQueueListRequest);
+    const queueListContainer = useAppSelector((state: RootState) => state.eventbusQueueList);
+
     const buildbreadcrumb = () => {
         const home: AppBreadcrumbItem = {
             id: 1,
@@ -62,140 +49,30 @@ const EventBusQueuesDashboard = () => {
         setBreadcrumbItems(newList);
     }
 
-    const getPaginatedList = () => {
-        dispatch(showBackdrop());
-
-        const listRequest: GetEventBusQueueListRequest = {
-            nameMatch: nameMatch,
-            descriptionMatch: descriptionMatch,
-            status: status,
-            page: currentPage!,
-            pageSize: currentPageSize!,
-            summarizeMessages: false
-        }
-
-        queueService.ListQueues(listRequest).then(response => {
-            dispatch(closeBackdrop());
-
-            const apiResponse = response.data;
-
-            if (apiResponse.isSuccess) {
-                const queueList = apiResponse.data;
-                setQueues(queueList);
-                setRowsFounded((apiResponse.data.length > 0 && apiResponse.data.length >= currentPageSize));
-            }
-            else{
-                const response: AppSnackbarResponse = {
-                    success: false,
-                    message: apiResponse.message,
-                    stackTrace: apiResponse.stackTrace,
-                    statusCode: apiResponse.status
-                }
-                
-                dispatch(showSnackbar(response));
-            }
-        }).catch(error => {
-            dispatch(closeBackdrop());
-
-            let response: AppSnackbarResponse = {
-                success: false,
-                message: error.toString().substring(0, 50)
-            }
-
-            const apiResponse = error.response.data;
-            if (typeof apiResponse !== 'undefined'){
-                response.message = apiResponse.message;
-                response.stackTrace = apiResponse.stackTrace;
-                response.statusCode = apiResponse.status;
-            }
-
-            dispatch(showSnackbar(response));
-        });
-    }
-
-    const getStatusList = () => {
-        dispatch(showBackdrop());
-
-        enumService.ListQueueStatus().then(response => {
-            dispatch(closeBackdrop());
-            
-            const apiResponse = response;
-            if (apiResponse === null){
-                return;
-            }
-
-            if (apiResponse.isSuccess) {
-                const queueStatusList = apiResponse.data;
-                setStatusList(queueStatusList);
-            }
-            else{
-                const response: AppSnackbarResponse = {
-                    success: false,
-                    message: apiResponse.message,
-                    stackTrace: apiResponse.stackTrace,
-                    statusCode: apiResponse.status
-                }
-    
-                dispatch(showSnackbar(response));
-            }
-        }).catch(error => {
-            dispatch(closeBackdrop());
-
-            let response: AppSnackbarResponse = {
-                success: false,
-                message: error.toString().substring(0, 50)
-            }
-
-            const apiResponse = error.response.data;
-            if (typeof apiResponse !== 'undefined'){
-                response.message = apiResponse.message;
-                response.stackTrace = apiResponse.stackTrace;
-                response.statusCode = apiResponse.status;
-            }
-
-            dispatch(showSnackbar(response));
-        });
+    const changePageData = (selectedPage: number, selectedPageSize: number) => {
+        dispatch(setEventBusQueueListPagination({ page: selectedPage, pageSize: selectedPageSize }));
     }
 
     useEffect(() => {
         buildbreadcrumb();
-        getStatusList();
-        getPaginatedList();
+        dispatch(fetchEventBusQueueList(currentRequest));
     }, []);
 
     useEffect(() => {
-        getPaginatedList();
-    }, [currentPage, currentPageSize])
-
-    const changePageData = (selectedPage: number, selectedPageSize: number) => {
-        setCurrentPage(selectedPage);
-        setCurrentPageSize(selectedPageSize);
-    }
-
-    const selectQueue = (currentQueue: GetEventbusQueueResponse, action: AppActionType) => {
-        setSelectedQueue(currentQueue);
-        setModalAction(action);
-        setShowModal(true);
-    }
-
-    const closeStatusModal = () => {
-        setShowModal(false);
-    }
-
-    const searchQueues = (name: string, description: string, currentStatus: number) => {
-        setNameMatch(name);
-        setdescriptionMatch(description);
-        setStatus(currentStatus === 0 ? null : currentStatus);
-    }
+        if (queueListContainer.data){
+            setQueues(queueListContainer.data);
+            setNextPageEnabled(queueListContainer.data.length >= 10);
+        }
+    }, [queueListContainer]);
 
     useEffect(() => {
-        getPaginatedList();
-    }, [nameMatch, descriptionMatch, status]);
+        dispatch(fetchEventBusQueueList(currentRequest));
+    }, [currentRequest.page, currentRequest.pageSize])
 
     return (
         <>
             <AppBreadcrumb breadcrumbItems={breadcrumbItems} />
-            <EventBusQueueSearchCard statusList={statusList} searchQueues={searchQueues}/>
+            <EventBusQueueSearchCard/>
             <TableContainer component={Paper}>
                 <Table>
                     <TableHead>
@@ -225,23 +102,29 @@ const EventBusQueuesDashboard = () => {
                                 <IconButton aria-label="Edit" size="small" color="success" onClick={() => navigateTo(`/eventbus-queues/${item.id}`)} title="Edit">
                                     <Edit />
                                 </IconButton>
-                                <IconButton aria-label="Edit" size="small" color="warning" title="Change status" onClick={() => selectQueue(item, AppActionType.Update)}>
+                                <IconButton aria-label="Change Status" size="small" color="warning" title="Change status" onClick={() => dispatch(openEventBusQueueModal({
+                                    queue: item,
+                                    action: AppActionType.Update
+                                }))}>
                                     {item.status.intKey == 1 ? <Lock /> : <LockOpen />}
                                 </IconButton>
-                                <IconButton aria-label="Delete" size="small" color="error" title="Delete" onClick={() => selectQueue(item, AppActionType.Delete)}>
+                                <IconButton aria-label="Delete" size="small" color="error" title="Delete" onClick={() => dispatch(openEventBusQueueModal({
+                                    queue: item,
+                                    action: AppActionType.Delete
+                                }))}>
                                     <Delete />
                                 </IconButton>
                             </TableCell>
                         </TableRow>)}
                     </TableBody>
                 </Table>
-                <AppPagination changePageData={changePageData} enableNextPage={rowsFounded} 
-                    pageData={{currentPage: currentPage, currentPageSize: currentPageSize}} />
+                <AppPagination changePageData={changePageData} enableNextPage={enableNextPage} 
+                    pageData={{currentPage: currentRequest.page, currentPageSize: currentRequest.pageSize}} />
             </TableContainer>
             <Fab color="info" sx={{ margin: 0, top: 'auto', right: 20, bottom: 20, left: 'auto', position: 'fixed' }} onClick={() => navigateTo("/eventbus-queues/new")}>
                 <Add />
             </Fab>
-            <EventBusQueueModal queue={selectedQueue} showModal={showModal} closeModal={closeStatusModal} action={modalAction} updateList={getPaginatedList} />
+            <EventBusQueueModal />
         </>
     );
 }

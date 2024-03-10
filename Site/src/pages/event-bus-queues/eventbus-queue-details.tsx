@@ -11,6 +11,8 @@ import { showBackdrop } from "../../state/slices/app-backdrop-slice";
 import { useAppDispatch, useAppSelector } from "../../state/hooks/app-hooks";
 import { RootState } from "../../state/app-store";
 import { fetchEventBusQueue } from "../../state/slices/eventbus-queue/eventbus-queue-slice";
+import { fetchEventBusMessageList } from "../../state/slices/eventbus-message/eventbus-message-list-slice";
+import { setEventBusMessageListRequest } from "../../state/slices/eventbus-message/eventbus-message-list-request-slice";
 
 const EventBusQueueDetails = () => {
     const dispatch = useAppDispatch();
@@ -18,6 +20,7 @@ const EventBusQueueDetails = () => {
     const navigateTo = useNavigate();
 
     const queueContainer = useAppSelector((state: RootState) => state.eventbusQueue);
+    const messageRequest = useAppSelector((state: RootState) => state.eventbusMessageListRequest);
 
     const [currentQueue, setCurrentQueue] = useState<GetEventbusQueueResponse>();
     const [breadcrumbItems, setBreadcrumbItems] = useState<AppBreadcrumbItem[]>([]);
@@ -54,7 +57,15 @@ const EventBusQueueDetails = () => {
 
     useEffect(() => {
         if (parameters.id) {
-            dispatch(showBackdrop());
+            dispatch(setEventBusMessageListRequest({
+                queueId: parameters.id,
+                page: 1,
+                pageSize: 10,
+                creationDateSearch: null,
+                updateDateSearch: null,
+                statusToSearch: null,
+                typeMatch: null
+            }));
             dispatch(fetchEventBusQueue({
                 id: parameters.id,
                 summarizeMessages: true
@@ -70,6 +81,10 @@ const EventBusQueueDetails = () => {
         }
     }, [queueContainer]);
 
+    useEffect(() => {
+        dispatch(fetchEventBusMessageList(messageRequest));
+    }, [messageRequest]);
+
     return (
         <>
             <AppBreadcrumb breadcrumbItems={breadcrumbItems} />
@@ -83,7 +98,7 @@ const EventBusQueueDetails = () => {
                             <CardHeader title="Queue Messages" sx={{ fontWeight: 'bold', textAlign: 'center' }} />
                             <CardContent>
                                 <Divider />
-                                <EventBusMessageTable gridSize={12} showQueue={false} showFilter={false} currentQueueId={currentQueue!.id} showActions={false} />
+                                <EventBusMessageTable gridSize={12} showQueue={false} showFilter={false} showActions={false} />
                             </CardContent>
                         </Card>
                     </Grid>

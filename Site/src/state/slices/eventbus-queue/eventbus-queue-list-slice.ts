@@ -1,10 +1,8 @@
-import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import GetEventbusQueueResponse from "../../../interfaces/responses/eventbus-queue/get-eventbus-queue-response";
-import { EnumsService } from "../../../services/enums-service";
 import AppSnackbarResponse from "../../../interfaces/requests/app-snackbar-response";
 import { showBackdrop, closeBackdrop } from "../app-backdrop-slice";
 import { showSnackbar } from "../app-snackbar-slice";
-import GetEventBusQueueRequest from "../../../interfaces/requests/eventbus-queue/get-eventbus-queue-request";
 import { EventBusQueueService } from "../../../services/eventbus-queue-service";
 import GetEventBusQueueListRequest from "../../../interfaces/requests/eventbus-queue/get-eventbus-queue-list-request";
 
@@ -31,10 +29,13 @@ export const fetchEventBusQueueList = createAsyncThunk(
             request = data;
         }
 
-        const response = await queueService.ListQueues(request);
-        const apiResponse = response.data;
+        const apiResponse = await queueService.ListQueues(request);
 
         dispatch(closeBackdrop());
+
+        if (apiResponse === null){
+            return [];
+        }
 
         if (apiResponse.isSuccess){
             return apiResponse.data;

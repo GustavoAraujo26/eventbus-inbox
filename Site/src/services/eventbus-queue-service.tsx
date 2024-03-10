@@ -39,10 +39,24 @@ export class EventBusQueueService extends HttpService {
         return apiResponse;
     }
 
-    DeleteQueue(id: string) {
-        const url = `/v1/event-bus/queue?Id=${id}`;
+    async DeleteQueue(id: string) {
+        let response: AxiosResponse<ApiResponse<AppTaskResponse>, any> | null = null;
+        let apiResponse: ApiResponse<AppTaskResponse> | null = null;
+        
+        try{
+            response = await this.delete<ApiResponse<AppTaskResponse>>(`/v1/event-bus/queue?Id=${id}`);
+            apiResponse = response.data;
+        }
+        catch(error){
+            console.log(error);
 
-        return this.delete<ApiResponse<AppTaskResponse>>(url);
+            if (axios.isAxiosError(error)){
+                const axiosError = error as AxiosError<ApiResponse<AppTaskResponse>, any>;
+                apiResponse = axiosError.response!.data
+            }
+        }
+        
+        return apiResponse;
     }
 
     async SaveQueue(request: SaveEventbusQueueRequest) {
@@ -65,13 +79,43 @@ export class EventBusQueueService extends HttpService {
         return apiResponse;
     }
 
-    ListQueues(request: GetEventBusQueueListRequest) {
-        return this.post<ApiResponse<GetEventbusQueueResponse>>('/v1/event-bus/queue/list', request);
+    async ListQueues(request: GetEventBusQueueListRequest) {
+        let response: AxiosResponse<ApiResponse<GetEventbusQueueResponse>, any> | null = null;
+        let apiResponse: ApiResponse<GetEventbusQueueResponse> | null = null;
+        
+        try{
+            response = await this.post<ApiResponse<GetEventbusQueueResponse>>('/v1/event-bus/queue/list', request);
+            apiResponse = response.data;
+        }
+        catch(error){
+            console.log(error);
+
+            if (axios.isAxiosError(error)){
+                const axiosError = error as AxiosError<ApiResponse<GetEventbusQueueResponse>, any>;
+                apiResponse = axiosError.response!.data
+            }
+        }
+        
+        return apiResponse;
     }
 
-    UpdateStatus(request: UpdateEventbusQueueStatusRequest) {
-        const url = `/v1/event-bus/queue/update/status?Id=${request.id}&Status=${request.status}`;
+    async UpdateStatus(request: UpdateEventbusQueueStatusRequest) {
+        let response: AxiosResponse<ApiResponse<AppTaskResponse>, any> | null = null;
+        let apiResponse: ApiResponse<AppTaskResponse> | null = null;
+        
+        try{
+            response = await this.get<ApiResponse<AppTaskResponse>>(`/v1/event-bus/queue/update/status?Id=${request.id}&Status=${request.status}`);
+            apiResponse = response.data;
+        }
+        catch(error){
+            console.log(error);
 
-        return this.get<ApiResponse<AppTaskResponse>>(url);
+            if (axios.isAxiosError(error)){
+                const axiosError = error as AxiosError<ApiResponse<AppTaskResponse>, any>;
+                apiResponse = axiosError.response!.data
+            }
+        }
+        
+        return apiResponse;
     }
 }

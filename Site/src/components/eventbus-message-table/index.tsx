@@ -20,11 +20,10 @@ interface MessageTableProps {
     gridSize: number,
     showQueue: boolean,
     showFilter: boolean,
-    currentQueueId: string | null,
     showActions: boolean
 }
 
-const EventBusMessageTable = ({ gridSize, showQueue, showFilter, currentQueueId, showActions }: MessageTableProps) => {
+const EventBusMessageTable = ({ gridSize, showQueue, showFilter, showActions }: MessageTableProps) => {
     const dispatch = useAppDispatch();
     const navigateTo = useNavigate();
 

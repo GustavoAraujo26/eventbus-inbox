@@ -11,142 +11,104 @@ import AppSnackBar from "../../../components/app-snackbar";
 import { useDispatch } from "react-redux";
 import { showSnackbar } from "../../../state/slices/app-snackbar-slice";
 import { closeBackdrop, showBackdrop } from "../../../state/slices/app-backdrop-slice";
-import { useAppDispatch } from "../../../state/hooks/app-hooks";
+import { useAppDispatch, useAppSelector } from "../../../state/hooks/app-hooks";
+import { RootState } from "../../../state/app-store";
+import { closeEventBusQueueModal } from "../../../state/slices/eventbus-queue/eventbus-queue-modal-slice";
+import { fetchEventBusQueueList } from "../../../state/slices/eventbus-queue/eventbus-queue-list-slice";
+import { ApiResponse } from "../../../interfaces/api-response";
+import AppTaskResponse from "../../../interfaces/app-task-response";
 
-interface StatusModalProps {
-    queue: GetEventbusQueueResponse | undefined,
-    showModal: boolean,
-    closeModal: () => void,
-    updateList: () => void,
-    action: AppActionType
-}
-
-const EventBusQueueModal = ({ queue, showModal, closeModal, updateList, action }: StatusModalProps) => {
+const EventBusQueueModal = () => {
     const dispatch = useAppDispatch();
     const queueService = new EventBusQueueService();
 
     const [title, setTitle] = useState('');
+    const [queue, setQueue] = useState<GetEventbusQueueResponse | null>();
 
-    useEffect(() => {
+    const modalContainer = useAppSelector((state: RootState) => state.eventbusQueueModal);
+    const queueListRequest = useAppSelector((state: RootState) => state.eventbusQueueListRequest);
+
+    const configureTitle = (action: AppActionType | null) => {
+        if (action === null) {
+            return;
+        }
+
         if (action === AppActionType.Update) {
             setTitle('Change event bus queue status?');
         }
         else {
             setTitle('Delete event bus queue?');
         }
-    }, [action]);
-
-    const updateStatus = () => {
-        dispatch(showBackdrop());
-        
-        let newStatus: number = 1;
-        if (queue!.status.intKey === 1) {
-            newStatus = 2;
-        }
-
-        const request: UpdateEventbusQueueStatusRequest = {
-            id: queue!.id,
-            status: newStatus
-        };
-
-        queueService.UpdateStatus(request).then(response => {
-            dispatch(closeBackdrop());
-
-            const apiResponse = response.data;
-
-            if (apiResponse.isSuccess){
-                updateList();
-                closeModal();
-            }
-            else{
-                const response: AppSnackbarResponse = {
-                    success: false,
-                    message: apiResponse.message,
-                    stackTrace: apiResponse.stackTrace,
-                    statusCode: apiResponse.status
-                }
-    
-                dispatch(showSnackbar(response));
-            }
-        }).catch(error => {
-            dispatch(closeBackdrop());
-
-            console.log(error);
-            let response: AppSnackbarResponse = {
-                success: false,
-                message: error.toString().substring(0, 50)
-            }
-
-            const apiResponse = error.response.data;
-            if (typeof apiResponse !== 'undefined') {
-                response.message = apiResponse.message;
-                response.stackTrace = apiResponse.stackTrace;
-                response.statusCode = apiResponse.status;
-            }
-
-            dispatch(showSnackbar(response));
-        });
     }
 
-    const deleteQueue = () => {
+    useEffect(() => {
+        if (modalContainer.queue) {
+            configureTitle(modalContainer.action);
+            setQueue(modalContainer.queue);
+        }
+    }, [modalContainer]);
+
+    const executeAction = async () => {
         dispatch(showBackdrop());
 
-        queueService.DeleteQueue(queue!.id).then(response => {
-            dispatch(closeBackdrop());
-            
-            const apiResponse = response.data;
+        let apiResponse: ApiResponse<AppTaskResponse> | null = null;
 
-            if (apiResponse.isSuccess){
-                updateList();
-                closeModal();
+        if (modalContainer.action === AppActionType.Update) {
+            let newStatus: number = 1;
+            if (queue!.status.intKey === 1) {
+                newStatus = 2;
             }
-            else{
-                const response: AppSnackbarResponse = {
-                    success: false,
-                    message: apiResponse.message,
-                    stackTrace: apiResponse.stackTrace,
-                    statusCode: apiResponse.status
-                }
-    
-                dispatch(showSnackbar(response));
-            }
-        }).catch(error => {
-            dispatch(closeBackdrop());
 
-            console.log(error);
-            let response: AppSnackbarResponse = {
+            const request: UpdateEventbusQueueStatusRequest = {
+                id: queue!.id,
+                status: newStatus
+            };
+
+            apiResponse = await queueService.UpdateStatus(request);
+        }
+        else if (modalContainer.action === AppActionType.Delete) {
+            apiResponse = await queueService.DeleteQueue(queue!.id);
+        }
+        
+        dispatch(showBackdrop());
+
+        if (apiResponse === null) {
+            return;
+        }
+
+        if (apiResponse.isSuccess) {
+            dispatch(fetchEventBusQueueList(queueListRequest));
+            dispatch(closeEventBusQueueModal());
+        }
+        else {
+            const response: AppSnackbarResponse = {
                 success: false,
-                message: error.toString().substring(0, 50)
-            }
-
-            const apiResponse = error.response.data;
-            if (typeof apiResponse !== 'undefined') {
-                response.message = apiResponse.message;
-                response.stackTrace = apiResponse.stackTrace;
-                response.statusCode = apiResponse.status;
+                message: apiResponse.message,
+                stackTrace: apiResponse.stackTrace,
+                statusCode: apiResponse.status
             }
 
             dispatch(showSnackbar(response));
-        });
+        }
     }
 
     return (
         <>
-            {queue && <Dialog open={showModal}>
+            {queue && <Dialog open={modalContainer.show}>
                 <DialogTitle>{title}</DialogTitle>
                 <DialogContent>
                     <EventBusQueueCard queue={queue} showDescription={false} showSummarization={false} showNavigation={false} />
                 </DialogContent>
                 <DialogActions>
-                    {action === AppActionType.Delete ? <Button color="error" onClick={() => deleteQueue()}>
+                    {modalContainer.action === AppActionType.Delete ? <Button color="error" onClick={() => executeAction()}>
                         <Delete />
                         Delete
                     </Button> : null}
-                    {action === AppActionType.Update ? <Button color="warning" onClick={() => updateStatus()}>
+                    {modalContainer.action === AppActionType.Update ? <Button color="warning" onClick={() => executeAction()}>
                         {queue.status.intKey === 1 ? <Lock /> : <LockOpen />}
                         {queue.status.intKey === 1 ? <Typography>Disable</Typography> : <Typography>Enable</Typography>}
                     </Button> : null}
-                    <Button color="secondary" onClick={() => closeModal()}>
+                    <Button color="secondary" onClick={() => dispatch(closeEventBusQueueModal())}>
                         <Close />
                         Close
                     </Button>
