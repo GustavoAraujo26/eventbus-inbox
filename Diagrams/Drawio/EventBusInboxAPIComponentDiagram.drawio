@@ -1,0 +1,260 @@
+<mxfile host="Electron" modified="2024-03-10T13:12:33.159Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/24.0.4 Chrome/120.0.6099.109 Electron/28.1.0 Safari/537.36" etag="cOSo8fxFlQWuR4ztmjm1" version="24.0.4" type="device">
+  <diagram name="Page-1" id="unVdxcQ77zro8NpjdMd2">
+    <mxGraphModel dx="2390" dy="1393" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="1654" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="UJEJ-g8sRD_BpSDyr6wl-1" value="" style="swimlane;startSize=0;dashed=1;dashPattern=8 8;" vertex="1" parent="1">
+          <mxGeometry x="60" y="432" width="1040" height="640" as="geometry" />
+        </mxCell>
+        <mxCell id="UJEJ-g8sRD_BpSDyr6wl-20" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;dashed=1;dashPattern=8 8;" edge="1" parent="UJEJ-g8sRD_BpSDyr6wl-1" source="UJEJ-g8sRD_BpSDyr6wl-2" target="UJEJ-g8sRD_BpSDyr6wl-5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="UJEJ-g8sRD_BpSDyr6wl-28" value="Uses" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="UJEJ-g8sRD_BpSDyr6wl-20">
+          <mxGeometry x="-0.0905" y="1" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="UJEJ-g8sRD_BpSDyr6wl-2" value="&lt;b&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;Event Bus Queue Controller&lt;/font&gt;&lt;/b&gt;&lt;div&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;[Component: ASP.NET API Controller]&lt;/font&gt;&lt;/div&gt;&lt;div&gt;Allows users to manage event bus queues information&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1ba1e2;fontColor=#ffffff;strokeColor=#006EAF;" vertex="1" parent="UJEJ-g8sRD_BpSDyr6wl-1">
+          <mxGeometry x="40" y="40" width="200" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="UJEJ-g8sRD_BpSDyr6wl-23" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;dashed=1;dashPattern=8 8;" edge="1" parent="UJEJ-g8sRD_BpSDyr6wl-1" source="UJEJ-g8sRD_BpSDyr6wl-3" target="UJEJ-g8sRD_BpSDyr6wl-6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="UJEJ-g8sRD_BpSDyr6wl-30" value="Uses" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="UJEJ-g8sRD_BpSDyr6wl-23">
+          <mxGeometry x="0.0048" y="-1" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="UJEJ-g8sRD_BpSDyr6wl-3" value="&lt;font style=&quot;font-size: 14px;&quot;&gt;&lt;b&gt;Event Bus Message Controller&lt;/b&gt;&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;[Component: ASP.NET API Controller]&lt;/font&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;Allow users to manage event bus messages information&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1ba1e2;fontColor=#ffffff;strokeColor=#006EAF;" vertex="1" parent="UJEJ-g8sRD_BpSDyr6wl-1">
+          <mxGeometry x="280" y="40" width="200" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="UJEJ-g8sRD_BpSDyr6wl-25" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;dashed=1;dashPattern=8 8;" edge="1" parent="UJEJ-g8sRD_BpSDyr6wl-1" source="UJEJ-g8sRD_BpSDyr6wl-4" target="UJEJ-g8sRD_BpSDyr6wl-7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="UJEJ-g8sRD_BpSDyr6wl-31" value="Uses" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="UJEJ-g8sRD_BpSDyr6wl-25">
+          <mxGeometry x="-0.019" y="1" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="UJEJ-g8sRD_BpSDyr6wl-4" value="&lt;b&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;Event Bus Sender Controller&lt;/font&gt;&lt;/b&gt;&lt;div&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;[Component: ASP.NET API Controller]&lt;/font&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;Allow users/systems to send event bus messages&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1ba1e2;fontColor=#ffffff;strokeColor=#006EAF;" vertex="1" parent="UJEJ-g8sRD_BpSDyr6wl-1">
+          <mxGeometry x="520" y="40" width="200" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="UJEJ-g8sRD_BpSDyr6wl-22" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;dashed=1;dashPattern=8 8;" edge="1" parent="UJEJ-g8sRD_BpSDyr6wl-1" source="UJEJ-g8sRD_BpSDyr6wl-5" target="UJEJ-g8sRD_BpSDyr6wl-8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="UJEJ-g8sRD_BpSDyr6wl-29" value="Uses" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="UJEJ-g8sRD_BpSDyr6wl-22">
+          <mxGeometry x="0.0524" y="-1" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="UJEJ-g8sRD_BpSDyr6wl-5" value="&lt;b&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;Queue Management Handlers&lt;/font&gt;&lt;/b&gt;&lt;div&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;[Component: C# mediator handler]&lt;/font&gt;&lt;/div&gt;&lt;div&gt;Execute the commands to manage event bus queues&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1ba1e2;fontColor=#ffffff;strokeColor=#006EAF;" vertex="1" parent="UJEJ-g8sRD_BpSDyr6wl-1">
+          <mxGeometry x="40" y="240" width="200" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="UJEJ-g8sRD_BpSDyr6wl-24" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;dashed=1;dashPattern=8 8;" edge="1" parent="UJEJ-g8sRD_BpSDyr6wl-1" source="UJEJ-g8sRD_BpSDyr6wl-6" target="UJEJ-g8sRD_BpSDyr6wl-9">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="UJEJ-g8sRD_BpSDyr6wl-32" value="Uses" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="UJEJ-g8sRD_BpSDyr6wl-24">
+          <mxGeometry x="0.0286" y="1" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="UJEJ-g8sRD_BpSDyr6wl-6" value="&lt;b&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;Message Management Handlers&lt;/font&gt;&lt;/b&gt;&lt;div&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;[Component: C# mediator handler]&lt;/font&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;Execute the commands to manage event bus messages&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1ba1e2;fontColor=#ffffff;strokeColor=#006EAF;" vertex="1" parent="UJEJ-g8sRD_BpSDyr6wl-1">
+          <mxGeometry x="280" y="240" width="200" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="UJEJ-g8sRD_BpSDyr6wl-27" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.227;entryY=0.002;entryDx=0;entryDy=0;entryPerimeter=0;dashed=1;dashPattern=8 8;" edge="1" parent="UJEJ-g8sRD_BpSDyr6wl-1" source="UJEJ-g8sRD_BpSDyr6wl-7" target="UJEJ-g8sRD_BpSDyr6wl-10">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="UJEJ-g8sRD_BpSDyr6wl-33" value="Uses" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="UJEJ-g8sRD_BpSDyr6wl-27">
+          <mxGeometry x="0.0948" y="-2" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="UJEJ-g8sRD_BpSDyr6wl-7" value="&lt;b&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;Message Sending Handler&lt;/font&gt;&lt;/b&gt;&lt;div&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;[Component: C# mediator handler]&lt;/font&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;Execute the command to send event bus message&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1ba1e2;fontColor=#ffffff;strokeColor=#006EAF;" vertex="1" parent="UJEJ-g8sRD_BpSDyr6wl-1">
+          <mxGeometry x="520" y="240" width="200" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="UJEJ-g8sRD_BpSDyr6wl-8" value="&lt;b&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;Queue Repository&lt;/font&gt;&lt;/b&gt;&lt;div&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;[Component: C# class]&lt;/font&gt;&lt;/div&gt;&lt;div&gt;Provides access to queues information stored in database&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1ba1e2;fontColor=#ffffff;strokeColor=#006EAF;" vertex="1" parent="UJEJ-g8sRD_BpSDyr6wl-1">
+          <mxGeometry x="40" y="440" width="200" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="UJEJ-g8sRD_BpSDyr6wl-9" value="&lt;b&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;Message Repository&lt;/font&gt;&lt;/b&gt;&lt;div&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;[Component: C# class]&lt;/font&gt;&lt;/div&gt;&lt;div&gt;Provides access to messages information stored in database&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1ba1e2;fontColor=#ffffff;strokeColor=#006EAF;" vertex="1" parent="UJEJ-g8sRD_BpSDyr6wl-1">
+          <mxGeometry x="280" y="440" width="200" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="UJEJ-g8sRD_BpSDyr6wl-10" value="&lt;font style=&quot;font-size: 14px;&quot;&gt;&lt;b&gt;RabbitMQ Repository&lt;/b&gt;&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;[Component: C# class]&lt;/font&gt;&lt;/div&gt;&lt;div&gt;Provides configuration to send and receive event bsu messages&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1ba1e2;fontColor=#ffffff;strokeColor=#006EAF;" vertex="1" parent="UJEJ-g8sRD_BpSDyr6wl-1">
+          <mxGeometry x="520" y="440" width="440" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="UJEJ-g8sRD_BpSDyr6wl-26" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.772;entryY=0.002;entryDx=0;entryDy=0;entryPerimeter=0;dashed=1;dashPattern=8 8;" edge="1" parent="UJEJ-g8sRD_BpSDyr6wl-1" source="UJEJ-g8sRD_BpSDyr6wl-11" target="UJEJ-g8sRD_BpSDyr6wl-10">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="UJEJ-g8sRD_BpSDyr6wl-34" value="Uses" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="UJEJ-g8sRD_BpSDyr6wl-26">
+          <mxGeometry x="-0.0491" y="1" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="UJEJ-g8sRD_BpSDyr6wl-11" value="&lt;b&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;Message Receiver Worker&lt;/font&gt;&lt;/b&gt;&lt;div&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;[Component: ASP.NET Hosted Service]&lt;/font&gt;&lt;/div&gt;&lt;div&gt;Periodically read messages&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1ba1e2;fontColor=#ffffff;strokeColor=#006EAF;" vertex="1" parent="UJEJ-g8sRD_BpSDyr6wl-1">
+          <mxGeometry x="760" y="240" width="200" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="UJEJ-g8sRD_BpSDyr6wl-77" value="API Application&lt;div&gt;[Container]&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="UJEJ-g8sRD_BpSDyr6wl-1">
+          <mxGeometry x="930" y="591" width="100" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="UJEJ-g8sRD_BpSDyr6wl-13" value="&lt;b&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;Database&lt;/font&gt;&lt;/b&gt;&lt;div&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;[Container: MongoDB]&lt;/font&gt;&lt;/div&gt;&lt;div&gt;Stores every message received from event bus&lt;/div&gt;" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#0050ef;fontColor=#ffffff;strokeColor=#001DBC;" vertex="1" parent="1">
+          <mxGeometry x="250" y="1152" width="160" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="UJEJ-g8sRD_BpSDyr6wl-14" value="&lt;b&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;Site&lt;/font&gt;&lt;/b&gt;&lt;div&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;[Container: Javascript and React]&lt;/font&gt;&lt;/div&gt;&lt;div&gt;Provides some functionalities to users via browser&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#0050ef;fontColor=#ffffff;strokeColor=#001DBC;" vertex="1" parent="1">
+          <mxGeometry x="100" y="152" width="200" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="UJEJ-g8sRD_BpSDyr6wl-42" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.542;exitY=0.25;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;dashed=1;dashPattern=8 8;" edge="1" parent="1" source="UJEJ-g8sRD_BpSDyr6wl-15" target="UJEJ-g8sRD_BpSDyr6wl-10">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="UJEJ-g8sRD_BpSDyr6wl-43" value="Get event bus message" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="UJEJ-g8sRD_BpSDyr6wl-42">
+          <mxGeometry x="-0.224" y="-2" relative="1" as="geometry">
+            <mxPoint x="-2" y="-4" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="UJEJ-g8sRD_BpSDyr6wl-15" value="&lt;b&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;Event Bus&lt;/font&gt;&lt;/b&gt;&lt;div&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;[Container: RabbitMQ]&lt;/font&gt;&lt;/div&gt;&lt;div&gt;Provides the communication&amp;nbsp;&lt;/div&gt;&lt;div&gt;between all systems&lt;/div&gt;" style="ellipse;shape=cloud;whiteSpace=wrap;html=1;fillColor=#0050ef;fontColor=#ffffff;strokeColor=#001DBC;" vertex="1" parent="1">
+          <mxGeometry x="670" y="1122" width="240" height="160" as="geometry" />
+        </mxCell>
+        <mxCell id="UJEJ-g8sRD_BpSDyr6wl-16" value="&lt;b&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;Shopping System&lt;/font&gt;&lt;/b&gt;&lt;div&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;[System Software]&lt;/font&gt;&lt;/div&gt;&lt;div&gt;Controls purchases made by the company&#39;s customers&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#647687;fontColor=#ffffff;strokeColor=#314354;" vertex="1" parent="1">
+          <mxGeometry x="690" y="1382" width="200" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="UJEJ-g8sRD_BpSDyr6wl-54" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;dashed=1;dashPattern=8 8;" edge="1" parent="1" source="UJEJ-g8sRD_BpSDyr6wl-17" target="UJEJ-g8sRD_BpSDyr6wl-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="UJEJ-g8sRD_BpSDyr6wl-63" value="Make API calls to&lt;div&gt;[JSON/HTTP]&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="UJEJ-g8sRD_BpSDyr6wl-54">
+          <mxGeometry x="-0.5695" y="-2" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="UJEJ-g8sRD_BpSDyr6wl-17" value="&lt;font style=&quot;font-size: 14px;&quot;&gt;&lt;b&gt;Low-Code Tool&lt;/b&gt;&lt;/font&gt;&lt;div&gt;&lt;div&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;[System Software]&lt;/font&gt;&lt;/div&gt;&lt;div&gt;Tool responsible to automate some system actions&lt;/div&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#647687;fontColor=#ffffff;strokeColor=#314354;" vertex="1" parent="1">
+          <mxGeometry x="340" y="152" width="200" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="UJEJ-g8sRD_BpSDyr6wl-18" value="&lt;font style=&quot;font-size: 14px;&quot;&gt;&lt;b&gt;Backoffice System&lt;/b&gt;&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;[System Software]&lt;/font&gt;&lt;/div&gt;&lt;div&gt;Responsible for carrying out actions related to the company&#39;s back office&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#647687;fontColor=#ffffff;strokeColor=#314354;" vertex="1" parent="1">
+          <mxGeometry x="930" y="1382" width="200" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="UJEJ-g8sRD_BpSDyr6wl-19" value="&lt;font style=&quot;font-size: 14px;&quot;&gt;&lt;b&gt;Customer&#39;s Communication System&lt;/b&gt;&lt;/font&gt;&lt;div&gt;&lt;div&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;[System Software]&lt;/font&gt;&lt;/div&gt;&lt;div&gt;Responsible to send notifications to customer&#39;s company&lt;/div&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#647687;fontColor=#ffffff;strokeColor=#314354;" vertex="1" parent="1">
+          <mxGeometry x="430" y="1382" width="200" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="UJEJ-g8sRD_BpSDyr6wl-35" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.145;entryY=0;entryDx=0;entryDy=4.35;entryPerimeter=0;dashed=1;dashPattern=8 8;" edge="1" parent="1" source="UJEJ-g8sRD_BpSDyr6wl-8" target="UJEJ-g8sRD_BpSDyr6wl-13">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="650" y="1112" as="sourcePoint" />
+            <mxPoint x="750" y="1112" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="UJEJ-g8sRD_BpSDyr6wl-39" value="Reads from and writes to&lt;div&gt;[BSON/TCP]&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="UJEJ-g8sRD_BpSDyr6wl-35">
+          <mxGeometry x="-0.507" y="1" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="UJEJ-g8sRD_BpSDyr6wl-37" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.855;entryY=0;entryDx=0;entryDy=4.35;entryPerimeter=0;dashed=1;dashPattern=8 8;" edge="1" parent="1" source="UJEJ-g8sRD_BpSDyr6wl-9" target="UJEJ-g8sRD_BpSDyr6wl-13">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="650" y="832" as="sourcePoint" />
+            <mxPoint x="750" y="832" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="UJEJ-g8sRD_BpSDyr6wl-40" value="Reads from and writes to&amp;nbsp;&lt;div&gt;[BSON/TCP]&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="UJEJ-g8sRD_BpSDyr6wl-37">
+          <mxGeometry x="-0.547" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="UJEJ-g8sRD_BpSDyr6wl-59" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=1;exitDx=0;exitDy=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;dashed=1;dashPattern=8 8;" edge="1" parent="1" source="UJEJ-g8sRD_BpSDyr6wl-41" target="UJEJ-g8sRD_BpSDyr6wl-4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="UJEJ-g8sRD_BpSDyr6wl-66" value="Make API calls to&lt;div&gt;[JSON/HTTP]&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="UJEJ-g8sRD_BpSDyr6wl-59">
+          <mxGeometry x="-0.2648" y="1" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="UJEJ-g8sRD_BpSDyr6wl-41" value="&lt;font style=&quot;font-size: 14px;&quot;&gt;&lt;b&gt;Backoffice System&lt;/b&gt;&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;[System Software]&lt;/font&gt;&lt;/div&gt;&lt;div&gt;Responsible for carrying out actions related to the company&#39;s back office&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#647687;fontColor=#ffffff;strokeColor=#314354;" vertex="1" parent="1">
+          <mxGeometry x="580" y="152" width="200" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="UJEJ-g8sRD_BpSDyr6wl-45" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.25;entryY=0;entryDx=0;entryDy=0;dashed=1;dashPattern=8 8;" edge="1" parent="1" source="UJEJ-g8sRD_BpSDyr6wl-14" target="UJEJ-g8sRD_BpSDyr6wl-3">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="650" y="492" as="sourcePoint" />
+            <mxPoint x="750" y="492" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="UJEJ-g8sRD_BpSDyr6wl-61" value="Make API calls to&lt;div&gt;[JSON/HTTP]&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="UJEJ-g8sRD_BpSDyr6wl-45">
+          <mxGeometry x="0.0396" y="1" relative="1" as="geometry">
+            <mxPoint y="-1" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="UJEJ-g8sRD_BpSDyr6wl-47" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.75;exitY=1;exitDx=0;exitDy=0;entryX=0.25;entryY=0;entryDx=0;entryDy=0;dashed=1;dashPattern=8 8;" edge="1" parent="1" source="UJEJ-g8sRD_BpSDyr6wl-14" target="UJEJ-g8sRD_BpSDyr6wl-4">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="650" y="492" as="sourcePoint" />
+            <mxPoint x="750" y="492" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="UJEJ-g8sRD_BpSDyr6wl-62" value="Make API calls to&lt;div&gt;[JSON/HTTP]&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="UJEJ-g8sRD_BpSDyr6wl-47">
+          <mxGeometry x="-0.6856" y="3" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="UJEJ-g8sRD_BpSDyr6wl-52" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;dashed=1;dashPattern=8 8;" edge="1" parent="1" source="UJEJ-g8sRD_BpSDyr6wl-14" target="UJEJ-g8sRD_BpSDyr6wl-2">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="650" y="492" as="sourcePoint" />
+            <mxPoint x="750" y="492" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="UJEJ-g8sRD_BpSDyr6wl-60" value="Make API calls to&lt;div&gt;[JSON/HTTP]&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="UJEJ-g8sRD_BpSDyr6wl-52">
+          <mxGeometry x="-0.1216" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="UJEJ-g8sRD_BpSDyr6wl-55" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;dashed=1;dashPattern=8 8;" edge="1" parent="1" source="UJEJ-g8sRD_BpSDyr6wl-41" target="UJEJ-g8sRD_BpSDyr6wl-3">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="650" y="492" as="sourcePoint" />
+            <mxPoint x="750" y="492" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="UJEJ-g8sRD_BpSDyr6wl-65" value="Make API calls to&lt;div&gt;[JSON/HTTP]&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="UJEJ-g8sRD_BpSDyr6wl-55">
+          <mxGeometry x="-0.7011" y="1" relative="1" as="geometry">
+            <mxPoint x="20" y="-10" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="UJEJ-g8sRD_BpSDyr6wl-57" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.75;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;dashed=1;dashPattern=8 8;" edge="1" parent="1" source="UJEJ-g8sRD_BpSDyr6wl-17" target="UJEJ-g8sRD_BpSDyr6wl-4">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="650" y="492" as="sourcePoint" />
+            <mxPoint x="750" y="492" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="UJEJ-g8sRD_BpSDyr6wl-64" value="Make API calls to&lt;div&gt;[JSON/HTTP]&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="UJEJ-g8sRD_BpSDyr6wl-57">
+          <mxGeometry x="-0.6421" y="3" relative="1" as="geometry">
+            <mxPoint x="84" y="86" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="UJEJ-g8sRD_BpSDyr6wl-67" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.13;entryY=0.77;entryDx=0;entryDy=0;entryPerimeter=0;dashed=1;dashPattern=8 8;" edge="1" parent="1" source="UJEJ-g8sRD_BpSDyr6wl-19" target="UJEJ-g8sRD_BpSDyr6wl-15">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="650" y="1342" as="sourcePoint" />
+            <mxPoint x="750" y="1342" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="UJEJ-g8sRD_BpSDyr6wl-74" value="Send event bus message" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="UJEJ-g8sRD_BpSDyr6wl-67">
+          <mxGeometry x="-0.0495" y="-1" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="UJEJ-g8sRD_BpSDyr6wl-70" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.55;entryY=0.95;entryDx=0;entryDy=0;entryPerimeter=0;dashed=1;dashPattern=8 8;" edge="1" parent="1" source="UJEJ-g8sRD_BpSDyr6wl-16" target="UJEJ-g8sRD_BpSDyr6wl-15">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="650" y="1342" as="sourcePoint" />
+            <mxPoint x="750" y="1342" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="UJEJ-g8sRD_BpSDyr6wl-75" value="Send event bus message" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="UJEJ-g8sRD_BpSDyr6wl-70">
+          <mxGeometry x="-0.1794" y="-2" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="UJEJ-g8sRD_BpSDyr6wl-72" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.96;entryY=0.7;entryDx=0;entryDy=0;entryPerimeter=0;dashed=1;dashPattern=8 8;" edge="1" parent="1" source="UJEJ-g8sRD_BpSDyr6wl-18" target="UJEJ-g8sRD_BpSDyr6wl-15">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="650" y="1342" as="sourcePoint" />
+            <mxPoint x="750" y="1342" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="UJEJ-g8sRD_BpSDyr6wl-76" value="Send event bus message" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="UJEJ-g8sRD_BpSDyr6wl-72">
+          <mxGeometry x="-0.0108" y="-1" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

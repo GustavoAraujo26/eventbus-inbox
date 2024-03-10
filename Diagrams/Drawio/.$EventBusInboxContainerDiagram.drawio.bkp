@@ -1,0 +1,155 @@
+<mxfile host="Electron" modified="2024-03-10T12:37:06.303Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/24.0.4 Chrome/120.0.6099.109 Electron/28.1.0 Safari/537.36" etag="TazkubxMkgD034MqUryZ" version="24.0.4" type="device">
+  <diagram name="Page-1" id="u9d-RnSXy5U_XG5L9_DD">
+    <mxGraphModel dx="1434" dy="836" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="1654" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="YokGL5_AdcgI0MQd6d8U-1" value="&lt;b&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;Shopping System&lt;/font&gt;&lt;/b&gt;&lt;div&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;[System Software]&lt;/font&gt;&lt;/div&gt;&lt;div&gt;Controls purchases made by the company&#39;s customers&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#647687;fontColor=#ffffff;strokeColor=#314354;" vertex="1" parent="1">
+          <mxGeometry x="60" y="500" width="200" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="YokGL5_AdcgI0MQd6d8U-2" value="&lt;font style=&quot;font-size: 14px;&quot;&gt;&lt;b&gt;Low-Code Tool&lt;/b&gt;&lt;/font&gt;&lt;div&gt;&lt;div&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;[System Software]&lt;/font&gt;&lt;/div&gt;&lt;div&gt;Tool responsible to automate some system actions&lt;/div&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#647687;fontColor=#ffffff;strokeColor=#314354;" vertex="1" parent="1">
+          <mxGeometry x="60" y="700" width="200" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="YokGL5_AdcgI0MQd6d8U-3" value="&lt;font style=&quot;font-size: 14px;&quot;&gt;&lt;b&gt;Backoffice System&lt;/b&gt;&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;[System Software]&lt;/font&gt;&lt;/div&gt;&lt;div&gt;Responsible for carrying out actions related to the company&#39;s back office&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#647687;fontColor=#ffffff;strokeColor=#314354;" vertex="1" parent="1">
+          <mxGeometry x="60" y="900" width="200" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="YokGL5_AdcgI0MQd6d8U-4" value="&lt;font style=&quot;font-size: 14px;&quot;&gt;&lt;b&gt;Customer&#39;s Communication System&lt;/b&gt;&lt;/font&gt;&lt;div&gt;&lt;div&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;[System Software]&lt;/font&gt;&lt;/div&gt;&lt;div&gt;Responsible to send notifications to customer&#39;s company&lt;/div&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#647687;fontColor=#ffffff;strokeColor=#314354;" vertex="1" parent="1">
+          <mxGeometry x="60" y="300" width="200" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="YokGL5_AdcgI0MQd6d8U-6" value="" style="swimlane;startSize=0;dashed=1;dashPattern=8 8;" vertex="1" parent="1">
+          <mxGeometry x="500" y="440" width="590" height="500" as="geometry" />
+        </mxCell>
+        <mxCell id="YokGL5_AdcgI0MQd6d8U-7" value="Event Bus Inbox System&lt;div&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;[System Software]&lt;/font&gt;&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="YokGL5_AdcgI0MQd6d8U-6">
+          <mxGeometry x="390" y="450" width="150" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="YokGL5_AdcgI0MQd6d8U-8" value="&lt;font style=&quot;font-size: 14px;&quot;&gt;&lt;b&gt;API&lt;/b&gt;&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;[Container: .NET Core 6]&lt;/font&gt;&lt;/div&gt;&lt;div&gt;Provides all of the functionality to systems via HTTP requests&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1ba1e2;fontColor=#ffffff;strokeColor=#006EAF;" vertex="1" parent="YokGL5_AdcgI0MQd6d8U-6">
+          <mxGeometry x="40" y="310" width="200" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="YokGL5_AdcgI0MQd6d8U-22" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0.95;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;dashed=1;dashPattern=8 8;" edge="1" parent="YokGL5_AdcgI0MQd6d8U-6" source="YokGL5_AdcgI0MQd6d8U-9" target="YokGL5_AdcgI0MQd6d8U-8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="YokGL5_AdcgI0MQd6d8U-23" value="Send event&amp;nbsp;&lt;div&gt;message&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="YokGL5_AdcgI0MQd6d8U-22">
+          <mxGeometry x="-0.0725" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="YokGL5_AdcgI0MQd6d8U-9" value="&lt;b&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;Event Bus&lt;/font&gt;&lt;/b&gt;&lt;div&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;[Container: RabbitMQ]&lt;/font&gt;&lt;/div&gt;&lt;div&gt;Provides the communication&amp;nbsp;&lt;/div&gt;&lt;div&gt;between all systems&lt;/div&gt;" style="ellipse;shape=cloud;whiteSpace=wrap;html=1;fillColor=#1ba1e2;fontColor=#ffffff;strokeColor=#006EAF;" vertex="1" parent="YokGL5_AdcgI0MQd6d8U-6">
+          <mxGeometry x="20" y="20" width="240" height="160" as="geometry" />
+        </mxCell>
+        <mxCell id="YokGL5_AdcgI0MQd6d8U-10" value="&lt;b&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;Database&lt;/font&gt;&lt;/b&gt;&lt;div&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;[Container: MongoDB]&lt;/font&gt;&lt;/div&gt;&lt;div&gt;Stores every message received from event bus&lt;/div&gt;" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#1ba1e2;fontColor=#ffffff;strokeColor=#006EAF;" vertex="1" parent="YokGL5_AdcgI0MQd6d8U-6">
+          <mxGeometry x="380" y="310" width="160" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="YokGL5_AdcgI0MQd6d8U-11" value="&lt;b&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;Site&lt;/font&gt;&lt;/b&gt;&lt;div&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;[Container: Javascript and React]&lt;/font&gt;&lt;/div&gt;&lt;div&gt;Provides some functionalities to users via browser&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1ba1e2;fontColor=#ffffff;strokeColor=#006EAF;" vertex="1" parent="YokGL5_AdcgI0MQd6d8U-6">
+          <mxGeometry x="360" y="40" width="200" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="YokGL5_AdcgI0MQd6d8U-12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;dashed=1;dashPattern=8 8;" edge="1" parent="YokGL5_AdcgI0MQd6d8U-6" source="YokGL5_AdcgI0MQd6d8U-8" target="YokGL5_AdcgI0MQd6d8U-10">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="YokGL5_AdcgI0MQd6d8U-13" value="Reads from and&amp;nbsp;&lt;div&gt;writes to&amp;nbsp;&lt;/div&gt;&lt;div&gt;[BSON]&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="YokGL5_AdcgI0MQd6d8U-12">
+          <mxGeometry x="-0.0714" y="1" relative="1" as="geometry">
+            <mxPoint x="5" y="1" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="YokGL5_AdcgI0MQd6d8U-18" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.035;exitY=0.975;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.975;entryY=0.067;entryDx=0;entryDy=0;entryPerimeter=0;dashed=1;dashPattern=8 8;" edge="1" parent="YokGL5_AdcgI0MQd6d8U-6" source="YokGL5_AdcgI0MQd6d8U-11" target="YokGL5_AdcgI0MQd6d8U-8">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="450" y="290" as="sourcePoint" />
+            <mxPoint x="550" y="290" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="YokGL5_AdcgI0MQd6d8U-19" value="Label" style="edgeLabel;resizable=0;html=1;;align=center;verticalAlign=middle;" connectable="0" vertex="1" parent="YokGL5_AdcgI0MQd6d8U-18">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="YokGL5_AdcgI0MQd6d8U-20" value="Make API calls to&amp;nbsp;&lt;div&gt;[JSON/HTTP]&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="YokGL5_AdcgI0MQd6d8U-18">
+          <mxGeometry x="-0.0213" y="3" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="YokGL5_AdcgI0MQd6d8U-27" value="" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.25;entryY=0.25;entryDx=0;entryDy=0;entryPerimeter=0;dashed=1;dashPattern=8 8;" edge="1" parent="1" source="YokGL5_AdcgI0MQd6d8U-4" target="YokGL5_AdcgI0MQd6d8U-9">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="550" y="490" as="sourcePoint" />
+            <mxPoint x="650" y="490" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="YokGL5_AdcgI0MQd6d8U-30" value="Send event&amp;nbsp;&lt;div&gt;message&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="YokGL5_AdcgI0MQd6d8U-27">
+          <mxGeometry x="-0.1571" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="YokGL5_AdcgI0MQd6d8U-33" value="" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.25;exitDx=0;exitDy=0;entryX=0.07;entryY=0.4;entryDx=0;entryDy=0;entryPerimeter=0;dashed=1;dashPattern=8 8;" edge="1" parent="1" source="YokGL5_AdcgI0MQd6d8U-1" target="YokGL5_AdcgI0MQd6d8U-9">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="550" y="690" as="sourcePoint" />
+            <mxPoint x="650" y="690" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="YokGL5_AdcgI0MQd6d8U-35" value="Send event&amp;nbsp;&lt;div&gt;message&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="YokGL5_AdcgI0MQd6d8U-33">
+          <mxGeometry x="-0.1122" y="1" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="YokGL5_AdcgI0MQd6d8U-37" value="" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.75;exitDx=0;exitDy=0;entryX=0.25;entryY=0;entryDx=0;entryDy=0;dashed=1;dashPattern=8 8;" edge="1" parent="1" source="YokGL5_AdcgI0MQd6d8U-1" target="YokGL5_AdcgI0MQd6d8U-8">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="550" y="690" as="sourcePoint" />
+            <mxPoint x="650" y="690" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="YokGL5_AdcgI0MQd6d8U-39" value="Make API calls to&amp;nbsp;&lt;div&gt;[JSON/HTTP]&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="YokGL5_AdcgI0MQd6d8U-37">
+          <mxGeometry x="-0.057" y="3" relative="1" as="geometry">
+            <mxPoint x="-67" y="-42" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="YokGL5_AdcgI0MQd6d8U-42" value="" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.25;entryDx=0;entryDy=0;dashed=1;dashPattern=8 8;" edge="1" parent="1" source="YokGL5_AdcgI0MQd6d8U-2" target="YokGL5_AdcgI0MQd6d8U-8">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="550" y="790" as="sourcePoint" />
+            <mxPoint x="650" y="790" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="YokGL5_AdcgI0MQd6d8U-44" value="Make API calls to&amp;nbsp;&lt;div&gt;[JSON/HTTP]&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="YokGL5_AdcgI0MQd6d8U-42">
+          <mxGeometry x="-0.5893" y="2" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="YokGL5_AdcgI0MQd6d8U-45" value="" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.25;exitDx=0;exitDy=0;entryX=0.31;entryY=0.8;entryDx=0;entryDy=0;entryPerimeter=0;dashed=1;dashPattern=8 8;" edge="1" parent="1" source="YokGL5_AdcgI0MQd6d8U-3" target="YokGL5_AdcgI0MQd6d8U-9">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="550" y="790" as="sourcePoint" />
+            <mxPoint x="650" y="790" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="YokGL5_AdcgI0MQd6d8U-47" value="Send event&amp;nbsp;&lt;div&gt;message&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="YokGL5_AdcgI0MQd6d8U-45">
+          <mxGeometry x="-0.6829" y="-3" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="YokGL5_AdcgI0MQd6d8U-49" value="" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.75;exitDx=0;exitDy=0;entryX=0;entryY=0.75;entryDx=0;entryDy=0;dashed=1;dashPattern=8 8;" edge="1" parent="1" source="YokGL5_AdcgI0MQd6d8U-3" target="YokGL5_AdcgI0MQd6d8U-8">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="550" y="790" as="sourcePoint" />
+            <mxPoint x="650" y="790" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="YokGL5_AdcgI0MQd6d8U-51" value="Make API calls to&amp;nbsp;&lt;div&gt;[JSON/HTTP]&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="YokGL5_AdcgI0MQd6d8U-49">
+          <mxGeometry x="-0.0118" y="-3" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="YokGL5_AdcgI0MQd6d8U-53" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=0.25;entryY=0;entryDx=0;entryDy=0;dashed=1;dashPattern=8 8;" edge="1" parent="1" source="YokGL5_AdcgI0MQd6d8U-52" target="YokGL5_AdcgI0MQd6d8U-11">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="YokGL5_AdcgI0MQd6d8U-54" value="Create event bus&amp;nbsp;&lt;div&gt;queues&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="YokGL5_AdcgI0MQd6d8U-53">
+          <mxGeometry x="-0.3" y="1" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="YokGL5_AdcgI0MQd6d8U-55" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=1;exitDx=0;exitDy=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;dashed=1;dashPattern=8 8;" edge="1" parent="1" source="YokGL5_AdcgI0MQd6d8U-52" target="YokGL5_AdcgI0MQd6d8U-11">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="YokGL5_AdcgI0MQd6d8U-56" value="Views event bus&amp;nbsp;&lt;div&gt;message states&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="YokGL5_AdcgI0MQd6d8U-55">
+          <mxGeometry x="-0.26" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="YokGL5_AdcgI0MQd6d8U-52" value="&lt;font style=&quot;font-size: 14px;&quot;&gt;&lt;b&gt;Company&#39;s Developer&lt;/b&gt;&lt;/font&gt;&lt;div&gt;&lt;div&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;[Person]&lt;/font&gt;&lt;/div&gt;&lt;div&gt;Responsible for maintaining the system&lt;/div&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#0050ef;fontColor=#ffffff;strokeColor=#001DBC;" vertex="1" parent="1">
+          <mxGeometry x="860" y="160" width="200" height="120" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

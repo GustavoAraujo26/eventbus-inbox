@@ -1,0 +1,89 @@
+<mxfile host="Electron" modified="2024-03-10T11:59:39.637Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/24.0.4 Chrome/120.0.6099.109 Electron/28.1.0 Safari/537.36" etag="1elaeJ7WYM2EGg-miO0o" version="24.0.4" type="device">
+  <diagram name="Página-1" id="nf8nAutaw8pgTfW_kGdm">
+    <mxGraphModel dx="1434" dy="836" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="LZkvKaUgxB-IKFRWWQkh-2" value="&lt;b&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;Shopping System&lt;/font&gt;&lt;/b&gt;&lt;div&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;[System Software]&lt;/font&gt;&lt;/div&gt;&lt;div&gt;Controls purchases made by the company&#39;s customers&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#647687;fontColor=#ffffff;strokeColor=#314354;" vertex="1" parent="1">
+          <mxGeometry x="480" y="80" width="200" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="LZkvKaUgxB-IKFRWWQkh-17" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.25;exitDx=0;exitDy=0;entryX=1;entryY=0.25;entryDx=0;entryDy=0;" edge="1" parent="1" source="LZkvKaUgxB-IKFRWWQkh-4" target="LZkvKaUgxB-IKFRWWQkh-7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="LZkvKaUgxB-IKFRWWQkh-19" value="Send event&amp;nbsp;&lt;div&gt;message&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="LZkvKaUgxB-IKFRWWQkh-17">
+          <mxGeometry x="0.04" y="2" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="LZkvKaUgxB-IKFRWWQkh-18" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.75;exitDx=0;exitDy=0;entryX=1;entryY=0.75;entryDx=0;entryDy=0;" edge="1" parent="1" source="LZkvKaUgxB-IKFRWWQkh-4" target="LZkvKaUgxB-IKFRWWQkh-7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="LZkvKaUgxB-IKFRWWQkh-21" value="Get event&amp;nbsp;&lt;div&gt;message&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="LZkvKaUgxB-IKFRWWQkh-18">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="LZkvKaUgxB-IKFRWWQkh-4" value="&lt;font style=&quot;font-size: 14px;&quot;&gt;&lt;b&gt;Low-Code Tool&lt;/b&gt;&lt;/font&gt;&lt;div&gt;&lt;div&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;[System Software]&lt;/font&gt;&lt;/div&gt;&lt;div&gt;Tool responsible to automate some system actions&lt;/div&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#647687;fontColor=#ffffff;strokeColor=#314354;" vertex="1" parent="1">
+          <mxGeometry x="880" y="320" width="200" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="LZkvKaUgxB-IKFRWWQkh-7" value="&lt;b&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;Event Bus Inbox System&lt;/font&gt;&lt;/b&gt;&lt;div&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;[System Software]&lt;/font&gt;&lt;/div&gt;&lt;div&gt;Controls the state of received messages&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1ba1e2;fontColor=#ffffff;strokeColor=#006EAF;" vertex="1" parent="1">
+          <mxGeometry x="400" y="320" width="360" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="LZkvKaUgxB-IKFRWWQkh-9" value="&lt;font style=&quot;font-size: 14px;&quot;&gt;&lt;b&gt;Backoffice System&lt;/b&gt;&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;[System Software]&lt;/font&gt;&lt;/div&gt;&lt;div&gt;Responsible for carrying out actions related to the company&#39;s back office&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#647687;fontColor=#ffffff;strokeColor=#314354;" vertex="1" parent="1">
+          <mxGeometry x="480" y="600" width="200" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="LZkvKaUgxB-IKFRWWQkh-26" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.25;exitDx=0;exitDy=0;entryX=0;entryY=0.25;entryDx=0;entryDy=0;" edge="1" parent="1" source="LZkvKaUgxB-IKFRWWQkh-12" target="LZkvKaUgxB-IKFRWWQkh-7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="LZkvKaUgxB-IKFRWWQkh-28" value="Send event&amp;nbsp;&lt;div&gt;message&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="LZkvKaUgxB-IKFRWWQkh-26">
+          <mxGeometry x="-0.08" y="1" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="LZkvKaUgxB-IKFRWWQkh-27" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.75;exitDx=0;exitDy=0;entryX=0;entryY=0.75;entryDx=0;entryDy=0;" edge="1" parent="1" source="LZkvKaUgxB-IKFRWWQkh-12" target="LZkvKaUgxB-IKFRWWQkh-7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="LZkvKaUgxB-IKFRWWQkh-29" value="Get event&amp;nbsp;&lt;div&gt;message&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="LZkvKaUgxB-IKFRWWQkh-27">
+          <mxGeometry x="-0.18" y="2" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="LZkvKaUgxB-IKFRWWQkh-12" value="&lt;font style=&quot;font-size: 14px;&quot;&gt;&lt;b&gt;Customer&#39;s Communication System&lt;/b&gt;&lt;/font&gt;&lt;div&gt;&lt;div&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;[System Software]&lt;/font&gt;&lt;/div&gt;&lt;div&gt;Responsible to send notifications to customer&#39;s company&lt;/div&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#647687;fontColor=#ffffff;strokeColor=#314354;" vertex="1" parent="1">
+          <mxGeometry x="80" y="320" width="200" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="LZkvKaUgxB-IKFRWWQkh-41" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.25;exitY=0;exitDx=0;exitDy=0;entryX=0.361;entryY=1;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="LZkvKaUgxB-IKFRWWQkh-9" target="LZkvKaUgxB-IKFRWWQkh-7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="LZkvKaUgxB-IKFRWWQkh-43" value="Send event&amp;nbsp;&lt;div&gt;message&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="LZkvKaUgxB-IKFRWWQkh-41">
+          <mxGeometry x="-0.0375" y="2" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="LZkvKaUgxB-IKFRWWQkh-42" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=0;exitDx=0;exitDy=0;entryX=0.639;entryY=1.025;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="LZkvKaUgxB-IKFRWWQkh-9" target="LZkvKaUgxB-IKFRWWQkh-7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="LZkvKaUgxB-IKFRWWQkh-44" value="Get event&amp;nbsp;&lt;div&gt;message&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="LZkvKaUgxB-IKFRWWQkh-42">
+          <mxGeometry x="0.0191" y="-1" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="LZkvKaUgxB-IKFRWWQkh-55" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=0.361;entryY=0.017;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="LZkvKaUgxB-IKFRWWQkh-2" target="LZkvKaUgxB-IKFRWWQkh-7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="LZkvKaUgxB-IKFRWWQkh-57" value="Send event&amp;nbsp;&lt;div&gt;message&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="LZkvKaUgxB-IKFRWWQkh-55">
+          <mxGeometry x="-0.0823" y="-2" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="LZkvKaUgxB-IKFRWWQkh-56" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=1;exitDx=0;exitDy=0;entryX=0.639;entryY=0.017;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="LZkvKaUgxB-IKFRWWQkh-2" target="LZkvKaUgxB-IKFRWWQkh-7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="LZkvKaUgxB-IKFRWWQkh-58" value="Get event&amp;nbsp;&lt;div&gt;message&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="LZkvKaUgxB-IKFRWWQkh-56">
+          <mxGeometry x="-0.1642" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
