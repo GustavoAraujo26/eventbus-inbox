@@ -1,5 +1,4 @@
 # Event Bus Inbox System
----
 
 > ### Introdução
 
