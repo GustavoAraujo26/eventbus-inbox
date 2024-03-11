@@ -1,60 +1,79 @@
-# Getting Started with Create React App
+# Event Bus Inbox Site
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+> ### Introdução
 
-## Available Scripts
+Front-End do sistema de inbox do barramento de eventos, foi construído em React, utilizando o ["Create React App"](https://github.com/facebook/create-react-app).
 
-In the project directory, you can run:
+Sobre o layout da aplicação, foi utilizado o ["Material UI"](https://mui.com);
 
-### `npm start`
+Dentre as funcionalidades da aplicação, estão a possibilidade de inclusão/alteração de filas, bem como alteração do seu estado, listagem de mensagens recebidas nas filas, alteração do estado dessas mensagens, bem como o envio de novas mensagens.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Para saber mais sobre o contexto da aplicação, ["acesse aqui."](https://github.com/GustavoAraujo26/eventbus-inbox/tree/master)
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+> ### Execução
 
-### `npm test`
+Para executar a aplicação, após clonar o repositório para sua máquina, realize os passos abaixo, utilizando o prompt de comando (caso esteja em ambiente Windows, sugiro utilizar o Powershell, além de executá-lo em modo administrador).
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+1. Instalação dos pacotes e dependências:
 
-### `npm run build`
+Antes de executar o site, realize a instalação das dependências do mesmo através do comando abaixo na raiz do site ["./Site"](https://github.com/GustavoAraujo26/eventbus-inbox/tree/master/Site).
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+``
+npm install
+``
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+2. Execução do sistema:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Após baixadas e instaladas todas as dependências da aplicação, execute o comando abaixo.
 
-### `npm run eject`
+``
+npm start
+``
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+> ### Bibliotecas utilizadas
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Segue listagem das bibliotecas utilizadas pela aplicação.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+- **react-router-dom 6.22.1:** utilizado para configurar as rotas (navegação) da aplicação;
+- **react-redux 9.1.0:** utilizado na configuração do gerenciamento de estados da aplicação;
+- **@reduxjs/toolkit 2.2.1:** utilizado na configuração do gerenciamento de estados da aplicação;
+- **@types/react-redux 7.1.33:** utilizado na configuração do gerenciamento de estados da aplicação;
+- **uuid 9.0.1:**: utilizado para geração de identificadores únicos para serem enviados para a API;
+- **axios 1.6.7:**: utilizado para realização de chamadas HTTP REST para a API;
+- **@mui/material 5.15.11:**: utilizado na construção do layout da aplicação;
+- **@mui/icons-material 5.15.11:** utilizado na construção do layout da aplicação;
+- **@mui/x-date-pickers 6.19.6:** utilizado na criação de campos de seleção de datas nas telas de cadastro/pesquisa da aplicação;
+- **@fontsource/roboto 5.0.8:** utilizado na construção do layout da aplicação;
+- **dayjs 1.11.0:** utilizado na criação de campos de seleção de datas nas telas de cadastro/pesquisa da aplicação;
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+> ### Exemplos do sistema
 
-## Learn More
+Sobre o layout e funcionalidades do sistema, abaixo seguem algumas imagens para exemplificar os mesmos.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+- **Página inicial**
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+![Home](../Images/HomePage.png)
 
-// Bibliotecas do Site
-react 18.2.0
-react-router-dom 6.22.1
-react-redux 9.1.0
-@reduxjs/toolkit 2.2.1
-@types/react-redux 7.1.33
-uuid 9.0.1
-axios 1.6.7
-@mui/material 5.15.11
-@mui/icons-material 5.15.11
-@mui/x-date-pickers 6.19.6
-@fontsource/roboto 5.0.8
-dayjs 1.11.0
+- **Listagem de filas**
+
+![Listagem de filas](../Images/QueueDashboard.png)
+
+- **Detalhes de uma fila**
+
+![Detalhes de uma fila](../Images/QueueDetails.png)
+
+- **Formulário de fila**
+
+![Formulário de fila](../Images/QueueForm.png)
+
+- **Listagem de mensagens recebidas**
+
+![Listagem de mensagens recebidas](../Images/MessageDashboard.png)
+
+- **Detalhes de mensagem recebida**
+
+![Detalhes de mensagem recebida](../Images/MessageDetails.png)
+
+- **Formulário de envio/edição de mensagem**
+
+![Formulário de envio/edição de mensagem](../Images/MessageEdit.png)

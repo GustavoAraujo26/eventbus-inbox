@@ -4,6 +4,8 @@
 
 API criada em .NET 6 seguindo os princípios do DDD (Domain-Driven Design), responsável por armazenar toda a lógica de negócio do sistema de inbox de mensagens.
 
+Para saber mais sobre o contexto da aplicação, ["acesse aqui."](https://github.com/GustavoAraujo26/eventbus-inbox/tree/master)
+
 Sobre a estrutura arquitetural foi utilizado o princípio hexagonal, onde a figura central é a camada de domínio da aplicação, e todas as outras camadas se conectam à mesma.
 
 Sobre os componentes do sistema, segue abaixo diagrama que exemplifica de forma simplificada.
