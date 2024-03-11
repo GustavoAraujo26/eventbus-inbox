@@ -1,6 +1,6 @@
 > # Event Bus Inbox System
 
-> Introdução
+> ### Introdução
 
 Projeto para simulação do design pattern "Inbox", o qual visa centralizar a comunicação entre sistemas em ambiente orientado a eventos.
 
@@ -12,7 +12,7 @@ Dentre as funcionalidades do sistema, é possível criar filas para recebimento 
 
 Para detalhes específicos sobre a API, [acesse aqui](https://github.com/GustavoAraujo26/eventbus-inbox/tree/master/API). Já para detalhes específicos do site, [acesse aqui](https://github.com/GustavoAraujo26/eventbus-inbox/tree/master/Site).
 
-> IDE'S utilizadas
+> ### IDE'S utilizadas
 
 Foram utilizadas as seguintes IDE's:
 
@@ -21,7 +21,7 @@ Foram utilizadas as seguintes IDE's:
 - Visual Studio Code 1.87.1
 - Studio 3T for MongoDB 2024.1.0
 
-> Contexto da utilização
+> ### Contexto da utilização
 
 Pensando em um ambiente complexo, mais precisamente um ambiente com microsserviços, o sistema de inbox foi contruído para facilitar a leitura das mensagens, além de tratar um problema que é corriqueiro na utilização de mensagerias: "deadletter".
 
@@ -43,7 +43,7 @@ Para exemplificar a utilização do sistema, abaixo segue diagrama de contexto d
 
 ![Event Bus Inbox Context Diagram](./Diagrams/Images/EventBusInboxContextDiagam.jpg)
 
-> Desafios
+> ### Desafios
 
 Sobre os desafios enfrentados no desenvolvimento do sistema, cito os seguintes:
 
@@ -51,14 +51,14 @@ Sobre os desafios enfrentados no desenvolvimento do sistema, cito os seguintes:
 - Comunicação entre containers do Docker: outro desafio encontrado foi fazer com que a API, hospedada em um container separado, conseguisse de forma acertiva comunicar com o RabbitMQ e o MongoDB (ambos em containers separados). Após grande pesquisa, consegui resolver o problema de comunicação criando uma "network" específica para o ambiente no Docker (conforme item 2 da seção "Execução do Sistema").
 - Hospedagem da API em .NET 6 no Docker: a execução da API dentro do Docker, sem ser em modo "debug", foi outro grande desafio. Mesmo especificando a porta para criação do container, a aplicação não funcionada. Foi necessário forçar a porta desejada no códipo da API, para que a aplicação funcionasse corretamente.
 
-> Evoluções futuras
+> ### Evoluções futuras
 
 Como evolução, existem alguns pontos que podem ser melhorados/criados:
 
 - Correção na paginação da lista de filas/mensagens;
 - Criação de painel de controle para poder trabalhar com diferentes tipos de mensagerias, como RabbitMQ/Kafka/Azure Service Bus.
 
-> Execução do sistema
+> ### Execução do sistema
 
 Para executar o sistema em modo hospedado, foi utilizado o Docker. Abaixo segue um pequeno manual para executar o sistema, utilizando o prompt de comando do sistema operacional (em caso de ambiente Windows, recomendo executar o prompt como administrador, além de utilizar o Powershell).
 
