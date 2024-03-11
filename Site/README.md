@@ -44,3 +44,17 @@ You don’t have to ever use `eject`. The curated feature set is suitable for sm
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
 To learn React, check out the [React documentation](https://reactjs.org/).
+
+// Bibliotecas do Site
+react 18.2.0
+react-router-dom 6.22.1
+react-redux 9.1.0
+@reduxjs/toolkit 2.2.1
+@types/react-redux 7.1.33
+uuid 9.0.1
+axios 1.6.7
+@mui/material 5.15.11
+@mui/icons-material 5.15.11
+@mui/x-date-pickers 6.19.6
+@fontsource/roboto 5.0.8
+dayjs 1.11.0

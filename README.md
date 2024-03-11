@@ -4,9 +4,13 @@
 
 Projeto para simulação do design pattern "Inbox", o qual visa centralizar a comunicação entre sistemas em ambiente orientado a eventos.
 
-Este projeto consiste em uma API (construída em .NET 6), um site (construído em React Typescript), um banco de dados NoSql (MongoDB) e um barramento de eventos (no caso foi utilizado o RabbitMQ, porém facilmente convertido para outros modelos de mensageria).
+Este projeto consiste em uma API (construída em .NET 6), um site (construído em React Typescript), um banco de dados NoSql (MongoDB) e um barramento de eventos (no caso foi utilizado o RabbitMQ, porém facilmente convertido para outros modelos de mensageria). Abaixo segue um diagrama de container exemplificando melhor a componentização do sistema.
+
+![Event Bus Inbox Container Diagram](./Diagrams/Images/EventBusInboxContainerDiagram.jpg)
 
 Dentre as funcionalidades do sistema, é possível criar filas para recebimento de mensagens automaticamente, fazer envio de mensagens no barramento e alterar o estado das mensagens.
+
+Para detalhes específicos sobre a API, [acesse aqui](https://github.com/GustavoAraujo26/eventbus-inbox/tree/master/API). Já para detalhes específicos do site, [acesse aqui](https://github.com/GustavoAraujo26/eventbus-inbox/tree/master/Site).
 
 > IDE'S utilizadas
 
@@ -34,6 +38,18 @@ Para tentar sanar alguns desses problemas, é que desenvolvi este sistema de inb
 - Cuida da leitura das mensagens trafegadas na fila, além de armazená-las no banco de dados da aplicação;
 - Cuida do estado da mensagem em si, permitindo marcar como "completada"/"falha temporária"/"falha permanente";
 - Cuida da habilitação de mensagens em estado concluído ou de falha permanente para reprocessamento.
+
+Para exemplificar a utilização do sistema, abaixo segue diagrama de contexto do sistema como um todo.
+
+![Event Bus Inbox Context Diagram](./Diagrams/Images/EventBusInboxContextDiagam.jpg)
+
+> Desafios
+
+Sobre os desafios enfrentados no desenvolvimento do sistema, cito os seguintes:
+
+- Configuração do RabbitMQ: por estar utilizando o RabbitMQ em um container separado, me deparei com alguns problemas relacionados à conexão entre a API e a mensageria em si. Tentei utilizar algumas "connection string's" que o pessoal utiliza, principalmente em alguns exemplos no StackOverflow, porém foi sem sucesso. No final, após grande tempo desprendido em vasculhar a internet, a solução para execução local foi mais simples que o imaginado.
+- Comunicação entre containers do Docker: outro desafio encontrado foi fazer com que a API, hospedada em um container separado, conseguisse de forma acertiva comunicar com o RabbitMQ e o MongoDB (ambos em containers separados). Após grande pesquisa, consegui resolver o problema de comunicação criando uma "network" específica para o ambiente no Docker (conforme item 2 da seção "Execução do Sistema").
+- Hospedagem da API em .NET 6 no Docker: a execução da API dentro do Docker, sem ser em modo "debug", foi outro grande desafio. Mesmo especificando a porta para criação do container, a aplicação não funcionada. Foi necessário forçar a porta desejada no códipo da API, para que a aplicação funcionasse corretamente.
 
 > Evoluções futuras
 
@@ -112,61 +128,3 @@ Ao final da execução, você poderá acessar as aplicações nas seguintes URL'
 Ao executar o "docker compose", pode ser que o site demore a subir, questão de 10 minitos ou mais. Caso tenha passado esse tempo, ao acessar o endereço esteja tomando o erro "ERR_EMPTY_RESPONSE" no browser, acesse os logs do container no Docker Desktop. Caso os logs estejam paralizados como na imagem abaixo, pare o "docker compose" e execute novamente o comando do item 5.
 
 ![Erro Docker Container Site](/Images/DockerSiteError.png)
-
- Projeto de exemplo de sistema de inbox para barramento de eventos
-
-//Comando para criar a rede
-docker network create -d bridge eventbus-inbox
-
-//Comando para criar os volumes
-docker volume create mongo
-docker volume create rabbitmq
-
-//Comando para criar as imagens
-docker pull rabbitmq
-docker pull mongo
-docker build -t gustavoaraujo26/eventbus-inbox-site
-docker build -t gustavoaraujo26/eventbus-inbox-api
-
-//Comando para subir o ambiente
-docker compose up -d
-
-//Versões das IDE's
-Docker Desktop: 4.27.1
-Visual Studio Community 2022 17.9.0
-Visual Studio Code 1.87.1
-Studio 3T for MongoDB 2024.1.0
-
-// Bibliotecas da API
-.NET Core 6
-Asp.Versioning.Mvc 6.4.1
-Asp.Versioning.Mvc.ApiExplorer 6.4.0
-AutoMapper 13.0.1
-MediatR 12.2.0
-FluentValidation 11.9.0
-MongoDB.Driver 2.24.0
-RabbitMQ.Client 6.8.1
-Serilog 3.1.1
-Serilog.AspNetCore 8.0.1
-Serilog.Sinks.File 5.0.0
-Serilog.Sinks.MongoDB 5.4.
-Swashbuckle.AspNetCore 6.5.0
-Swashbuckle.AspNetcore.Annotations 6.5.0
-xunit 2.4.2
-xunit.runner.visualstudio 2.4.5
-Bogus 35.4.0
-Moq 4.20.70
-
-// Bibliotecas do Site
-react 18.2.0
-react-router-dom 6.22.1
-react-redux 9.1.0
-@reduxjs/toolkit 2.2.1
-@types/react-redux 7.1.33
-uuid 9.0.1
-axios 1.6.7
-@mui/material 5.15.11
-@mui/icons-material 5.15.11
-@mui/x-date-pickers 6.19.6
-@fontsource/roboto 5.0.8
-dayjs 1.11.0
