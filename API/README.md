@@ -32,7 +32,7 @@ Sobre os design pattern aplicados na construção do sistema, destaco os seguint
 - **Singleton:** utilizado na criação da classe de leitura de configurações do ambiente, para que o mesmo fosse criado somente uma vez na aplicação, e pudesse ser utilizado em vários pontos da mesma;
 - **Factory:** utilizado na criação da sumarização das mensagens vinculadas às filas criadas pelo usuário;
 - **Command:** utilizado na execução dos manipuladores de ações do sistema, para encapsular os dados das requisições;
-- **Mediator:"" utilizado juntamente com a biblioteca "MediatR" para acalçar o desacoplamento das camadas do sistema, além de centralizar a comunicação entre os mesmos;
+- **Mediator:** utilizado juntamente com a biblioteca "MediatR" para acalçar o desacoplamento das camadas do sistema, além de centralizar a comunicação entre os mesmos;
 - **State:** utilizado no gerenciamento dos estados das filas e das mensagens.
 
 > ### Bibliotecas utilizadas
