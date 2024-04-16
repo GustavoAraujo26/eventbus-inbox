@@ -101,13 +101,13 @@ docker volume create rabbitmq
 Para criação da imagem do site, no prompt de comando, navegue até a pasta ["./Site"](https://github.com/GustavoAraujo26/eventbus-inbox/tree/master/Site), e execute o comando abaixo:
 
 ``
-docker build -t gustavoaraujo26/eventbus-inbox-site
+docker build -t gustavoaraujo26/eventbus-inbox-site .
 ``
 
 Para criação da imagem da API, no prompt de comando, navegue até a pasta ["./API"](https://github.com/GustavoAraujo26/eventbus-inbox/tree/master/API), e execute o comando abaixo:
 
 ``
-docker build -t gustavoaraujo26/eventbus-inbox-api
+docker build -t gustavoaraujo26/eventbus-inbox-api .
 ``
 
 5. Execução do ambiente em si
